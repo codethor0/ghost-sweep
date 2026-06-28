@@ -1,0 +1,70 @@
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ghost_sweep
+      POSTGRES_USER: ghost_sweep
+      POSTGRES_PASSWORD: ghost_sweep
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ghost_sweep -d ghost_sweep"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  postgres_test:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: ghost_sweep_test
+      POSTGRES_USER: ghost_sweep
+      POSTGRES_PASSWORD: ghost_sweep
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ghost_sweep -d ghost_sweep_test"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      DATABASE_URL: postgresql+asyncpg://ghost_sweep:ghost_sweep@postgres:5432/ghost_sweep
+      REDIS_URL: redis://redis:6379/0
+      JWT_SECRET_KEY: local-development-secret-change-before-production
+      ENVIRONMENT: development
+      CORS_ORIGINS: '["http://localhost:3000"]'
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

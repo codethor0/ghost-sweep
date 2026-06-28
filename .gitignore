@@ -1,19 +1,31 @@
-# Binaries
-/ghost-sweep
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.mypy_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+.next/
+out/
+coverage/
+*.tsbuildinfo
+
+# Binaries and build output
 /dist/
 *.exe
 *.dll
 *.so
 *.dylib
+ghost-sweep
 
-# Test artifacts
-*.test
-*.out
-coverage.out
-coverage.html
-
-# Go workspace
-/vendor/
+# Go legacy
+go.sum
 
 # IDE
 .idea/
@@ -27,4 +39,9 @@ coverage.html
 
 # Local env
 .env
-.env.*
+.env.local
+.env.*.local
+!.env.example
+
+# Docker
+postgres_data/

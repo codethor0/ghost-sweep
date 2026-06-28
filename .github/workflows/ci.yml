@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: ghost_sweep_test
+          POSTGRES_USER: ghost_sweep
+          POSTGRES_PASSWORD: ghost_sweep
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U ghost_sweep -d ghost_sweep_test"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+      redis:
+        image: redis:7
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+    env:
+      TEST_DATABASE_URL: postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5432/ghost_sweep_test
+      TEST_REDIS_URL: redis://localhost:6379/1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install backend dependencies
+        run: pip install "./backend[dev]"
+      - name: Compile Python sources
+        run: python -m py_compile $(find backend -name "*.py")
+      - name: Black
+        run: cd backend && black --check .
+      - name: Flake8
+        run: cd backend && flake8 .
+      - name: Mypy
+        run: cd backend && mypy --strict .
+      - name: Pytest
+        run: cd backend && pytest --cov=app --cov-report=term-missing
+      - name: Bandit
+        run: cd backend && bandit -r app
+      - name: pip-audit
+        run: cd backend && pip-audit
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install frontend dependencies
+        run: cd frontend && npm install
+      - name: Lint
+        run: cd frontend && npm run lint
+      - name: Typecheck
+        run: cd frontend && npm run typecheck
+      - name: Test
+        run: cd frontend && npm test
+      - name: npm audit
+        run: cd frontend && npm audit --audit-level=high
+
+  extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Extension smoke tests
+        run: node extension/tests/smoke.test.mjs
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: docker compose config
+      - name: Build images
+        run: docker compose build

@@ -5,14 +5,14 @@ import os
 from collections.abc import AsyncGenerator, AsyncIterator
 from datetime import UTC, datetime
 from decimal import Decimal
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 import pytest
 import pytest_asyncio
 from alembic import command
 from alembic.config import Config
 from httpx import ASGITransport, AsyncClient
-from sqlalchemy import text
+from sqlalchemy import text, update
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 
 from app.config import Settings, get_settings
@@ -21,6 +21,7 @@ from app.main import app
 from app.models.company import Company
 from app.models.enums import PostingSource, PostingStatus, VerifiedStatus
 from app.models.job_posting import JobPosting
+from app.models.user import User
 from app.redis_client import (
     RedisClient,
     close_redis_client,
@@ -265,3 +266,26 @@ async def auth_headers(client: AsyncClient) -> dict[str, str]:
     assert response.status_code == 200
     token = response.json()["access_token"]
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest_asyncio.fixture
+async def admin_auth_headers(client: AsyncClient, db_session: AsyncSession) -> dict[str, str]:
+    """Provide bearer auth headers for a registered admin user."""
+    suffix = uuid4().hex[:8]
+    response = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": f"admin-{suffix}@example.com",
+            "username": f"admin_{suffix}",
+            "password": "StrongPass123!",
+        },
+    )
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+    me_response = await client.get("/api/v1/auth/me", headers=headers)
+    assert me_response.status_code == 200
+    user_id = UUID(me_response.json()["id"])
+    await db_session.execute(update(User).where(User.id == user_id).values(is_admin=True))
+    await db_session.flush()
+    return headers

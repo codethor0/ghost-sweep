@@ -67,3 +67,72 @@ async def log_vote_created(
             },
         )
     )
+
+
+async def log_employer_claim_created(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    claim_id: UUID,
+    company_id: UUID,
+) -> None:
+    """Record an audit entry for employer claim submission."""
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="employer_claim.created",
+            entity_type="employer_claim",
+            entity_id=claim_id,
+            metadata_json={"company_id": str(company_id)},
+        )
+    )
+
+
+async def log_employer_claim_approved(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    claim_id: UUID,
+    company_id: UUID,
+    claimant_user_id: UUID,
+) -> None:
+    """Record an audit entry for employer claim approval."""
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="employer_claim.approved",
+            entity_type="employer_claim",
+            entity_id=claim_id,
+            metadata_json={
+                "company_id": str(company_id),
+                "claimant_user_id": str(claimant_user_id),
+            },
+        )
+    )
+
+
+async def log_employer_claim_rejected(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    claim_id: UUID,
+    company_id: UUID,
+    claimant_user_id: UUID,
+    reason: str | None,
+) -> None:
+    """Record an audit entry for employer claim rejection."""
+    metadata: dict[str, object] = {
+        "company_id": str(company_id),
+        "claimant_user_id": str(claimant_user_id),
+    }
+    if reason is not None:
+        metadata["reason"] = reason
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="employer_claim.rejected",
+            entity_type="employer_claim",
+            entity_id=claim_id,
+            metadata_json=metadata,
+        )
+    )

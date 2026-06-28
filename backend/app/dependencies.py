@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import Settings, get_settings
 from app.database import get_db_session
-from app.exceptions import UnauthorizedError
+from app.exceptions import ForbiddenError, UnauthorizedError
 from app.models.user import User
 from app.redis_client import RedisClient, get_shared_redis_client
 from app.security.tokens import decode_access_token
@@ -78,3 +78,20 @@ async def get_current_user(
         raise UnauthorizedError()
 
     return user
+
+
+async def require_admin(current_user: User = Depends(get_current_user)) -> User:
+    """Require an authenticated admin user.
+
+    Args:
+        current_user: Authenticated user from bearer token.
+
+    Returns:
+        User: Admin user record.
+
+    Raises:
+        ForbiddenError: When the user is not an admin.
+    """
+    if not current_user.is_admin:
+        raise ForbiddenError()
+    return current_user

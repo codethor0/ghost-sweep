@@ -3,7 +3,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, field_validator
 
 from app.models.enums import (
     ClaimStatus,
@@ -216,6 +216,42 @@ class EmployerClaimResponse(BaseModel):
     reviewed_at: datetime | None
 
     model_config = {"from_attributes": True}
+
+
+class CreateEmployerClaimRequest(BaseModel):
+    """Employer claim submission payload."""
+
+    company_id: UUID
+    verification_documents: list[str] = Field(min_length=1, max_length=10)
+
+    @field_validator("verification_documents")
+    @classmethod
+    def validate_verification_documents(cls, documents: list[str]) -> list[str]:
+        """Ensure each verification document reference is non-empty and bounded."""
+        validated: list[str] = []
+        for document in documents:
+            trimmed = document.strip()
+            if not trimmed:
+                raise ValueError("Verification documents must be non-empty strings")
+            if len(trimmed) > 2048:
+                raise ValueError("Verification documents must be 2048 characters or fewer")
+            validated.append(trimmed)
+        return validated
+
+
+class RejectEmployerClaimRequest(BaseModel):
+    """Optional rejection reason stored in audit metadata only."""
+
+    reason: str | None = Field(default=None, max_length=2000)
+
+
+class EmployerClaimListResponse(BaseModel):
+    """Paginated employer claim list."""
+
+    items: list[EmployerClaimResponse]
+    total: int
+    page: int
+    page_size: int
 
 
 class ScoreSnapshotResponse(BaseModel):

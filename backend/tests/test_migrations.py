@@ -62,7 +62,7 @@ async def test_alembic_upgrade_head_records_revision() -> None:
         result = await connection.execute(text("SELECT version_num FROM alembic_version"))
         version = result.scalar_one()
     await engine.dispose()
-    assert version == "001_initial_uuid_schema"
+    assert version == "002_employer_claim_constraints"
 
 
 @pytest.mark.asyncio
@@ -125,6 +125,33 @@ async def test_votes_table_has_unique_report_user_constraint() -> None:
         constraint_exists = result.first() is not None
     await engine.dispose()
     assert constraint_exists is True
+
+
+@pytest.mark.asyncio
+async def test_employer_claims_have_partial_unique_indexes() -> None:
+    """Employer claims should enforce one approved claim per company and one pending per user."""
+    assert TEST_DATABASE_URL is not None
+    engine = create_async_engine(TEST_DATABASE_URL, pool_pre_ping=True)
+    async with engine.connect() as connection:
+        result = await connection.execute(
+            text(
+                """
+                SELECT indexname
+                FROM pg_indexes
+                WHERE schemaname = 'public'
+                  AND indexname IN (
+                    'uq_employer_claims_company_approved',
+                    'uq_employer_claims_user_company_pending'
+                  )
+                """
+            )
+        )
+        index_names = {row[0] for row in result.fetchall()}
+    await engine.dispose()
+    assert index_names == {
+        "uq_employer_claims_company_approved",
+        "uq_employer_claims_user_company_pending",
+    }
 
 
 def test_downgrade_and_upgrade_cycle_succeeds() -> None:

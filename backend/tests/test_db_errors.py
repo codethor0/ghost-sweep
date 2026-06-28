@@ -6,6 +6,8 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from app.db_errors import (
+    EMPLOYER_CLAIM_COMPANY_APPROVED,
+    EMPLOYER_CLAIM_USER_COMPANY_PENDING,
     USER_EMAIL_UNIQUE,
     VOTE_REPORT_USER_UNIQUE,
     conflict_detail_from_integrity_error,
@@ -31,6 +33,20 @@ def test_conflict_detail_maps_user_email_unique_constraint() -> None:
     """User email unique constraint violations should map to email conflict detail."""
     detail = conflict_detail_from_integrity_error(_integrity_error(USER_EMAIL_UNIQUE))
     assert detail == "Email already registered"
+
+
+def test_conflict_detail_maps_employer_claim_pending_constraint() -> None:
+    """Pending employer claim unique violations should map to pending conflict detail."""
+    detail = conflict_detail_from_integrity_error(
+        _integrity_error(EMPLOYER_CLAIM_USER_COMPANY_PENDING)
+    )
+    assert detail == "Pending claim already exists for this company"
+
+
+def test_conflict_detail_maps_employer_claim_approved_constraint() -> None:
+    """Approved employer claim unique violations should map to approved conflict detail."""
+    detail = conflict_detail_from_integrity_error(_integrity_error(EMPLOYER_CLAIM_COMPANY_APPROVED))
+    assert detail == "Company already has an approved employer claim"
 
 
 def test_raise_conflict_from_integrity_error_raises_conflict_error() -> None:

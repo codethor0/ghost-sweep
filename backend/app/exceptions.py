@@ -40,3 +40,10 @@ class RateLimitError(HTTPException):
 
     def __init__(self, detail: str = "Too many requests") -> None:
         super().__init__(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=detail)
+
+
+class ForbiddenError(HTTPException):
+    """Raised when an authenticated user lacks permission."""
+
+    def __init__(self, detail: str = "Forbidden") -> None:
+        super().__init__(status_code=status.HTTP_403_FORBIDDEN, detail=detail)

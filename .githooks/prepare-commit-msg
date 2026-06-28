@@ -1,0 +1,18 @@
+#!/bin/sh
+MSG_FILE="$1"
+
+# Remove tool attribution trailers injected by external wrappers.
+sed -i '' \
+  -e '/^Co-authored-by:[[:space:]]*Cursor/d' \
+  -e '/^Co-authored-by:[[:space:]]*cursor/d' \
+  -e '/^Co-authored-by:[[:space:]]*AI/d' \
+  -e '/^Co-authored-by:[[:space:]]*assistant/d' \
+  -e '/^Generated-by:/d' \
+  -e '/^Created-by:/d' \
+  -e '/^Signed-off-by:[[:space:]]*Cursor/d' \
+  "$MSG_FILE"
+
+# Drop trailing blank lines left after trailer removal.
+sed -i '' -e :a -e '/^\n*$/{$d;N;ba' -e '}' "$MSG_FILE" 2>/dev/null || true
+
+exit 0

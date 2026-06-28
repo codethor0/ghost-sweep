@@ -47,6 +47,18 @@ docker compose up --build backend frontend
 API: http://localhost:8000  
 Frontend: http://localhost:3000
 
+## Current project status
+
+As of the Batch 4 checkpoint (`6a0e6c0`):
+
+- Backend foundation is complete through auth register, login, `/me`, refresh, logout, and auth rate limiting
+- Domain APIs for companies, reports, and job postings are not implemented yet
+- Frontend serves the Next.js scaffold but is not wired to the current auth or domain APIs
+- Browser extension code is present but has not been live-tested against the current API
+- GitHub repository: https://github.com/codethor0/ghost-sweep (private)
+
+Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md)
+
 ## Local development
 
 Backend:

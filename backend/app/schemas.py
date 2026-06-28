@@ -55,10 +55,23 @@ class LoginRequest(BaseModel):
 
 
 class TokenResponse(BaseModel):
-    """JWT access token response."""
+    """JWT access and refresh token response."""
 
     access_token: str
+    refresh_token: str
     token_type: str = "bearer"
+
+
+class RefreshRequest(BaseModel):
+    """Refresh token exchange payload."""
+
+    refresh_token: str = Field(min_length=1, max_length=512)
+
+
+class LogoutRequest(BaseModel):
+    """Logout payload."""
+
+    refresh_token: str = Field(min_length=1, max_length=512)
 
 
 class UserResponse(BaseModel):

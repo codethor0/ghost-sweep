@@ -1,20 +1,20 @@
-# Authentication API (Batch 3)
+# Authentication API
 
 Base URL: `http://localhost:8000`
 
-Batch 3 provides access-token-only authentication. Register and login return a bearer JWT access token in the JSON response body. Protected routes accept `Authorization: Bearer <access_token>`.
+Authentication uses short-lived JWT access tokens plus opaque refresh tokens delivered in JSON response bodies. Protected routes accept `Authorization: Bearer <access_token>`.
 
-Deferred to Batch 4:
+Refresh tokens are stored in Redis by SHA-256 hash only. Logout revokes the refresh token only; access tokens remain valid until their JWT expiration time.
 
-- Refresh tokens
-- Logout
+Deferred to future batches:
+
 - HttpOnly cookies
-- Redis-backed session or token storage
-- Auth rate limiting
+- Redis health reporting in `/health`
+- Domain APIs for companies, reports, and job postings
 
 ## POST /api/v1/auth/register
 
-Register a user and receive an access token.
+Register a user and receive access and refresh tokens.
 
 Request:
 
@@ -37,6 +37,7 @@ Response `200`:
 ```json
 {
   "access_token": "jwt",
+  "refresh_token": "opaque-token",
   "token_type": "bearer"
 }
 ```
@@ -46,6 +47,7 @@ Errors:
 - `409` when the email is already registered
 - `409` when the username is already taken
 - `422` when request validation fails
+- `429` when the auth rate limit is exceeded
 
 ## POST /api/v1/auth/login
 
@@ -65,6 +67,7 @@ Response `200`:
 ```json
 {
   "access_token": "jwt",
+  "refresh_token": "opaque-token",
   "token_type": "bearer"
 }
 ```
@@ -76,6 +79,57 @@ Invalid credentials always return `401`:
   "detail": "Invalid credentials"
 }
 ```
+
+Rate limiting returns `429`:
+
+```json
+{
+  "detail": "Too many requests"
+}
+```
+
+## POST /api/v1/auth/refresh
+
+Exchange a valid refresh token for a new access token. Batch 4 does not rotate refresh tokens; the same refresh token is returned.
+
+Request:
+
+```json
+{
+  "refresh_token": "opaque-token"
+}
+```
+
+Response `200`:
+
+```json
+{
+  "access_token": "jwt",
+  "refresh_token": "opaque-token",
+  "token_type": "bearer"
+}
+```
+
+Errors:
+
+- `401` when the refresh token is missing, expired, or revoked
+- `429` when the auth rate limit is exceeded
+
+## POST /api/v1/auth/logout
+
+Revoke a refresh token. Existing access tokens remain valid until expiration.
+
+Request:
+
+```json
+{
+  "refresh_token": "opaque-token"
+}
+```
+
+Response `204 No Content`
+
+Logout is not rate-limited.
 
 ## GET /api/v1/auth/me
 
@@ -111,4 +165,12 @@ Access tokens are signed JWTs with:
 
 Token lifetime follows `ACCESS_TOKEN_EXPIRE_MINUTES` (default 15 minutes).
 
-Invalid, expired, missing, or wrong-type tokens are rejected with `401 Unauthorized`.
+## Refresh token format
+
+Refresh tokens are opaque random strings generated server-side. Only the SHA-256 hash is stored in Redis under `refresh:{token_hash}` with TTL `REFRESH_TOKEN_EXPIRE_DAYS * 86400` (default 14 days).
+
+## Auth rate limiting
+
+Register, login, and refresh are rate-limited per client IP and route using Redis keys `auth_rl:{route}:{ip}` with a 60-second window. The limit follows `AUTH_RATE_LIMIT_PER_MINUTE` (default 20).
+
+Logout is excluded from rate limiting.

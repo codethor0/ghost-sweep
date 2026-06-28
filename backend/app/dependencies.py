@@ -11,6 +11,7 @@ from app.config import Settings, get_settings
 from app.database import get_db_session
 from app.exceptions import UnauthorizedError
 from app.models.user import User
+from app.redis_client import RedisClient, close_redis_client, get_redis_client
 from app.security.tokens import decode_access_token
 from app.services.auth import get_user_by_id
 
@@ -34,6 +35,24 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
     async for session in get_db_session():
         yield session
+
+
+async def get_redis(
+    settings: Settings = Depends(get_settings_dependency),
+) -> AsyncGenerator[RedisClient, None]:
+    """Provide a Redis client for the current request.
+
+    Args:
+        settings: Application settings.
+
+    Yields:
+        RedisClient: Request-scoped async Redis client.
+    """
+    client = await get_redis_client(settings)
+    try:
+        yield client
+    finally:
+        await close_redis_client(client)
 
 
 async def get_current_user(

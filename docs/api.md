@@ -37,21 +37,22 @@ Response:
 
 ## Authentication
 
-Batch 3 implements access-token-only authentication. See [auth-api.md](auth-api.md) for request and response details.
+See [auth-api.md](auth-api.md) for request and response details.
 
 Implemented endpoints:
 
 - `POST /api/v1/auth/register`
 - `POST /api/v1/auth/login`
+- `POST /api/v1/auth/refresh`
+- `POST /api/v1/auth/logout`
 - `GET /api/v1/auth/me`
 
-Deferred to Batch 4:
+Register, login, and refresh are rate-limited per client IP and route. Logout returns `204 No Content` and revokes the refresh token only; access tokens remain valid until expiration.
 
-- Refresh tokens
-- Logout
+Deferred to future batches:
+
 - HttpOnly cookies
-- Redis-backed session or token storage
-- Auth rate limiting
+- Redis health reporting in `/health`
 
 ## Future batches
 
@@ -71,5 +72,6 @@ Common HTTP status codes in the current API:
 - `404` resource not found
 - `409` conflict such as duplicate account
 - `422` validation or business rule failure
+- `429` auth rate limit exceeded
 
 Stack traces are not exposed to clients.

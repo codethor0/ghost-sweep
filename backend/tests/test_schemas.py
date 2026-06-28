@@ -59,7 +59,7 @@ def test_job_ghost_risk_score_response_accepts_valid_breakdown() -> None:
 
 def test_token_response_defaults_to_bearer_type() -> None:
     """Token responses should default to bearer token type."""
-    response = TokenResponse(access_token="signed-token")
+    response = TokenResponse(access_token="signed-token", refresh_token="refresh-token")
     assert response.token_type == "bearer"
 
 

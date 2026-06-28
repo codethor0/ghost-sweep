@@ -1,7 +1,7 @@
 """JWT access token creation and validation."""
 
 from datetime import UTC, datetime, timedelta
-from uuid import UUID
+from uuid import UUID, uuid4
 
 import jwt
 
@@ -31,6 +31,8 @@ def create_access_token(subject: UUID | str, settings: Settings) -> str:
     payload = {
         "sub": str(subject),
         "exp": expire,
+        "iat": datetime.now(tz=UTC),
+        "jti": str(uuid4()),
         "type": ACCESS_TOKEN_CLAIM_TYPE,
     }
     return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)

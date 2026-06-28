@@ -33,3 +33,10 @@ class NotFoundError(HTTPException):
 
     def __init__(self, detail: str) -> None:
         super().__init__(status_code=status.HTTP_404_NOT_FOUND, detail=detail)
+
+
+class RateLimitError(HTTPException):
+    """Raised when an auth endpoint rate limit is exceeded."""
+
+    def __init__(self, detail: str = "Too many requests") -> None:
+        super().__init__(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=detail)

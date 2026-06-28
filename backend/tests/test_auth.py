@@ -33,6 +33,8 @@ async def test_register_success(client: AsyncClient) -> None:
     assert body["token_type"] == "bearer"
     assert isinstance(body["access_token"], str)
     assert body["access_token"]
+    assert isinstance(body["refresh_token"], str)
+    assert body["refresh_token"]
 
 
 @pytest.mark.asyncio
@@ -76,6 +78,7 @@ async def test_login_with_email(client: AsyncClient) -> None:
     body = login_response.json()
     assert body["token_type"] == "bearer"
     assert body["access_token"]
+    assert body["refresh_token"]
 
 
 @pytest.mark.asyncio
@@ -93,6 +96,7 @@ async def test_login_with_username(client: AsyncClient) -> None:
     body = login_response.json()
     assert body["token_type"] == "bearer"
     assert body["access_token"]
+    assert body["refresh_token"]
 
 
 @pytest.mark.asyncio

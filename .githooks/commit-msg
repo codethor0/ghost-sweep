@@ -1,0 +1,12 @@
+#!/bin/sh
+MSG_FILE="$1"
+
+if grep -qiE \
+  'Co-authored-by:[[:space:]]*(Cursor|cursor|AI|assistant)|Generated-by:|Created-by:|Signed-off-by:[[:space:]]*Cursor' \
+  "$MSG_FILE"
+then
+  echo "Commit rejected: message contains forbidden attribution trailer." >&2
+  exit 1
+fi
+
+exit 0

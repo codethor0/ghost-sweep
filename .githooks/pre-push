@@ -1,0 +1,14 @@
+#!/bin/sh
+EXPECTED='Isaac Thor <codethor@gmail.com> | Isaac Thor <codethor@gmail.com>'
+
+while IFS= read -r line; do
+  [ -z "$line" ] && continue
+  if [ "$line" != "$EXPECTED" ]; then
+    echo "Push rejected: unauthorized authorship on commit:" >&2
+    echo "  $line" >&2
+    echo "Expected: $EXPECTED" >&2
+    exit 1
+  fi
+done <<EOF
+$(git log --pretty=format:"%an <%ae> | %cn <%ce>" -n 10)
+EOF

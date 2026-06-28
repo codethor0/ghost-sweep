@@ -1,64 +1,64 @@
 # ghost-sweep
 
-ghost-sweep is an open-source Job Integrity Database that helps job seekers evaluate hiring transparency using evidence-based reports, transparent risk signals, and employer response workflows.
+ghost-sweep is an open-source, community-driven Job Integrity Database that helps job seekers evaluate hiring transparency using evidence-based reports, transparent integrity scores, and employer response workflows.
 
-## What this project does
+## Problem
 
-- Collects structured, evidence-backed reports about job postings
-- Tracks companies and posting history over time
-- Calculates transparent ghost job risk signals with documented inputs and weights
-- Provides employer claim, response, verification, and dispute pathways
-- Offers a web application and browser extension entry points for reporting
+Job seekers often invest time in postings that remain open without hiring intent, receive no recruiter follow-up, or are reposted repeatedly without closure. Hiring transparency is uneven, and public information is fragmented across boards, employer sites, and anecdotal reports.
 
-## What this project does not do
+## Solution
 
-- It does not make unsupported accusations or legal findings
-- It does not publish private personal information
-- It does not replace background checks, legal review, or direct employer communication
-- It does not guarantee hiring outcomes or company intent
+ghost-sweep collects structured, evidence-backed reports about job postings and companies, calculates documented integrity scores, and gives employers a path to verify active roles, respond to reports, and dispute incorrect information.
 
-## Repository layout
+The platform uses risk-signal language. It does not make unsupported legal accusations.
+
+## Architecture
 
 ```text
-backend/     FastAPI API, scoring engine, auth, migrations
-frontend/    Next.js web application
-extension/   Chrome and Firefox Manifest V3 extensions
-docs/        Architecture, API, scoring, moderation, legal guidance
+ghost-sweep/
+  backend/     FastAPI API, scoring engine, auth, moderation services
+  frontend/    Next.js web application
+  extension/   Manifest V3 browser extension for job board overlays
+  docs/        Architecture, API, scoring, moderation, legal guidance
+  .github/     CI workflows and community templates
 ```
 
-## Requirements
+Data stores:
 
-- Python 3.11
-- Node.js 20+
-- Docker and Docker Compose
-- PostgreSQL 15
-- Redis 7
+- PostgreSQL 15 for primary records
+- Redis 7 for auth rate limiting and refresh token storage
 
-## Local development
+## Tech stack
 
-1. Copy environment template:
+Backend: Python 3.11, FastAPI, SQLAlchemy 2.0 async, Alembic, Pydantic v2, PostgreSQL 15, Redis 7
+
+Frontend: Next.js 14, React, TypeScript strict mode, Tailwind CSS
+
+Extension: Chrome and Firefox Manifest V3
+
+## Quick start
 
 ```bash
 cp .env.example .env
-```
-
-2. Start infrastructure and services:
-
-```bash
-docker compose up -d postgres redis postgres_test
+docker compose up -d postgres redis
 docker compose up --build backend frontend
 ```
 
-3. Run database migrations manually when working outside Docker:
+API: http://localhost:8000  
+Frontend: http://localhost:3000
+
+## Local development
+
+Backend:
 
 ```bash
 cd backend
-pip install ".[dev]"
-alembic upgrade head
+python3.11 -m pip install -e ".[dev]"
+pytest tests/test_scoring.py
 uvicorn app.main:app --reload
 ```
 
-4. Start the frontend:
+Frontend:
 
 ```bash
 cd frontend
@@ -66,9 +66,9 @@ npm install
 npm run dev
 ```
 
-## Verification
+## Testing
 
-Backend:
+Backend verification:
 
 ```bash
 python -m py_compile $(find backend -name "*.py")
@@ -80,7 +80,7 @@ cd backend && bandit -r app
 cd backend && pip-audit
 ```
 
-Frontend:
+Frontend verification:
 
 ```bash
 cd frontend && npm run lint
@@ -89,7 +89,7 @@ cd frontend && npm test
 cd frontend && npm audit
 ```
 
-Docker:
+Docker verification:
 
 ```bash
 docker compose config
@@ -98,27 +98,10 @@ docker compose up -d
 docker compose ps
 ```
 
-## API overview
-
-- `GET /health`
-- `POST /api/v1/auth/register`
-- `POST /api/v1/auth/login`
-- `POST /api/v1/auth/refresh`
-- `GET /api/v1/companies`
-- `POST /api/v1/reports`
-- `GET /api/v1/job-postings/{id}`
-- `GET /api/v1/job-postings/{id}/risk-score`
-
-See `docs/api.md` for details.
-
 ## Contributing
 
-Read `CONTRIBUTING.md`, `CODE_OF_CONDUCT.md`, and `AGENTS.md` before opening a pull request.
-
-## Security
-
-Report vulnerabilities using `SECURITY.md`.
+Read `CONTRIBUTING.md`, `AGENTS.md`, and `CODE_OF_CONDUCT.md` before opening a pull request.
 
 ## License
 
-MIT
+MIT. See `LICENSE`.

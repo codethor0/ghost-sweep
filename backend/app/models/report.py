@@ -1,49 +1,48 @@
-"""User report and evidence models."""
+"""Report ORM model."""
 
-from datetime import datetime
+import uuid
+from decimal import Decimal
 
-from sqlalchemy import DateTime, ForeignKey, String, Text
+from sqlalchemy import ForeignKey, Integer, Numeric, Text, Uuid
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.models.base import TimestampMixin
+from app.models.base import TimestampMixin, UUIDPrimaryKeyMixin
+from app.models.enums import ReportStatus, ReportType
 
 
-class Report(Base, TimestampMixin):
+class Report(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     """Evidence-based job integrity report."""
 
     __tablename__ = "reports"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    job_posting_id: Mapped[int] = mapped_column(
+    job_posting_id: Mapped[uuid.UUID] = mapped_column(
+        Uuid(as_uuid=True),
         ForeignKey("job_postings.id"),
         index=True,
         nullable=False,
     )
-    submitter_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True, nullable=False)
-    category: Mapped[str] = mapped_column(String(64), index=True, nullable=False)
-    timeline_description: Mapped[str] = mapped_column(Text, nullable=False)
-    status: Mapped[str] = mapped_column(String(32), default="submitted", index=True, nullable=False)
-    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    reporter_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid(as_uuid=True),
+        ForeignKey("users.id"),
+        index=True,
+        nullable=True,
+    )
+    report_type: Mapped[ReportType] = mapped_column(index=True, nullable=False)
+    description: Mapped[str] = mapped_column(Text, nullable=False)
+    status: Mapped[ReportStatus] = mapped_column(default=ReportStatus.PENDING, index=True)
+    confidence_score: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=Decimal("0.0"))
+    verification_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     job_posting: Mapped["JobPosting"] = relationship(back_populates="reports")
-    submitter: Mapped["User"] = relationship(back_populates="reports")
-    evidence_items: Mapped[list["ReportEvidence"]] = relationship(back_populates="report")
+    reporter: Mapped["User | None"] = relationship(back_populates="reports")
+    evidence_files: Mapped[list["EvidenceFile"]] = relationship(back_populates="report")
+    votes: Mapped[list["Vote"]] = relationship(back_populates="report")
+    employer_responses: Mapped[list["EmployerResponse"]] = relationship(back_populates="report")
 
 
-class ReportEvidence(Base, TimestampMixin):
-    """Supporting evidence attached to a report."""
-
-    __tablename__ = "report_evidence"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    report_id: Mapped[int] = mapped_column(ForeignKey("reports.id"), index=True, nullable=False)
-    evidence_type: Mapped[str] = mapped_column(String(64), nullable=False)
-    source_url: Mapped[str | None] = mapped_column(String(1024), nullable=True)
-    description: Mapped[str] = mapped_column(Text, nullable=False)
-
-    report: Mapped["Report"] = relationship(back_populates="evidence_items")
-
-
+from app.models.employer_response import EmployerResponse  # noqa: E402
+from app.models.evidence_file import EvidenceFile  # noqa: E402
 from app.models.job_posting import JobPosting  # noqa: E402
 from app.models.user import User  # noqa: E402
+from app.models.vote import Vote  # noqa: E402

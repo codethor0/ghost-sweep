@@ -1,45 +1,40 @@
-"""Company and employer claim models."""
+"""Company ORM model."""
 
-from sqlalchemy import ForeignKey, String, Text
+from decimal import Decimal
+
+from sqlalchemy import Integer, Numeric, String
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.models.base import TimestampMixin
+from app.models.base import TimestampMixin, UUIDPrimaryKeyMixin
+from app.models.enums import VerifiedStatus
 
 
-class Company(Base, TimestampMixin):
+class Company(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     """Employer organization tracked by the integrity database."""
 
     __tablename__ = "companies"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
-    website: Mapped[str | None] = mapped_column(String(512), nullable=True)
-    profile_status: Mapped[str] = mapped_column(
-        String(32),
-        default="unclaimed",
+    domain: Mapped[str | None] = mapped_column(String(255), nullable=True, index=True)
+    industry: Mapped[str | None] = mapped_column(String(128), nullable=True)
+    size: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    locations: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
+    integrity_score: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=Decimal("50.0"))
+    verified_status: Mapped[VerifiedStatus] = mapped_column(
+        default=VerifiedStatus.UNVERIFIED,
         index=True,
-        nullable=False,
     )
+    total_postings: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    total_hires: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
+    report_count: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 
     job_postings: Mapped[list["JobPosting"]] = relationship(back_populates="company")
-    claims: Mapped[list["CompanyClaim"]] = relationship(back_populates="company")
+    employer_claims: Mapped[list["EmployerClaim"]] = relationship(back_populates="company")
+    employer_responses: Mapped[list["EmployerResponse"]] = relationship(back_populates="company")
 
 
-class CompanyClaim(Base, TimestampMixin):
-    """Employer claim request for a company profile."""
-
-    __tablename__ = "company_claims"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    company_id: Mapped[int] = mapped_column(ForeignKey("companies.id"), index=True, nullable=False)
-    claimant_user_id: Mapped[int] = mapped_column(
-        ForeignKey("users.id"), index=True, nullable=False
-    )
-    status: Mapped[str] = mapped_column(String(32), default="pending", index=True, nullable=False)
-    verification_notes: Mapped[str | None] = mapped_column(Text, nullable=True)
-
-    company: Mapped["Company"] = relationship(back_populates="claims")
-
-
+from app.models.employer_claim import EmployerClaim  # noqa: E402
+from app.models.employer_response import EmployerResponse  # noqa: E402
 from app.models.job_posting import JobPosting  # noqa: E402

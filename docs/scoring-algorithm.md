@@ -1,74 +1,131 @@
 # Scoring Algorithm
 
-ghost-sweep uses transparent, testable risk signals rather than black-box accusations.
+ghost-sweep publishes transparent scores on a 0 to 100 scale. Scores are risk signals and integrity signals, not legal findings.
 
-## Principles
+## Job Ghost Risk Score
 
-- Every score includes raw inputs, weighted calculation, confidence, last updated timestamp, and user-facing explanation
-- Language emphasizes risk signals, not legal findings
-- Employer verification and disputes can reduce a score
-- Reviewed evidence increases confidence
+Range: 0 to 100. Higher values indicate stronger ghost-job risk signals.
 
-## Inputs
+### Components
 
-| Input | Description |
-| ----- | ----------- |
-| report_count | Total reports linked to the posting |
-| reviewed_report_count | Reports with a reviewed timestamp |
-| days_since_first_seen | Age of the posting record |
-| days_since_last_repost | Days since the posting was last observed |
-| duplicate_report_count | Number of duplicate category groups |
-| verification_status | unverified, evidence_reviewed, disputed, verified_active |
+| Component | Max points | Input signal |
+| --------- | ---------- | ------------ |
+| posting_age | 25 | Days since posting detected, capped at 180 days |
+| repost_history | 20 | Repost count, capped at 8 reposts |
+| company_history | 15 | Inverse of company integrity score |
+| verified_report_evidence | 15 | Count of verified reports, capped at 5 |
+| language_risk_signals | 10 | Normalized 0..1 language analysis signal |
+| no_response_reports | 10 | Count of no-response reports, capped at 4 |
+| interview_without_offer_pattern | 5 | Count of fake-interview reports, capped at 3 |
 
-## Weighted components
+### Adjustments
 
-| Component | Weight |
-| --------- | ------ |
-| report_volume | 0.30 |
-| reviewed_reports | 0.25 |
-| repost_age | 0.20 |
-| posting_staleness | 0.15 |
-| duplicate_reports | 0.10 |
+- `filled` postings reduce posting age and repost contributions to 25 percent of normal
+- `disputed` postings reduce verified report evidence to 50 percent of normal
 
-Each component is normalized to a 0..1 range before weighting.
+### Formula
 
-## Verification adjustments
+Each component is scaled to its max points, summed, then clamped:
 
-| Status | Adjustment |
-| ------ | ---------- |
-| unverified | 0.00 |
-| evidence_reviewed | +0.15 |
-| disputed | -0.20 |
-| verified_active | -0.35 |
+```text
+total = clamp(sum(breakdown.values()), 0, 100)
+```
 
-The final score is clamped to 0..1 after adjustment.
+### Example
 
-## Confidence calculation
+Inputs:
 
-Confidence starts at 0.35 and increases when:
+- posting age: 200 days
+- repost count: 6
+- company integrity score: 25
+- verified reports: 4
+- language risk signal: 0.8
+- no-response reports: 3
+- fake-interview reports: 2
+- status: active
 
-- at least one report exists
-- at least one reviewed report exists
-- verification status is not unverified
+Expected result: score at or above 70 with non-zero values in posting age, repost history, and verified report evidence.
 
-## User-facing language
+## Company Integrity Score
 
-Use:
+Range: 0 to 100. Higher values indicate stronger integrity signals.
 
-- Risk signal
-- Reported by users
-- Unverified
-- Verified active
-- Disputed
-- Evidence reviewed
+### Components
 
-Avoid:
+| Component | Max points | Input signal |
+| --------- | ---------- | ------------ |
+| post_to_hire_ratio | 25 | hires / postings, capped at 1.0 |
+| report_ratio | 20 | inverse of verified reports / postings |
+| response_rate | 15 | employer responses / total reports |
+| verification_status | 15 | verified=15, unverified=7.5, disputed=3 |
+| average_time_to_fill | 10 | faster fill earns more points |
+| recruiter_follow_through | 10 | normalized follow-through rate |
+| correction_history | 5 | correction count capped at 5 |
 
-- Fraud
-- Criminal
-- Scam company
-- Fake company
+### Zero-division safety
+
+- post-to-hire ratio uses 0 when postings = 0
+- report ratio uses 0 when postings = 0
+- response rate uses denominator max(reports, 1)
+- missing average time to fill defaults to 5 points
+
+### Example
+
+Inputs:
+
+- postings: 20
+- hires: 15
+- verified reports: 0
+- total reports: 1
+- employer responses: 1
+- verified status: verified
+- average days to fill: 30
+- follow-through rate: 0.9
+- corrections: 2
+
+Expected result: score at or above 80.
+
+## Confidence model
+
+Batch 1 implements deterministic scoring functions only. Confidence weighting for display layers will combine:
+
+- count of verified reports
+- presence of employer responses
+- evidence file count and hash verification
+- moderation outcome history
+
+Confidence metadata will be added in API responses during Batch 2 endpoint work.
+
+## Edge cases
+
+| Case | Expected behavior |
+| ---- | ----------------- |
+| Zero postings for company | post-to-hire and report ratio components use safe defaults |
+| Zero reports | response rate uses denominator 1 |
+| Missing fill-time data | average time to fill defaults to 5 points |
+| Extreme input values | all totals clamp to 0..100 |
+| Filled posting | age and repost risk reduced |
 
 ## Test coverage
 
-Scoring tests live in `backend/tests/test_scoring.py` and must be updated whenever weights or adjustments change.
+Scoring tests live in `backend/tests/test_scoring.py` and must be updated whenever weights or caps change.
+
+Current batch includes 12 test cases covering clamping, zero-division safety, status adjustments, and verified report counting.
+
+## Language standards
+
+Use:
+
+- risk signal
+- reported by users
+- unverified
+- verified
+- disputed
+- evidence reviewed
+
+Avoid:
+
+- fraud
+- criminal
+- scam company
+- fake company

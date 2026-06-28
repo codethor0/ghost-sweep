@@ -1,5 +1,6 @@
 # Python
 __pycache__/
+*.pyc
 *.py[cod]
 *.egg-info/
 .venv/
@@ -7,17 +8,18 @@ venv/
 .mypy_cache/
 .pytest_cache/
 .coverage
+coverage/
 htmlcov/
 
 # Node
 node_modules/
 .next/
 out/
-coverage/
+dist/
+build/
 *.tsbuildinfo
 
 # Binaries and build output
-/dist/
 *.exe
 *.dll
 *.so
@@ -39,8 +41,7 @@ go.sum
 
 # Local env
 .env
-.env.local
-.env.*.local
+.env.*
 !.env.example
 
 # Docker

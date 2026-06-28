@@ -6,7 +6,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import get_settings
-from app.routers import auth, companies, health, job_postings, reports
+from app.schemas import HealthResponse
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -22,14 +22,14 @@ app.add_middleware(
     allow_headers=["Authorization", "Content-Type"],
 )
 
-app.include_router(health.router)
-app.include_router(auth.router, prefix=settings.api_prefix)
-app.include_router(companies.router, prefix=settings.api_prefix)
-app.include_router(reports.router, prefix=settings.api_prefix)
-app.include_router(job_postings.router, prefix=settings.api_prefix)
+
+@app.get("/health", response_model=HealthResponse)
+async def health_check() -> HealthResponse:
+    """Return basic service health metadata."""
+    return HealthResponse(status="ok", service=settings.app_name)
 
 
 @app.get("/")
 async def root() -> dict[str, str]:
-    """Return basic API metadata."""
-    return {"service": settings.app_name, "status": "ok"}
+    """Return API metadata."""
+    return {"service": settings.app_name, "status": "ok", "api_prefix": settings.api_prefix}

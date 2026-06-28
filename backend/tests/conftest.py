@@ -8,8 +8,13 @@ import pytest
 import pytest_asyncio
 from alembic import command
 from alembic.config import Config
+from httpx import ASGITransport, AsyncClient
 from sqlalchemy import text
-from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+
+from app.config import Settings, get_settings
+from app.dependencies import get_db, get_settings_dependency
+from app.main import app
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 
@@ -102,8 +107,43 @@ async def db_session(migrated_database: str) -> AsyncGenerator[AsyncSession, Non
         AsyncSession: Active SQLAlchemy session rolled back after each test.
     """
     engine = create_async_engine(migrated_database, pool_pre_ping=True)
-    session_factory = async_sessionmaker(engine, expire_on_commit=False, class_=AsyncSession)
-    async with session_factory() as session:
-        yield session
-        await session.rollback()
+    async with engine.connect() as connection:
+        await connection.begin()
+        session = AsyncSession(
+            bind=connection,
+            expire_on_commit=False,
+            join_transaction_mode="create_savepoint",
+        )
+        try:
+            yield session
+        finally:
+            await session.close()
+            await connection.rollback()
     await engine.dispose()
+
+
+@pytest_asyncio.fixture
+async def client(db_session: AsyncSession) -> AsyncGenerator[AsyncClient, None]:
+    """Provide an HTTP client with database dependencies overridden.
+
+    Args:
+        db_session: Request-scoped database session.
+
+    Yields:
+        AsyncClient: Async HTTP client bound to the FastAPI application.
+    """
+
+    async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
+        yield db_session
+
+    async def override_get_settings() -> Settings:
+        return get_settings()
+
+    app.dependency_overrides[get_db] = override_get_db
+    app.dependency_overrides[get_settings_dependency] = override_get_settings
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://testserver") as async_client:
+        yield async_client
+
+    app.dependency_overrides.clear()

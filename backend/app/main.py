@@ -5,6 +5,7 @@ import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1.auth import router as auth_router
 from app.config import get_settings
 from app.schemas import HealthResponse
 
@@ -21,6 +22,8 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allow_headers=["Authorization", "Content-Type"],
 )
+
+app.include_router(auth_router, prefix=settings.api_prefix)
 
 
 @app.get("/health", response_model=HealthResponse)

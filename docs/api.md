@@ -2,138 +2,70 @@
 
 Base URL: `http://localhost:8000`
 
-## Health
+This document lists endpoints implemented in the current codebase. Domain APIs for companies, reports, and job postings are planned for future batches and are not available yet.
 
-### GET /health
+## Service metadata
 
-Returns database and Redis health.
+### GET /
+
+Return API metadata.
 
 Response:
 
 ```json
 {
-  "status": "healthy",
-  "database": "healthy",
-  "redis": "healthy"
+  "service": "ghost-sweep",
+  "status": "ok",
+  "api_prefix": "/api/v1"
+}
+```
+
+## Health
+
+### GET /health
+
+Return basic service health. Database and Redis checks are not included in the current implementation.
+
+Response:
+
+```json
+{
+  "status": "ok",
+  "service": "ghost-sweep"
 }
 ```
 
 ## Authentication
 
-### POST /api/v1/auth/register
+Batch 3 implements access-token-only authentication. See [auth-api.md](auth-api.md) for request and response details.
 
-Register a user and receive an access token. Refresh token is set in an HttpOnly cookie.
+Implemented endpoints:
 
-Request:
+- `POST /api/v1/auth/register`
+- `POST /api/v1/auth/login`
+- `GET /api/v1/auth/me`
 
-```json
-{
-  "email": "user@example.com",
-  "username": "seeker1",
-  "password": "StrongPass123!"
-}
-```
+Deferred to Batch 4:
 
-Response:
+- Refresh tokens
+- Logout
+- HttpOnly cookies
+- Redis-backed session or token storage
+- Auth rate limiting
 
-```json
-{
-  "access_token": "jwt",
-  "token_type": "bearer"
-}
-```
+## Future batches
 
-### POST /api/v1/auth/login
+The following API areas are not implemented yet:
 
-Authenticate with email or username.
+- Company APIs (planned for a future batch)
+- Report APIs (planned for a future batch)
+- Job posting APIs (planned for a future batch)
 
-Request:
-
-```json
-{
-  "identifier": "user@example.com",
-  "password": "StrongPass123!"
-}
-```
-
-Invalid credentials always return:
-
-```json
-{
-  "detail": "Invalid credentials"
-}
-```
-
-### POST /api/v1/auth/refresh
-
-Exchange a refresh token for a new access token using either request body or HttpOnly cookie.
-
-## Companies
-
-### GET /api/v1/companies?page=1&page_size=20
-
-Returns paginated company records.
-
-### POST /api/v1/companies
-
-Create a company profile. Requires bearer authentication.
-
-## Reports
-
-### POST /api/v1/reports
-
-Submit an evidence-based report. Requires bearer authentication.
-
-Request:
-
-```json
-{
-  "company_name": "Example Corp",
-  "job_title": "Backend Engineer",
-  "posting_url": "https://example.com/jobs/backend-engineer",
-  "category": "stale_repost",
-  "timeline_description": "Posting remained open for several months without updates.",
-  "evidence": [
-    {
-      "evidence_type": "screenshot",
-      "source_url": "https://example.com/evidence/1",
-      "description": "Screenshot showing repeated repost activity."
-    }
-  ]
-}
-```
-
-Validation failures return HTTP 422 when evidence is missing or business rules fail.
-
-## Job postings
-
-### GET /api/v1/job-postings/{id}
-
-Return posting metadata.
-
-### GET /api/v1/job-postings/{id}/risk-score
-
-Return transparent risk signal breakdown:
-
-```json
-{
-  "job_posting_id": 1,
-  "score": 0.7425,
-  "confidence": 0.75,
-  "explanation": "Risk signal based on reported user activity...",
-  "components": [
-    {
-      "name": "report_volume",
-      "raw_value": 0.8,
-      "weight": 0.3,
-      "weighted_value": 0.24
-    }
-  ],
-  "calculated_at": "2026-06-28T00:00:00Z"
-}
-```
+Do not treat these endpoints as available until their batch is shipped and documented here.
 
 ## Error model
+
+Common HTTP status codes in the current API:
 
 - `401` authentication failure
 - `404` resource not found

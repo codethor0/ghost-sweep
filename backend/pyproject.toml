@@ -45,6 +45,7 @@ testpaths = ["tests"]
 python_version = "3.11"
 strict = true
 plugins = ["pydantic.mypy"]
+exclude = ["^alembic/versions/.*\\.py$"]
 
 [tool.coverage.run]
 source = ["app"]

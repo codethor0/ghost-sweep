@@ -1,14 +1,22 @@
 """Authentication API and service tests."""
 
 from datetime import UTC, datetime, timedelta
+from unittest.mock import MagicMock
 from uuid import uuid4
 
 import jwt
 import pytest
 from httpx import AsyncClient
+from sqlalchemy.exc import IntegrityError
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
+from app.db_errors import USER_EMAIL_UNIQUE
+from app.exceptions import ConflictError
+from app.redis_client import RedisClient
+from app.schemas import RegisterRequest
 from app.security.tokens import ACCESS_TOKEN_CLAIM_TYPE
+from app.services import auth as auth_service
 
 DEFAULT_PASSWORD = "StrongPass123!"
 
@@ -61,6 +69,30 @@ async def test_register_rejects_duplicate_username(client: AsyncClient) -> None:
     response = await client.post("/api/v1/auth/register", json=duplicate)
     assert response.status_code == 409
     assert response.json()["detail"] == "Username already taken"
+
+
+@pytest.mark.asyncio
+async def test_register_handles_integrity_error_on_commit(
+    db_session: AsyncSession,
+    redis_client: RedisClient,
+) -> None:
+    """Duplicate registration races should return conflict instead of 500."""
+    payload = RegisterRequest(
+        email=f"race-{uuid4().hex[:8]}@example.com",
+        username=f"race_{uuid4().hex[:8]}",
+        password=DEFAULT_PASSWORD,
+    )
+    settings = get_settings()
+
+    async def commit_with_integrity_error(*_args: object, **_kwargs: object) -> None:
+        orig = MagicMock()
+        orig.diag.constraint_name = USER_EMAIL_UNIQUE
+        raise IntegrityError("INSERT", {}, orig)
+
+    db_session.commit = commit_with_integrity_error  # type: ignore[method-assign]
+
+    with pytest.raises(ConflictError, match="Email already registered"):
+        await auth_service.register_user(db_session, redis_client, settings, payload)
 
 
 @pytest.mark.asyncio

@@ -8,9 +8,10 @@ Refresh tokens are stored in Redis by SHA-256 hash only. Logout revokes the refr
 
 Deferred to future batches:
 
-- HttpOnly cookies
+- HttpOnly cookies (refresh tokens are JSON-body delivered today)
 - Redis health reporting in `/health`
-- Domain APIs for companies, reports, and job postings
+- Evidence upload
+- Moderation status transition APIs
 
 ## POST /api/v1/auth/register
 

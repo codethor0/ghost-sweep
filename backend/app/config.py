@@ -1,8 +1,8 @@
 """Application configuration loaded from environment variables.
 
 JWT secret policy:
-- production: JWT_SECRET_KEY is required and must be at least 32 characters
-- development and staging: JWT_SECRET_KEY is optional; a local-only default is applied when unset
+- production and staging: JWT_SECRET_KEY is required and must be at least 32 characters
+- development and test: JWT_SECRET_KEY is optional; a local-only default is applied when unset
 """
 
 from functools import lru_cache
@@ -46,19 +46,19 @@ class Settings(BaseSettings):
             return data
 
         environment = data.get("environment", "development")
-        if environment != "production" and data.get("jwt_secret_key") is None:
+        if environment == "development" and data.get("jwt_secret_key") is None:
             data["jwt_secret_key"] = DEVELOPMENT_JWT_SECRET
         return data
 
     @model_validator(mode="after")
     def validate_production_jwt_secret(self) -> Self:
-        """Require explicit JWT secrets in production."""
-        if self.environment == "production" and (
+        """Require explicit JWT secrets in production and staging."""
+        if self.environment in {"production", "staging"} and (
             self.jwt_secret_key is None or len(self.jwt_secret_key.strip()) < 32
         ):
             raise ValueError(
-                "Production deployments must set JWT_SECRET_KEY to a secret of at least "
-                "32 characters."
+                f"{self.environment.capitalize()} deployments must set JWT_SECRET_KEY to a "
+                "secret of at least 32 characters."
             )
         return self
 

@@ -3,6 +3,9 @@
 import asyncio
 import os
 from collections.abc import AsyncGenerator, AsyncIterator
+from datetime import UTC, datetime
+from decimal import Decimal
+from uuid import uuid4
 
 import pytest
 import pytest_asyncio
@@ -15,7 +18,16 @@ from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from app.config import Settings, get_settings
 from app.dependencies import get_db, get_redis, get_settings_dependency
 from app.main import app
-from app.redis_client import RedisClient, close_redis_client, get_redis_client
+from app.models.company import Company
+from app.models.enums import PostingSource, PostingStatus, VerifiedStatus
+from app.models.job_posting import JobPosting
+from app.redis_client import (
+    RedisClient,
+    close_redis_client,
+    get_redis_client,
+    init_redis_client,
+    shutdown_redis_client,
+)
 
 TEST_DATABASE_URL = os.getenv("TEST_DATABASE_URL")
 TEST_REDIS_URL = os.getenv("TEST_REDIS_URL")
@@ -186,8 +198,70 @@ async def client(
     app.dependency_overrides[get_redis] = override_get_redis
     app.dependency_overrides[get_settings_dependency] = override_get_settings
 
+    await init_redis_client(get_settings())
     transport = ASGITransport(app=app)
-    async with AsyncClient(transport=transport, base_url="http://testserver") as async_client:
-        yield async_client
+    try:
+        async with AsyncClient(transport=transport, base_url="http://testserver") as async_client:
+            yield async_client
+    finally:
+        app.dependency_overrides.clear()
+        await shutdown_redis_client()
 
-    app.dependency_overrides.clear()
+
+@pytest_asyncio.fixture
+async def sample_company(db_session: AsyncSession) -> Company:
+    """Provide a persisted company for domain API tests."""
+    company = Company(
+        name=f"Integrity Corp {uuid4().hex[:8]}",
+        domain="example.com",
+        industry="Technology",
+        size="100-500",
+        locations=["Remote"],
+        integrity_score=Decimal("50.0"),
+        verified_status=VerifiedStatus.UNVERIFIED,
+        total_postings=1,
+        total_hires=0,
+        report_count=0,
+    )
+    db_session.add(company)
+    await db_session.flush()
+    return company
+
+
+@pytest_asyncio.fixture
+async def sample_job_posting(db_session: AsyncSession, sample_company: Company) -> JobPosting:
+    """Provide a persisted job posting for domain API tests."""
+    now = datetime.now(tz=UTC)
+    posting = JobPosting(
+        company_id=sample_company.id,
+        title="Platform Engineer",
+        description="Build integrity tooling.",
+        url=f"https://example.com/jobs/{uuid4()}",
+        source=PostingSource.COMPANY_SITE,
+        posted_date=now,
+        status=PostingStatus.ACTIVE,
+        ghost_risk_score=Decimal("50.0"),
+        repost_count=0,
+        detected_at=now,
+        last_seen_at=now,
+    )
+    db_session.add(posting)
+    await db_session.flush()
+    return posting
+
+
+@pytest_asyncio.fixture
+async def auth_headers(client: AsyncClient) -> dict[str, str]:
+    """Provide bearer auth headers for an registered test user."""
+    suffix = uuid4().hex[:8]
+    response = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": f"voter-{suffix}@example.com",
+            "username": f"voter_{suffix}",
+            "password": "StrongPass123!",
+        },
+    )
+    assert response.status_code == 200
+    token = response.json()["access_token"]
+    return {"Authorization": f"Bearer {token}"}

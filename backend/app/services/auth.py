@@ -3,9 +3,11 @@
 from uuid import UUID
 
 from sqlalchemy import or_, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import Settings
+from app.db_errors import raise_conflict_from_integrity_error
 from app.exceptions import ConflictError, UnauthorizedError
 from app.models.user import User
 from app.redis_client import RedisClient
@@ -53,7 +55,11 @@ async def register_user(
         hashed_password=hash_password(payload.password),
     )
     session.add(user)
-    await session.commit()
+    try:
+        await session.commit()
+    except IntegrityError as exc:
+        await session.rollback()
+        raise_conflict_from_integrity_error(exc)
     await session.refresh(user)
 
     refresh_token = await issue_refresh_token(redis, user.id, settings)

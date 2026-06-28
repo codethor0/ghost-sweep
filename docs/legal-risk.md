@@ -20,7 +20,7 @@ Public copy and score explanations must avoid unsupported accusations. Preferred
 
 ## Evidence expectations
 
-Reports should rely on verifiable hiring artifacts such as posting URLs, dated screenshots, repost history, and public employer statements. Moderators may remove reports that lack adequate support.
+Reports should rely on verifiable hiring artifacts such as posting URLs, dated screenshots, repost history, and public employer statements. Evidence file upload is deferred in the current API; moderators may remove reports that lack adequate support once moderation tooling exists.
 
 ## Employer dispute path
 
@@ -28,11 +28,11 @@ Employers need a fair process to respond, verify active roles, and dispute incor
 
 ## Defamation risk mitigation
 
-- Require evidence with every report
+- Encourage evidence in report descriptions; file upload is deferred
 - Document scoring inputs and weights
-- Provide employer response and dispute mechanisms
+- Provide employer response and dispute mechanisms (planned)
 - Avoid categorical fraud language
-- Support moderation review before high-visibility promotion of reports
+- Support moderation review before high-visibility promotion of reports (planned)
 
 ## Privacy and retaliation risk
 

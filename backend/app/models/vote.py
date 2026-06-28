@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.base import UUIDPrimaryKeyMixin
 from app.models.enums import VoteValue
+from app.models.pg_enums import vote_value_enum
 
 
 class Vote(Base, UUIDPrimaryKeyMixin):
@@ -29,7 +30,7 @@ class Vote(Base, UUIDPrimaryKeyMixin):
         index=True,
         nullable=False,
     )
-    vote: Mapped[VoteValue] = mapped_column(nullable=False)
+    vote: Mapped[VoteValue] = mapped_column(vote_value_enum, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

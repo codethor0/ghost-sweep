@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.base import TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import ReportStatus, ReportType
+from app.models.pg_enums import report_status_enum, report_type_enum
 
 
 class Report(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -28,9 +29,11 @@ class Report(Base, UUIDPrimaryKeyMixin, TimestampMixin):
         index=True,
         nullable=True,
     )
-    report_type: Mapped[ReportType] = mapped_column(index=True, nullable=False)
+    report_type: Mapped[ReportType] = mapped_column(report_type_enum, index=True, nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=False)
-    status: Mapped[ReportStatus] = mapped_column(default=ReportStatus.PENDING, index=True)
+    status: Mapped[ReportStatus] = mapped_column(
+        report_status_enum, default=ReportStatus.PENDING, index=True
+    )
     confidence_score: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=Decimal("0.0"))
     verification_votes: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
 

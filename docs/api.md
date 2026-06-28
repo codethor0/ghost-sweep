@@ -2,7 +2,7 @@
 
 Base URL: `http://localhost:8000`
 
-This document lists endpoints implemented in the current codebase. Domain APIs for companies, reports, and job postings are planned for future batches and are not available yet.
+This document lists endpoints implemented in the current codebase.
 
 ## Service metadata
 
@@ -49,20 +49,30 @@ Implemented endpoints:
 
 Register, login, and refresh are rate-limited per client IP and route. Logout returns `204 No Content` and revokes the refresh token only; access tokens remain valid until expiration.
 
+## Domain APIs
+
+See [domain-api.md](domain-api.md) for request and response details.
+
+Implemented endpoints:
+
+- `GET /api/v1/companies`
+- `GET /api/v1/companies/{company_id}`
+- `GET /api/v1/companies/{company_id}/integrity-score`
+- `GET /api/v1/job-postings/{job_posting_id}`
+- `GET /api/v1/job-postings/{job_posting_id}/risk-score`
+- `POST /api/v1/reports`
+- `GET /api/v1/reports/{report_id}`
+- `GET /api/v1/reports?job_posting_id={uuid}`
+- `POST /api/v1/reports/{report_id}/votes`
+
 Deferred to future batches:
 
-- HttpOnly cookies
+- HttpOnly cookies (refresh tokens are JSON-body delivered today)
 - Redis health reporting in `/health`
-
-## Future batches
-
-The following API areas are not implemented yet:
-
-- Company APIs (planned for a future batch)
-- Report APIs (planned for a future batch)
-- Job posting APIs (planned for a future batch)
-
-Do not treat these endpoints as available until their batch is shipped and documented here.
+- Employer claims and moderation workflows
+- Evidence upload
+- Admin APIs
+- Company and job posting write APIs
 
 ## Error model
 
@@ -70,7 +80,7 @@ Common HTTP status codes in the current API:
 
 - `401` authentication failure
 - `404` resource not found
-- `409` conflict such as duplicate account
+- `409` conflict such as duplicate account or duplicate vote
 - `422` validation or business rule failure
 - `429` auth rate limit exceeded
 

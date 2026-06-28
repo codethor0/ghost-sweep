@@ -156,6 +156,29 @@ class ReportResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class CreateReportRequest(BaseModel):
+    """Report submission payload."""
+
+    job_posting_id: UUID
+    report_type: ReportType
+    description: str = Field(min_length=20, max_length=5000)
+
+
+class ReportListResponse(BaseModel):
+    """Paginated reports linked to a job posting."""
+
+    items: list[ReportResponse]
+    total: int
+    page: int
+    page_size: int
+
+
+class CreateVoteRequest(BaseModel):
+    """Vote submission payload."""
+
+    vote: VoteValue
+
+
 class EvidenceFileResponse(BaseModel):
     """Stored evidence file metadata."""
 

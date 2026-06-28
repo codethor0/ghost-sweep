@@ -49,15 +49,37 @@ Frontend: http://localhost:3000
 
 ## Current project status
 
-As of the Batch 4 checkpoint (`6a0e6c0`):
+Committed baseline: `3c6aa83` (Batch 4 docs checkpoint).
 
-- Backend foundation is complete through auth register, login, `/me`, refresh, logout, and auth rate limiting
-- Domain APIs for companies, reports, and job postings are not implemented yet
-- Frontend serves the Next.js scaffold but is not wired to the current auth or domain APIs
-- Browser extension code is present but has not been live-tested against the current API
-- GitHub repository: https://github.com/codethor0/ghost-sweep (private)
+Batch 5 domain APIs are implemented in the working tree but **not yet committed**. This is not a release-ready state.
 
-Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md)
+**Implemented (Batch 5, uncommitted):**
+
+- Auth through Batch 4: register, login, `/me`, refresh, logout, and auth rate limiting
+- Company read APIs: list, detail, integrity score breakdown
+- Job posting read APIs: detail, ghost risk score breakdown
+- Report create, read, and paginated list APIs
+- Vote endpoint with duplicate protection and race-safe conflict handling
+- Scoring recalculation on report and vote writes, with score snapshots persisted
+- Audit logging for `report.created` and `vote.created`
+
+**Scaffold or stale (not wired to Batch 5 API):**
+
+- Frontend: Next.js scaffold only; not connected to auth or domain endpoints
+- Browser extension: present under `extension/`; not live-tested against the current API
+
+**Deferred (not started):**
+
+- Employer claims and responses
+- Moderation workflows and report status transitions
+- Evidence upload
+- Admin APIs
+- Frontend and extension integration
+- Dependency audit advisories (documented deferred findings in dev/transitive tooling)
+
+GitHub repository: https://github.com/codethor0/ghost-sweep (private)
+
+Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md) (Batch 4 auth validated; Batch 5 domain endpoints not yet documented there)
 
 ## Local development
 

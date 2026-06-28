@@ -9,6 +9,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.base import TimestampMixin, UUIDPrimaryKeyMixin
 from app.models.enums import VerifiedStatus
+from app.models.pg_enums import verified_status_enum
 
 
 class Company(Base, UUIDPrimaryKeyMixin, TimestampMixin):
@@ -23,6 +24,7 @@ class Company(Base, UUIDPrimaryKeyMixin, TimestampMixin):
     locations: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     integrity_score: Mapped[Decimal] = mapped_column(Numeric(5, 2), default=Decimal("50.0"))
     verified_status: Mapped[VerifiedStatus] = mapped_column(
+        verified_status_enum,
         default=VerifiedStatus.UNVERIFIED,
         index=True,
     )

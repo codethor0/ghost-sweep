@@ -1,10 +1,20 @@
 """Auth endpoint rate limiting backed by Redis."""
 
+from typing import cast
+
 from app.config import Settings
 from app.exceptions import RateLimitError
 from app.redis_client import RedisClient
 
 RATE_LIMIT_WINDOW_SECONDS = 60
+
+_RATE_LIMIT_SCRIPT = """
+local current = redis.call('INCR', KEYS[1])
+if current == 1 then
+  redis.call('EXPIRE', KEYS[1], ARGV[1])
+end
+return current
+"""
 
 
 def rate_limit_key(route: str, client_ip: str) -> str:
@@ -38,8 +48,12 @@ async def check_auth_rate_limit(
         RateLimitError: When the client exceeds the configured limit.
     """
     key = rate_limit_key(route, client_ip)
-    count = await redis.incr(key)
-    if count == 1:
-        await redis.expire(key, RATE_LIMIT_WINDOW_SECONDS)
+    raw_count = await redis.eval(  # type: ignore[no-untyped-call]
+        _RATE_LIMIT_SCRIPT,
+        1,
+        key,
+        str(RATE_LIMIT_WINDOW_SECONDS),
+    )
+    count = int(cast(int, raw_count))
     if count > settings.auth_rate_limit_per_minute:
         raise RateLimitError()

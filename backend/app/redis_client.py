@@ -11,17 +11,56 @@ if TYPE_CHECKING:
 else:
     RedisClient = Redis
 
+_redis_client: "RedisClient | None" = None
 
-async def get_redis_client(settings: Settings) -> "RedisClient":
-    """Create a Redis client from settings.
+
+async def init_redis_client(settings: Settings) -> "RedisClient":
+    """Create or return the shared application Redis client.
 
     Args:
         settings: Application settings.
 
     Returns:
-        RedisClient: Async Redis client.
+        RedisClient: Shared async Redis client with connection pooling.
     """
-    return Redis.from_url(settings.redis_url, decode_responses=True)
+    global _redis_client
+    if _redis_client is None:
+        _redis_client = Redis.from_url(settings.redis_url, decode_responses=True)
+    return _redis_client
+
+
+def get_shared_redis_client() -> "RedisClient":
+    """Return the initialized shared Redis client.
+
+    Returns:
+        RedisClient: Shared async Redis client.
+
+    Raises:
+        RuntimeError: When the client has not been initialized.
+    """
+    if _redis_client is None:
+        raise RuntimeError("Redis client is not initialized")
+    return _redis_client
+
+
+async def shutdown_redis_client() -> None:
+    """Close the shared Redis client and reset module state."""
+    global _redis_client
+    if _redis_client is not None:
+        await _redis_client.aclose()  # type: ignore[attr-defined]
+        _redis_client = None
+
+
+async def get_redis_client(settings: Settings) -> "RedisClient":
+    """Return the shared Redis client, initializing it when needed.
+
+    Args:
+        settings: Application settings.
+
+    Returns:
+        RedisClient: Shared async Redis client.
+    """
+    return await init_redis_client(settings)
 
 
 async def check_redis_connection(client: "RedisClient") -> bool:

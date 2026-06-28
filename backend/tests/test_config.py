@@ -33,10 +33,19 @@ def test_development_settings_without_jwt_secret_uses_dev_default() -> None:
     assert settings.jwt_secret_key == DEVELOPMENT_JWT_SECRET
 
 
-def test_staging_settings_without_jwt_secret_uses_dev_default() -> None:
-    """Staging may run without JWT_SECRET_KEY using a local-only default."""
-    settings = Settings(environment="staging", jwt_secret_key=None)
-    assert settings.jwt_secret_key == DEVELOPMENT_JWT_SECRET
+def test_staging_settings_without_jwt_secret_raises_validation_error() -> None:
+    """Staging must reject missing JWT secrets."""
+    with pytest.raises(ValidationError, match="JWT_SECRET_KEY"):
+        Settings(environment="staging", jwt_secret_key=None)
+
+
+def test_staging_settings_with_valid_jwt_secret_succeeds() -> None:
+    """Staging accepts an explicit JWT secret of sufficient length."""
+    settings = Settings(
+        environment="staging",
+        jwt_secret_key="staging-secret-with-sufficient-length",
+    )
+    assert settings.jwt_secret_key == "staging-secret-with-sufficient-length"
 
 
 def test_development_settings_with_explicit_jwt_secret_preserves_value() -> None:

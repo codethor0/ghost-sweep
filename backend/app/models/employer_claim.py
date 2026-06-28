@@ -10,6 +10,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.database import Base
 from app.models.base import UUIDPrimaryKeyMixin
 from app.models.enums import ClaimStatus
+from app.models.pg_enums import claim_status_enum
 
 
 class EmployerClaim(Base, UUIDPrimaryKeyMixin):
@@ -29,7 +30,9 @@ class EmployerClaim(Base, UUIDPrimaryKeyMixin):
         index=True,
         nullable=False,
     )
-    status: Mapped[ClaimStatus] = mapped_column(default=ClaimStatus.PENDING, index=True)
+    status: Mapped[ClaimStatus] = mapped_column(
+        claim_status_enum, default=ClaimStatus.PENDING, index=True
+    )
     verification_documents: Mapped[list[str]] = mapped_column(JSONB, default=list, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

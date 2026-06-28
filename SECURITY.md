@@ -27,7 +27,8 @@ ghost-sweep processes job posting URLs, employer names, report narratives, and u
 
 - No hardcoded secrets
 - No stack traces exposed to end users
-- Refresh tokens must remain in HttpOnly cookies
+- Refresh tokens are delivered in JSON response bodies today; only SHA-256 hashes are stored in Redis
+- HttpOnly cookie transport for refresh tokens is deferred future work
 - Access tokens must not be stored in browser localStorage
 - Auth endpoints are rate limited
 - Dependencies are audited in CI

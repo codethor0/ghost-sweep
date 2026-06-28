@@ -87,14 +87,16 @@ Expected result: score at or above 80.
 
 ## Confidence model
 
-Batch 1 implements deterministic scoring functions only. Confidence weighting for display layers will combine:
+Scoring formulas are implemented in `backend/app/services/scoring.py`.
+
+Batch 5 wires scoring recalculation to report and vote writes and persists score snapshots. Score read endpoints return current score breakdowns without persisting on read.
+
+Future work may expand confidence modeling, moderation integration, and evidence weighting. Potential inputs include:
 
 - count of verified reports
 - presence of employer responses
 - evidence file count and hash verification
 - moderation outcome history
-
-Confidence metadata will be added in API responses during Batch 2 endpoint work.
 
 ## Edge cases
 

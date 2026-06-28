@@ -1,0 +1,30 @@
+# Binaries
+/ghost-sweep
+/dist/
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test artifacts
+*.test
+*.out
+coverage.out
+coverage.html
+
+# Go workspace
+/vendor/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+._*
+
+# Local env
+.env
+.env.*

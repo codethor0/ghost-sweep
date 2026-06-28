@@ -60,6 +60,57 @@ Refresh tokens are opaque, stored in Redis by SHA-256 hash, and revoked on logou
 
 See [auth-api.md](auth-api.md) for request and response details.
 
+## Domain endpoints (Batch 5)
+
+Batch 5 domain APIs are committed at `feefc19`. Public reads do not require authentication; report and vote writes require a bearer access token from the auth flow above.
+
+Replace placeholder UUIDs with values returned by earlier requests or seeded test data in your database.
+
+```bash
+# Public reads
+curl -s http://localhost:8000/api/v1/companies | jq .
+curl -s http://localhost:8000/api/v1/companies/{company_id} | jq .
+curl -s http://localhost:8000/api/v1/companies/{company_id}/integrity-score | jq .
+
+curl -s http://localhost:8000/api/v1/job-postings/{job_posting_id} | jq .
+curl -s http://localhost:8000/api/v1/job-postings/{job_posting_id}/risk-score | jq .
+
+# Authenticated writes (set ACCESS_TOKEN from register or login)
+ACCESS_TOKEN="<access_token>"
+JOB_POSTING_ID="<job_posting_uuid>"
+
+curl -s -X POST http://localhost:8000/api/v1/reports \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d "{\"job_posting_id\":\"${JOB_POSTING_ID}\",\"report_type\":\"stale_posting\",\"description\":\"The posting remained active without recruiter follow-up for several months.\"}" \
+  | jq .
+
+REPORT_ID="<report_uuid_from_create_response>"
+
+curl -s "http://localhost:8000/api/v1/reports?job_posting_id=${JOB_POSTING_ID}" | jq .
+curl -s http://localhost:8000/api/v1/reports/${REPORT_ID} | jq .
+
+curl -s -X POST "http://localhost:8000/api/v1/reports/${REPORT_ID}/votes" \
+  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+  -H "Content-Type: application/json" \
+  -d '{"vote":"up"}' \
+  | jq .
+```
+
+| Endpoint | Auth | Expected result |
+| -------- | ---- | --------------- |
+| `GET /api/v1/companies` | No | HTTP 200, paginated company list |
+| `GET /api/v1/companies/{id}` | No | HTTP 200 or 404 |
+| `GET /api/v1/companies/{id}/integrity-score` | No | HTTP 200 score breakdown or 404 |
+| `GET /api/v1/job-postings/{id}` | No | HTTP 200 or 404 |
+| `GET /api/v1/job-postings/{id}/risk-score` | No | HTTP 200 score breakdown or 404 |
+| `POST /api/v1/reports` | Bearer | HTTP 201, report with `status: pending` |
+| `GET /api/v1/reports?job_posting_id={uuid}` | No | HTTP 200 paginated list or 404 |
+| `GET /api/v1/reports/{id}` | No | HTTP 200 or 404 |
+| `POST /api/v1/reports/{id}/votes` | Bearer | HTTP 201 or 409 on duplicate vote |
+
+See [domain-api.md](domain-api.md) for request and response details.
+
 ## Frontend status
 
 The frontend container serves at `http://localhost:3000` and returns the Next.js app shell with title `ghost-sweep`.
@@ -116,4 +167,5 @@ The backend container entrypoint also runs `alembic upgrade head` on startup. A 
 
 - [database-migrations.md](database-migrations.md)
 - [auth-api.md](auth-api.md)
+- [domain-api.md](domain-api.md)
 - [api.md](api.md)

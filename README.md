@@ -49,11 +49,11 @@ Frontend: http://localhost:3000
 
 ## Current project status
 
-Committed baseline: `3c6aa83` (Batch 4 docs checkpoint).
+Committed baseline: `feefc19` (Batch 5 domain APIs).
 
-Batch 5 domain APIs are implemented in the working tree but **not yet committed**. This is not a release-ready state.
+Batch 5 is implemented locally, post-commit reviewed, and approved for push. The docs-only Batch 5.1 commit aligns this status section with the committed tree.
 
-**Implemented (Batch 5, uncommitted):**
+**Implemented (Batch 5):**
 
 - Auth through Batch 4: register, login, `/me`, refresh, logout, and auth rate limiting
 - Company read APIs: list, detail, integrity score breakdown
@@ -63,7 +63,7 @@ Batch 5 domain APIs are implemented in the working tree but **not yet committed*
 - Scoring recalculation on report and vote writes, with score snapshots persisted
 - Audit logging for `report.created` and `vote.created`
 
-**Scaffold or stale (not wired to Batch 5 API):**
+**Scaffold (not wired to Batch 5 API):**
 
 - Frontend: Next.js scaffold only; not connected to auth or domain endpoints
 - Browser extension: present under `extension/`; not live-tested against the current API
@@ -79,7 +79,7 @@ Batch 5 domain APIs are implemented in the working tree but **not yet committed*
 
 GitHub repository: https://github.com/codethor0/ghost-sweep (private)
 
-Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md) (Batch 4 auth validated; Batch 5 domain endpoints not yet documented there)
+Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md) (Batch 4 auth and Batch 5 domain curl examples)
 
 ## Local development
 

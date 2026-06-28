@@ -58,6 +58,39 @@ def test_calculate_job_ghost_risk_score_with_filled_posting_reduces_age_and_repo
     assert filled.score < active.score
 
 
+def test_calculate_job_ghost_risk_score_with_disputed_posting_reduces_verified_report_points() -> (
+    None
+):
+    """Disputed postings should reduce verified report evidence to 50 percent."""
+    active = calculate_job_ghost_risk_score(
+        JobGhostRiskInputs(
+            posting_age_days=0,
+            repost_count=0,
+            company_integrity_score=50.0,
+            verified_report_count=5,
+            language_risk_signal=0.0,
+            no_response_report_count=0,
+            fake_interview_report_count=0,
+            posting_status=PostingStatus.ACTIVE,
+        )
+    )
+    disputed = calculate_job_ghost_risk_score(
+        JobGhostRiskInputs(
+            posting_age_days=0,
+            repost_count=0,
+            company_integrity_score=50.0,
+            verified_report_count=5,
+            language_risk_signal=0.0,
+            no_response_report_count=0,
+            fake_interview_report_count=0,
+            posting_status=PostingStatus.DISPUTED,
+        )
+    )
+    assert active.breakdown["verified_report_evidence"] == 15.0
+    assert disputed.breakdown["verified_report_evidence"] == 7.5
+    assert disputed.score < active.score
+
+
 def test_calculate_job_ghost_risk_score_with_no_signals_returns_low_score() -> None:
     """New postings without reports should remain near the low end."""
     result = calculate_job_ghost_risk_score(

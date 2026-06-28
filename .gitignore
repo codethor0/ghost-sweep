@@ -26,9 +26,6 @@ build/
 *.dylib
 ghost-sweep
 
-# Go legacy
-go.sum
-
 # IDE
 .idea/
 *.swp

@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime
 
-from sqlalchemy import DateTime, ForeignKey, Uuid, func
+from sqlalchemy import DateTime, ForeignKey, UniqueConstraint, Uuid, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -15,6 +15,7 @@ class Vote(Base, UUIDPrimaryKeyMixin):
     """Community vote on a report."""
 
     __tablename__ = "votes"
+    __table_args__ = (UniqueConstraint("report_id", "user_id", name="uq_votes_report_user"),)
 
     report_id: Mapped[uuid.UUID] = mapped_column(
         Uuid(as_uuid=True),

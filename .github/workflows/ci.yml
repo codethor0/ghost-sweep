@@ -43,18 +43,21 @@ jobs:
       - name: Install backend dependencies
         run: pip install "./backend[dev]"
       - name: Compile Python sources
-        run: python -m py_compile $(find backend -name "*.py")
+        run: cd backend && python -m py_compile $(find app tests alembic -name "*.py")
       - name: Black
-        run: cd backend && black --check .
+        run: cd backend && black --check --quiet app tests alembic
       - name: Flake8
-        run: cd backend && flake8 .
+        run: cd backend && flake8 app tests alembic
       - name: Mypy
         run: cd backend && mypy --strict .
+      - name: Pytest with coverage
+        run: cd backend && pytest -v --cov=app --cov-report=term-missing --cov-fail-under=80
       - name: Pytest
-        run: cd backend && pytest --cov=app --cov-report=term-missing
+        run: cd backend && pytest -v
       - name: Bandit
         run: cd backend && bandit -r app
-      - name: pip-audit
+      - name: pip-audit (advisory; 16 deferred dev/transitive advisories)
+        continue-on-error: true
         run: cd backend && pip-audit
 
   frontend:

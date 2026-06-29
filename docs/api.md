@@ -51,7 +51,11 @@ Register, login, and refresh are rate-limited per client IP and route. Logout re
 
 ## Domain APIs
 
-See [domain-api.md](domain-api.md) for request and response details.
+See [domain-api.md](domain-api.md) for report and vote endpoints.
+
+## Employer and moderation APIs
+
+See [employer-api.md](employer-api.md) and [moderation-api.md](moderation-api.md).
 
 Implemented endpoints:
 
@@ -64,21 +68,32 @@ Implemented endpoints:
 - `GET /api/v1/reports/{report_id}`
 - `GET /api/v1/reports?job_posting_id={uuid}`
 - `POST /api/v1/reports/{report_id}/votes`
+- `GET /api/v1/reports/{report_id}/responses`
+- `POST /api/v1/reports/{report_id}/responses`
+- `POST /api/v1/employer-claims`
+- `GET /api/v1/employer-claims/me`
+- `GET /api/v1/employer-claims/{claim_id}`
+- `GET /api/v1/employer-claims`
+- `POST /api/v1/employer-claims/{claim_id}/approve`
+- `POST /api/v1/employer-claims/{claim_id}/reject`
+- `GET /api/v1/moderation/reports`
+- `POST /api/v1/moderation/reports/{report_id}/verify`
+- `POST /api/v1/moderation/reports/{report_id}/dismiss`
 
 Deferred to future batches:
 
 - HttpOnly cookies (refresh tokens are JSON-body delivered today)
 - Redis health reporting in `/health`
-- Employer claims and moderation workflows
-- Evidence upload
-- Admin APIs
+- Evidence file upload
 - Company and job posting write APIs
+- Frontend and extension integration
 
 ## Error model
 
 Common HTTP status codes in the current API:
 
 - `401` authentication failure
+- `403` forbidden (admin or employer permission required)
 - `404` resource not found
 - `409` conflict such as duplicate account or duplicate vote
 - `422` validation or business rule failure

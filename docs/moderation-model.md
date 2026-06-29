@@ -23,7 +23,7 @@ Future batches may require evidence attachments before promotion or verification
 | `dismissed` | Report rejected or insufficient |
 | `disputed` | Employer or reviewer challenged the report |
 
-Moderation APIs that transition between these states are **not implemented** in the current batch. New reports always start as `pending`.
+Moderation APIs that transition between these states are implemented in Batch 6. New reports always start as `pending`.
 
 ## Abuse prevention
 
@@ -57,7 +57,7 @@ Employers must be able to:
 - dispute incorrect reports
 - correct stale postings
 
-These workflows are planned; APIs are not implemented yet.
+These workflows are planned; employer claim and response APIs are implemented. Full employer verification of company profiles remains future work.
 
 ## Moderator responsibilities
 

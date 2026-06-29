@@ -136,3 +136,82 @@ async def log_employer_claim_rejected(
             metadata_json=metadata,
         )
     )
+
+
+async def log_report_verified(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    report_id: UUID,
+    job_posting_id: UUID,
+    previous_status: str,
+) -> None:
+    """Record an audit entry for report verification."""
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="report.verified",
+            entity_type="report",
+            entity_id=report_id,
+            metadata_json={
+                "job_posting_id": str(job_posting_id),
+                "previous_status": previous_status,
+                "new_status": "verified",
+            },
+        )
+    )
+
+
+async def log_report_dismissed(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    report_id: UUID,
+    job_posting_id: UUID,
+    previous_status: str,
+    reason: str | None,
+) -> None:
+    """Record an audit entry for report dismissal."""
+    metadata: dict[str, object] = {
+        "job_posting_id": str(job_posting_id),
+        "previous_status": previous_status,
+        "new_status": "dismissed",
+    }
+    if reason is not None:
+        metadata["reason"] = reason
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="report.dismissed",
+            entity_type="report",
+            entity_id=report_id,
+            metadata_json=metadata,
+        )
+    )
+
+
+async def log_employer_response_created(
+    session: AsyncSession,
+    *,
+    actor_user_id: UUID,
+    response_id: UUID,
+    report_id: UUID,
+    company_id: UUID,
+    previous_status: str,
+    new_status: str,
+) -> None:
+    """Record an audit entry for employer response creation."""
+    session.add(
+        AuditLog(
+            actor_user_id=actor_user_id,
+            action="employer_response.created",
+            entity_type="employer_response",
+            entity_id=response_id,
+            metadata_json={
+                "report_id": str(report_id),
+                "company_id": str(company_id),
+                "previous_status": previous_status,
+                "new_status": new_status,
+            },
+        )
+    )

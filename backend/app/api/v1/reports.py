@@ -8,12 +8,16 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.dependencies import get_current_user, get_db
 from app.models.user import User
 from app.schemas import (
+    CreateEmployerResponseRequest,
     CreateReportRequest,
     CreateVoteRequest,
+    EmployerResponseListResponse,
+    EmployerResponseResponse,
     ReportListResponse,
     ReportResponse,
     VoteResponse,
 )
+from app.services import employer_responses as employer_responses_service
 from app.services import reports as reports_service
 from app.services import votes as votes_service
 
@@ -43,6 +47,32 @@ async def get_report(
     """Return a submitted report."""
     report = await reports_service.get_report(session, report_id)
     return ReportResponse.model_validate(report)
+
+
+@router.get("/{report_id}/responses", response_model=EmployerResponseListResponse)
+async def list_employer_responses(
+    report_id: UUID,
+    session: AsyncSession = Depends(get_db),
+) -> EmployerResponseListResponse:
+    """Return employer responses linked to a report."""
+    return await employer_responses_service.list_employer_responses(session, report_id=report_id)
+
+
+@router.post("/{report_id}/responses", response_model=EmployerResponseResponse, status_code=201)
+async def create_employer_response(
+    report_id: UUID,
+    payload: CreateEmployerResponseRequest,
+    session: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> EmployerResponseResponse:
+    """Submit an employer response for a report."""
+    response = await employer_responses_service.create_employer_response(
+        session,
+        report_id=report_id,
+        payload=payload,
+        employer=current_user,
+    )
+    return EmployerResponseResponse.model_validate(response)
 
 
 @router.get("", response_model=ReportListResponse)

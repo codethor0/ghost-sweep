@@ -18,7 +18,7 @@ Registered users authenticate with short-lived JWT access tokens. Refresh tokens
 
 ### Companies
 
-Companies are tracked by normalized name. Employer claim, response, and verification workflows are planned but not implemented in the current API.
+Companies are tracked by normalized name. Employer claim and response APIs are implemented. Company profile verification beyond claim approval remains future work.
 
 ### Job postings
 
@@ -32,7 +32,7 @@ Current report creation requires:
 - a report category (`report_type`)
 - a text description (minimum 20 characters)
 
-Evidence file upload is deferred. Reports are created with status `pending`. Moderation transitions to `verified`, `dismissed`, or `disputed` are not implemented yet.
+Evidence file upload is deferred. Reports are created with status `pending`. Moderation transitions and employer dispute responses are implemented in Batch 6.
 
 ### Scoring
 
@@ -45,8 +45,9 @@ The scoring service calculates transparent ghost job risk signals from posting a
 3. Backend stores the report, increments company report count, recalculates scores, and writes audit logs.
 4. Clients request company, posting, and score breakdown details via public read endpoints.
 5. Authenticated users may vote on reports; duplicate votes return `409`.
+6. Admins moderate reports; verified employers may respond and dispute reports.
 
-Employer claim, evidence upload, and moderation review flows are future work.
+Employer claim review, moderation transitions, and evidence upload beyond URL references remain partially deferred (file upload is future work).
 
 ## Security boundaries (implemented)
 

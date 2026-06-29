@@ -289,3 +289,42 @@ async def admin_auth_headers(client: AsyncClient, db_session: AsyncSession) -> d
     await db_session.execute(update(User).where(User.id == user_id).values(is_admin=True))
     await db_session.flush()
     return headers
+
+
+@pytest_asyncio.fixture
+async def employer_auth_headers(
+    client: AsyncClient,
+    sample_company: Company,
+    admin_auth_headers: dict[str, str],
+) -> dict[str, str]:
+    """Provide bearer auth headers for an approved employer on sample_company."""
+    suffix = uuid4().hex[:8]
+    register = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": f"employer-{suffix}@example.com",
+            "username": f"employer_{suffix}",
+            "password": "StrongPass123!",
+        },
+    )
+    assert register.status_code == 200
+    token = register.json()["access_token"]
+    headers = {"Authorization": f"Bearer {token}"}
+
+    claim = await client.post(
+        "/api/v1/employer-claims",
+        json={
+            "company_id": str(sample_company.id),
+            "verification_documents": ["https://example.com/verify.txt"],
+        },
+        headers=headers,
+    )
+    assert claim.status_code == 201
+    claim_id = claim.json()["id"]
+
+    approve = await client.post(
+        f"/api/v1/employer-claims/{claim_id}/approve",
+        headers=admin_auth_headers,
+    )
+    assert approve.status_code == 200
+    return headers

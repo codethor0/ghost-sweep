@@ -49,37 +49,42 @@ Frontend: http://localhost:3000
 
 ## Current project status
 
-Committed baseline: `feefc19` (Batch 5 domain APIs).
+Committed baseline: `1230309` (Batch 6A employer claims on remote).
 
-Batch 5 is implemented locally, post-commit reviewed, and approved for push. The docs-only Batch 5.1 commit aligns this status section with the committed tree.
+Batch 6B (moderation + employer responses) is implemented locally and uncommitted pending review.
 
-**Implemented (Batch 5):**
+**Implemented (Batch 6A, committed):**
+
+- Employer claim submit, admin approve/reject, migration 002 constraints
+- Audit logging for claim lifecycle events
+
+**Implemented (Batch 6B, uncommitted):**
+
+- Admin moderation queue and report verify/dismiss transitions
+- Employer responses with auto-dispute from `pending` or `verified`
+- Score recalculation and audit logs on moderation/response writes
+
+**Implemented (Batches 1–5, committed):**
 
 - Auth through Batch 4: register, login, `/me`, refresh, logout, and auth rate limiting
-- Company read APIs: list, detail, integrity score breakdown
-- Job posting read APIs: detail, ghost risk score breakdown
-- Report create, read, and paginated list APIs
-- Vote endpoint with duplicate protection and race-safe conflict handling
-- Scoring recalculation on report and vote writes, with score snapshots persisted
-- Audit logging for `report.created` and `vote.created`
+- Company and job posting read APIs with score breakdowns
+- Report create/read/list, vote endpoint, scoring pipeline, score snapshots
 
-**Scaffold (not wired to Batch 5 API):**
+**Scaffold (not wired to API):**
 
-- Frontend: Next.js scaffold only; not connected to auth or domain endpoints
+- Frontend: Next.js scaffold only
 - Browser extension: present under `extension/`; not live-tested against the current API
 
 **Deferred (not started):**
 
-- Employer claims and responses
-- Moderation workflows and report status transitions
-- Evidence upload
-- Admin APIs
+- Evidence file upload
+- Company and job posting write APIs
 - Frontend and extension integration
 - Dependency audit advisories (documented deferred findings in dev/transitive tooling)
 
 GitHub repository: https://github.com/codethor0/ghost-sweep (private)
 
-Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md) (Batch 4 auth and Batch 5 domain curl examples)
+Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md)
 
 ## Local development
 

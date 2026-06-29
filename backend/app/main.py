@@ -11,6 +11,7 @@ from app.api.v1.auth import router as auth_router
 from app.api.v1.companies import router as companies_router
 from app.api.v1.employer_claims import router as employer_claims_router
 from app.api.v1.job_postings import router as job_postings_router
+from app.api.v1.moderation import router as moderation_router
 from app.api.v1.reports import router as reports_router
 from app.config import get_settings
 from app.redis_client import init_redis_client, shutdown_redis_client
@@ -45,6 +46,7 @@ app.include_router(auth_router, prefix=settings.api_prefix)
 app.include_router(companies_router, prefix=settings.api_prefix)
 app.include_router(employer_claims_router, prefix=settings.api_prefix)
 app.include_router(job_postings_router, prefix=settings.api_prefix)
+app.include_router(moderation_router, prefix=settings.api_prefix)
 app.include_router(reports_router, prefix=settings.api_prefix)
 
 

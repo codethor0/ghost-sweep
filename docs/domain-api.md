@@ -113,9 +113,14 @@ Request:
 
 Response `201`: report object matching `ReportResponse` with `status: "pending"`.
 
-Report status values in the schema: `pending`, `verified`, `dismissed`, `disputed`. Only `pending` is assigned on create today; moderation transitions are deferred.
+Report status values in the schema: `pending`, `verified`, `dismissed`, `disputed`. New reports start as `pending`.
 
-Evidence upload is not required and not available in the current API.
+Moderation transitions are implemented in Batch 6:
+
+- Admins verify or dismiss reports via `/api/v1/moderation/reports/{id}/verify|dismiss`
+- Verified employers dispute reports by submitting `/api/v1/reports/{id}/responses` (moves `pending` or `verified` → `disputed`)
+
+See [moderation-api.md](moderation-api.md) and [employer-api.md](employer-api.md).
 
 Side effects:
 
@@ -202,4 +207,4 @@ Language risk signals default to `0.0` until a future analysis batch adds suppor
 
 ## Audit notes
 
-Batch 5 writes audit logs for report and vote creation only. Read endpoints are not audited in this batch.
+Batch 5 writes audit logs for report and vote creation. Batch 6 adds audit logs for employer claim review, report moderation transitions, and employer responses. Read endpoints are not audited.

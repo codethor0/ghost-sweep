@@ -254,6 +254,54 @@ class EmployerClaimListResponse(BaseModel):
     page_size: int
 
 
+class EmployerResponseResponse(BaseModel):
+    """Employer response to an integrity report."""
+
+    id: UUID
+    report_id: UUID
+    company_id: UUID
+    user_id: UUID
+    response_text: str
+    evidence_urls: list[str]
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
+class CreateEmployerResponseRequest(BaseModel):
+    """Employer response submission payload."""
+
+    response_text: str = Field(min_length=20, max_length=5000)
+    evidence_urls: list[str] = Field(default_factory=list, max_length=10)
+
+    @field_validator("evidence_urls")
+    @classmethod
+    def validate_evidence_urls(cls, urls: list[str]) -> list[str]:
+        """Ensure each evidence URL reference is non-empty and bounded."""
+        validated: list[str] = []
+        for url in urls:
+            trimmed = url.strip()
+            if not trimmed:
+                raise ValueError("Evidence URLs must be non-empty strings")
+            if len(trimmed) > 2048:
+                raise ValueError("Evidence URLs must be 2048 characters or fewer")
+            validated.append(trimmed)
+        return validated
+
+
+class EmployerResponseListResponse(BaseModel):
+    """Employer responses linked to a report."""
+
+    items: list[EmployerResponseResponse]
+    total: int
+
+
+class DismissReportRequest(BaseModel):
+    """Optional dismissal reason stored in audit metadata only."""
+
+    reason: str | None = Field(default=None, max_length=2000)
+
+
 class ScoreSnapshotResponse(BaseModel):
     """Historical score snapshot."""
 

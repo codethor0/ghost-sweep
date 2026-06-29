@@ -32,6 +32,6 @@ describe("HomeHero", () => {
 
     expect(screen.getByText("Posting URL from extension")).toBeInTheDocument();
     expect(screen.getByText("https://example.com/jobs/123")).toBeInTheDocument();
-    expect(screen.getByText(/Report submission from the browser extension is not yet available/)).toBeInTheDocument();
+    expect(screen.getByText(/Extension handoff is display-only/)).toBeInTheDocument();
   });
 });

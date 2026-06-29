@@ -22,8 +22,12 @@ export function HomeHero({ title, subtitle, postingUrl }: HomeHeroProps) {
           <h2 className="text-base font-semibold text-ink">Posting URL from extension</h2>
           <p className="mt-2 break-all text-sm text-slate">{postingUrl}</p>
           <p className="mt-2 text-sm text-slate">
-            Report submission from the browser extension is not yet available. This URL is displayed
-            for review only until frontend report flows are implemented.
+            Extension handoff is display-only. Look up the matching posting in{" "}
+            <a href="/companies" className="font-medium text-signal hover:underline">
+              companies
+            </a>
+            , sign in, and submit a report from the posting detail page. Direct URL-to-posting lookup
+            is not wired yet.
           </p>
         </div>
       ) : null}

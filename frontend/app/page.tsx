@@ -18,12 +18,10 @@ function resolvePostingUrl(value: string | string[] | undefined): string | undef
 
 export default function HomePage({ searchParams }: HomePageProps) {
   return (
-    <main>
-      <HomeHero
-        title="Expose ghost jobs. Restore hiring transparency."
-        subtitle="ghost-sweep helps job seekers evaluate companies and postings using evidence-based reports, transparent risk signals, and employer response workflows."
-        postingUrl={resolvePostingUrl(searchParams?.posting_url)}
-      />
-    </main>
+    <HomeHero
+      title="Expose ghost jobs. Restore hiring transparency."
+      subtitle="ghost-sweep helps job seekers evaluate companies and postings using evidence-based reports, transparent risk signals, and employer response workflows."
+      postingUrl={resolvePostingUrl(searchParams?.posting_url)}
+    />
   );
 }

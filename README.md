@@ -49,37 +49,42 @@ Frontend: http://localhost:3000
 
 ## Current project status
 
-Committed baseline: `1230309` (Batch 6A employer claims on remote).
+Latest pushed baseline: `949b401` (Batch 6B moderation and employer responses, plus CI workflow alignment).
 
-Batch 6B (moderation + employer responses) is implemented locally and uncommitted pending review.
+Batch 6A and Batch 6B are committed and pushed on `main`. This is active development, not a release-ready product.
 
-**Implemented (Batch 6A, committed):**
+**CI:**
 
-- Employer claim submit, admin approve/reject, migration 002 constraints
-- Audit logging for claim lifecycle events
+- GitHub Actions workflow is aligned with verified local backend gates (Python 3.11, postgres:15, redis:7, coverage ≥ 80%, advisory-only pip-audit for documented deferred advisories).
+- GitHub Actions is currently blocked by account billing/spending limits, not by failing tests. Jobs do not start until billing is resolved.
 
-**Implemented (Batch 6B, uncommitted):**
+**Implemented backend (through Batch 6B):**
 
-- Admin moderation queue and report verify/dismiss transitions
-- Employer responses with auto-dispute from `pending` or `verified`
-- Score recalculation and audit logs on moderation/response writes
-
-**Implemented (Batches 1–5, committed):**
-
-- Auth through Batch 4: register, login, `/me`, refresh, logout, and auth rate limiting
-- Company and job posting read APIs with score breakdowns
-- Report create/read/list, vote endpoint, scoring pipeline, score snapshots
+- Auth: register, login, `/me`, refresh, logout
+- Auth rate limiting
+- Company read APIs
+- Job posting read APIs
+- Report create/read/list
+- Votes
+- Employer claims (submit, admin approve/reject, migration 002 constraints)
+- Moderation queue
+- Report verify/dismiss
+- Employer responses (auto-dispute from `pending` or `verified`)
+- Scoring recalculation and score snapshots
+- Audit logging (reports, votes, claims, moderation, employer responses)
 
 **Scaffold (not wired to API):**
 
 - Frontend: Next.js scaffold only
-- Browser extension: present under `extension/`; not live-tested against the current API
+- Browser extension: present under `extension/`; smoke-tested only, not integrated with the live API
 
-**Deferred (not started):**
+**Deferred:**
 
 - Evidence file upload
 - Company and job posting write APIs
-- Frontend and extension integration
+- Frontend wiring to the API
+- Extension API integration
+- Release hardening
 - Dependency audit advisories (documented deferred findings in dev/transitive tooling)
 
 GitHub repository: https://github.com/codethor0/ghost-sweep (private)

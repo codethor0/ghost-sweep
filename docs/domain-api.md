@@ -8,12 +8,10 @@ Public reads do not require authentication. Report and vote creation require a b
 
 Deferred to later batches:
 
-- Employer claims and responses
-- Moderation workflows
 - Evidence upload
-- Admin APIs
-- Company and job posting create/update/delete
-- Frontend and extension integration
+- Company and job posting create/update/delete (public write APIs)
+- Extension API integration (Batch 6D)
+- URL-to-posting lookup from extension handoff
 
 ## GET /api/v1/companies
 

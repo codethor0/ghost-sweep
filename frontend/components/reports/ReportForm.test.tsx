@@ -33,4 +33,19 @@ describe("ReportForm", () => {
     });
     expect(screen.getByText(/Evidence upload deferred/)).toBeInTheDocument();
   });
+
+  it("documents minimum description length for authenticated users", async () => {
+    render(
+      <SessionProvider>
+        <WithAccessToken token="token-abc">
+          <ReportForm jobPostingId="posting-1" />
+        </WithAccessToken>
+      </SessionProvider>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByLabelText("Description")).toBeInTheDocument();
+    });
+    expect(screen.getByText(/Minimum 20 characters/)).toBeInTheDocument();
+  });
 });

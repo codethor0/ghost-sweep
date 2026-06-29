@@ -219,3 +219,120 @@ async def test_verify_missing_report_returns_404(
         headers=admin_auth_headers,
     )
     assert response.status_code == 404
+
+
+@pytest.mark.asyncio
+async def test_verify_report_writes_audit_row(
+    client: AsyncClient,
+    db_session: AsyncSession,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
+) -> None:
+    """Verification should write a report.verified audit log entry."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/verify",
+        headers=admin_auth_headers,
+    )
+    assert response.status_code == 200
+
+    audit = await db_session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "report.verified",
+            AuditLog.entity_id == UUID(report_id),
+        )
+    )
+    assert audit is not None
+    assert audit.metadata_json["previous_status"] == ReportStatus.PENDING.value
+    assert audit.metadata_json["new_status"] == ReportStatus.VERIFIED.value
+
+
+@pytest.mark.asyncio
+async def test_dismiss_report_writes_audit_row(
+    client: AsyncClient,
+    db_session: AsyncSession,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
+) -> None:
+    """Dismissal should write a report.dismissed audit log entry."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/dismiss",
+        headers=admin_auth_headers,
+        json={"reason": "Insufficient evidence for moderation review."},
+    )
+    assert response.status_code == 200
+
+    audit = await db_session.scalar(
+        select(AuditLog).where(
+            AuditLog.action == "report.dismissed",
+            AuditLog.entity_id == UUID(report_id),
+        )
+    )
+    assert audit is not None
+
+
+@pytest.mark.asyncio
+async def test_verify_report_requires_admin(
+    client: AsyncClient,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+) -> None:
+    """Non-admin users should not verify reports."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/verify",
+        headers=auth_headers,
+    )
+    assert response.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_dismiss_report_requires_admin(
+    client: AsyncClient,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+) -> None:
+    """Non-admin users should not dismiss reports."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/dismiss",
+        headers=auth_headers,
+        json={"reason": "Insufficient evidence for moderation review."},
+    )
+    assert response.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_dismiss_report_triggers_score_snapshot(
+    client: AsyncClient,
+    db_session: AsyncSession,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
+) -> None:
+    """Dismissal should recalculate scores and persist snapshots."""
+    before_result = await db_session.execute(
+        select(func.count())
+        .select_from(ScoreSnapshot)
+        .where(ScoreSnapshot.entity_type == SnapshotEntityType.JOB_POSTING)
+    )
+    before_count = int(before_result.scalar_one())
+
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/dismiss",
+        headers=admin_auth_headers,
+        json={"reason": "Insufficient evidence for moderation review."},
+    )
+    assert response.status_code == 200
+
+    after_result = await db_session.execute(
+        select(func.count())
+        .select_from(ScoreSnapshot)
+        .where(ScoreSnapshot.entity_type == SnapshotEntityType.JOB_POSTING)
+    )
+    after_count = int(after_result.scalar_one())
+    assert after_count > before_count

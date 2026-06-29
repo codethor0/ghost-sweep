@@ -23,6 +23,17 @@ You should receive an initial response within 72 hours.
 
 ghost-sweep processes job posting URLs, employer names, report narratives, and user account data. Do not include live user data, secrets, or production credentials in reports or pull requests.
 
+## Public MVP and Google Form intake
+
+The static public site in `public-mvp/` has no backend, no secrets, and no analytics. Report intake uses Google Forms (temporary). Form responses are stored in a maintainer-only Google Sheet.
+
+- Do not submit credentials or confidential documents through the Form.
+- Optional contact email is for follow-up only. Raw emails must not be published.
+- Submissions may be moderated before public use. Public data may be anonymized or summarized.
+- Google Form data is outside the repository and subject to Google's terms of service.
+
+See [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md).
+
 ## Secure development expectations
 
 - No hardcoded secrets
@@ -30,8 +41,10 @@ ghost-sweep processes job posting URLs, employer names, report narratives, and u
 - Refresh tokens are delivered in JSON response bodies today; only SHA-256 hashes are stored in Redis
 - HttpOnly cookie transport for refresh tokens is deferred future work
 - Access tokens must not be stored in browser localStorage
+- Docker Compose defaults in `.env.example` are development-only placeholders, not production values
 - Auth endpoints are rate limited
 - Dependencies are audited in CI; see [docs/dependency-audit.md](docs/dependency-audit.md) for known deferred advisories
+- External validation bundles and review artifacts must redact access and refresh tokens; see [docs/validation-artifacts.md](docs/validation-artifacts.md)
 
 ## Disclosure policy
 

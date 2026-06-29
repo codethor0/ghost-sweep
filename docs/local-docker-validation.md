@@ -2,7 +2,7 @@
 
 This document records live-validated milestones for ghost-sweep on Docker Compose.
 
-Latest validation baseline: commit `682e349` (Batch 6B backend complete; pre-6C remediation may add frontend health and extension handoff fixes locally).
+Latest validation baseline: commit `3453fb8` (Batch 6C frontend API wiring; backend through Batch 6B).
 
 ## Validated Docker services
 
@@ -125,7 +125,7 @@ Validated live (with bootstrapped company and job posting data):
 
 | Endpoint | Auth | Expected result |
 | -------- | ---- | --------------- |
-| `POST /api/v1/employer-claims` | Bearer | HTTP 201 |
+| `POST /api/v1/employer-claims` | Bearer | HTTP 201; requires `verification_documents` array |
 | `POST /api/v1/employer-claims/{id}/approve` | Admin bearer | HTTP 200 |
 | `GET /api/v1/moderation/reports` | Admin bearer | HTTP 200 |
 | `GET /api/v1/moderation/reports` | Non-admin bearer | HTTP 403 |
@@ -135,17 +135,96 @@ Validated live (with bootstrapped company and job posting data):
 
 See [employer-api.md](employer-api.md) and [moderation-api.md](moderation-api.md).
 
-## Frontend status
+## Demo seed (local development only)
 
-The frontend container serves at `http://localhost:3000` and returns the Next.js app shell with title `ghost-sweep`.
+When the companies list is empty, run the idempotent demo seed from the backend directory:
 
-The frontend calls `GET /health` only for platform status. It displays a posting URL when opened with `?posting_url=` from the browser extension. Auth, report submission, and domain browse UI are not implemented.
+```bash
+cd backend
+python3.11 scripts/seed_demo_data.py
+```
+
+This creates one demo company and job posting when `ENVIRONMENT=development`. It refuses to run in staging or production.
+
+## SQL bootstrap (local validation only)
+
+When testing employer or moderation flows against a fresh database, SQL bootstrap is acceptable for local validation but is **not** product UX. Record commands used in validation logs.
+
+Example (replace UUIDs and emails):
+
+```sql
+INSERT INTO companies (id, name, domain, locations)
+VALUES (gen_random_uuid(), 'E2E Test Corp', 'e2e.example.com', '[]'::jsonb);
+
+INSERT INTO job_postings (id, company_id, title, url, detected_at, last_seen_at)
+VALUES (
+  gen_random_uuid(),
+  '<company_uuid>'::uuid,
+  'E2E Role',
+  'https://e2e.example.com/jobs/1',
+  now(),
+  now()
+);
+
+UPDATE users SET is_admin = true WHERE email = 'admin@example.com';
+```
+
+Employer claims require `verification_documents` in the JSON body. See [employer-api.md](employer-api.md).
+
+Redact access and refresh tokens from validation reports. See [validation-artifacts.md](validation-artifacts.md).
+
+## Frontend status (Batch 6C)
+
+The frontend container serves at `http://localhost:3000`.
+
+Validated pages (curl or browser):
+
+| Page | Expected |
+| ---- | -------- |
+| `/` | Home, health panel matching `{status, service}` |
+| `/register`, `/login` | Auth forms |
+| `/dashboard` | Profile when signed in; sign-in prompt when not |
+| `/companies` | Company list from API |
+| `/companies/{id}` | Detail and integrity score |
+| `/postings/{id}` | Detail, risk score, deferred notices |
+| `/postings/{id}/report` | Report form when signed in |
+| `/?posting_url=...` | Handoff notice; does not claim URL lookup is wired |
+
+Frontend access tokens are stored in React state only and are lost on page refresh. Refresh token handling is not wired in the UI.
+
+## Public MVP (static site)
+
+The free public launch path uses `public-mvp/`, not the Next.js frontend.
+
+| Item | Detail |
+| ---- | ------ |
+| Location | `public-mvp/index.html`, `public-mvp/styles.css` |
+| Hosting | GitHub Pages (static only); configure Settings -> Pages -> /public-mvp |
+| Backend calls | None |
+| Report intake | Google Form placeholder URL; manual Sheet review |
+| Full app | FastAPI/Postgres/Redis remains local Docker only |
+
+Local preview:
+
+```bash
+python3 -m http.server 8080 --directory public-mvp
+curl -I http://localhost:8080/
+curl -sS http://localhost:8080/ | grep -i "Submit a report"
+```
+
+Validation:
+
+```bash
+python3.11 scripts/validate_public_mvp.py
+```
+
+See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-intake-spec.md](google-form-intake-spec.md).
 
 ## Extension status
 
 The browser extension exists under `extension/` for Chrome and Firefox Manifest V3.
 
-The popup reads the active tab URL and opens the frontend with `?posting_url=`. Extension smoke tests validate manifest structure. Backend API integration remains deferred.
+The popup reads the active tab URL and opens the frontend with `?posting_url=`. Extension smoke tests validate manifest structure only. Browser manual testing and backend API integration remain deferred (Batch 6D not started).
 
 ## Existing local Postgres: empty alembic_version
 
@@ -193,3 +272,4 @@ The backend container entrypoint also runs `alembic upgrade head` on startup. A 
 - [auth-api.md](auth-api.md)
 - [domain-api.md](domain-api.md)
 - [api.md](api.md)
+- [validation-artifacts.md](validation-artifacts.md)

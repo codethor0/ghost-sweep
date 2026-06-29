@@ -12,6 +12,26 @@ Thank you for helping improve hiring transparency.
 
 See `README.md` for local setup and verification commands.
 
+## Public MVP vs full-stack development
+
+ghost-sweep has two paths:
+
+| Path | Location | Purpose |
+| ---- | -------- | ------- |
+| Public MVP | `public-mvp/` | Static GitHub Pages site; report intake via Google Form |
+| Full application | `backend/`, `frontend/`, Docker Compose | Local API, database, and Next.js UI |
+
+Contributors working on the API, scoring, auth, or Next.js pages should use the Docker stack. The public MVP is plain HTML/CSS with no build step. Do not convert the full Next.js app to static export without approval.
+
+Public MVP validation:
+
+```bash
+python3.11 scripts/validate_public_mvp.py
+python3 -m http.server 8080 --directory public-mvp
+```
+
+Extension API integration (Batch 6D) remains deferred. Evidence file upload and public backend hosting are deferred.
+
 ## Pull request requirements
 
 Every pull request must include:

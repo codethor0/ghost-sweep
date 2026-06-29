@@ -17,7 +17,8 @@ The platform uses risk-signal language. It does not make unsupported legal accus
 ```text
 ghost-sweep/
   backend/     FastAPI API, scoring engine, auth, moderation services
-  frontend/    Next.js web application
+  frontend/    Next.js web application (local Docker; server-mode)
+  public-mvp/  Static GitHub Pages landing site (free public MVP)
   extension/   Manifest V3 browser extension for job board overlays
   docs/        Architecture, API, scoring, moderation, legal guidance
   .github/     CI workflows and community templates
@@ -40,23 +41,65 @@ Extension: Chrome and Firefox Manifest V3
 
 ```bash
 cp .env.example .env
-docker compose up -d postgres redis
+docker compose up -d postgres postgres_test redis
 docker compose up --build backend frontend
 ```
+
+Optional local demo data (development only):
+
+```bash
+cd backend
+python3.11 scripts/seed_demo_data.py
+```
+
+This creates a demo company and job posting when `ENVIRONMENT=development`. It is idempotent and refuses to run in staging or production.
+
+For employer/moderation live validation without the seed script, see SQL bootstrap examples in [docs/local-docker-validation.md](docs/local-docker-validation.md). SQL bootstrap is for local validation only, not product UX.
+
+Validation artifacts must redact tokens. See [docs/validation-artifacts.md](docs/validation-artifacts.md).
 
 API: http://localhost:8000  
 Frontend: http://localhost:3000
 
+## Public MVP (static site)
+
+The free public launch path uses a standalone static site in `public-mvp/`, not the full Next.js app.
+
+| Layer | Hosting | Status |
+| ----- | ------- | ------ |
+| Public landing + report CTA | GitHub Pages (`public-mvp/`) | Static site files are ready; replace the Google Form URL before enabling GitHub Pages |
+| Report intake | Google Form -> Google Sheet | Temporary; manual review |
+| Full app (FastAPI/Postgres/Redis) | Local Docker only | Batch 6B/6C; not publicly hosted |
+| Live scoring database | Not hosted | Deferred |
+
+GitHub Pages serves static HTML/CSS/JS only. It cannot run FastAPI, PostgreSQL, or Redis. The Batch 6C Next.js frontend is server-mode and is not GitHub Pages-ready without separate changes.
+
+Preview the static MVP locally:
+
+```bash
+python3 -m http.server 8080 --directory public-mvp
+```
+
+Validate before deploy:
+
+```bash
+python3.11 scripts/validate_public_mvp.py
+```
+
+See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), and [docs/public-launch-checklist.md](docs/public-launch-checklist.md).
+
+The Google Form URL in `public-mvp/index.html` is a placeholder until the real form is created. Raw applicant emails must not be published. The repository is not yet public-contributor-ready until docs, audits, and the launch checklist are complete.
+
 ## Current project status
 
-Latest pushed baseline: `682e349` (README Batch 6 status alignment; includes Batch 6B and CI workflow at `949b401`).
+Latest pushed baseline: `3453fb8` (Batch 6C frontend API wiring on `main`).
 
-Batch 6A and Batch 6B are committed and pushed on `main`. Pre-6C remediation may exist locally and is not yet pushed. This is active development, not a release-ready product.
+Batch 6A through Batch 6C are committed and pushed on `main`. This is active development, not a release-ready product and not yet public-contributor-ready.
 
 **CI:**
 
-- GitHub Actions workflow is aligned with verified local backend gates (Python 3.11, postgres:15, redis:7, coverage ≥ 80%, advisory-only pip-audit for documented deferred advisories).
-- GitHub Actions is currently blocked by account billing/spending limits, not by failing tests. Jobs do not start until billing is resolved.
+- GitHub Actions workflow is aligned with verified local backend gates (Python 3.11, postgres:15, redis:7, coverage >= 80%, advisory-only pip-audit for documented deferred advisories).
+- GitHub Actions is currently blocked by account billing/spending limits before job steps execute, not by failing tests. Local verification is the current source of truth until billing is resolved.
 
 **Implemented backend (through Batch 6B):**
 
@@ -73,17 +116,28 @@ Batch 6A and Batch 6B are committed and pushed on `main`. Pre-6C remediation may
 - Scoring recalculation and score snapshots
 - Audit logging (reports, votes, claims, moderation, employer responses)
 
-**Scaffold (not wired to API):**
+**Implemented frontend (Batch 6C):**
 
-- Frontend: Next.js scaffold; health probe and extension `posting_url` display only
-- Browser extension: popup links to frontend with posting URL query parameter; no backend API calls
+- API client for existing backend read and write endpoints
+- Register and login forms
+- In-memory access token session (React state only; lost on page refresh)
+- Dashboard (`GET /api/v1/auth/me`)
+- Companies list and detail with integrity scores
+- Job posting detail with risk scores
+- Report submission form (`POST /api/v1/reports`)
+- Home health probe and extension `posting_url` handoff display
+
+**Scaffold (not backend-wired):**
+
+- Browser extension: MV3 popup reads active tab URL and opens frontend with `?posting_url=`; no backend API calls; Batch 6D not started
 
 **Deferred:**
 
 - Evidence file upload
-- Company and job posting write APIs
-- Frontend wiring to the API
-- Extension API integration
+- Company and job posting write APIs (public)
+- Extension API integration (Batch 6D)
+- Frontend moderation, employer, and admin UI
+- Frontend refresh-token handling
 - Release hardening
 - Dependency audit advisories (see [docs/dependency-audit.md](docs/dependency-audit.md))
 

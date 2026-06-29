@@ -1,5 +1,6 @@
 """Employer response API tests."""
 
+from decimal import Decimal
 from uuid import UUID, uuid4
 
 import pytest
@@ -8,7 +9,8 @@ from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.audit_log import AuditLog
-from app.models.enums import ReportStatus, ReportType, SnapshotEntityType
+from app.models.company import Company
+from app.models.enums import ReportStatus, ReportType, SnapshotEntityType, VerifiedStatus
 from app.models.job_posting import JobPosting
 from app.models.score_snapshot import ScoreSnapshot
 
@@ -76,6 +78,68 @@ async def test_create_employer_response_requires_verified_employer(
         f"/api/v1/reports/{report_id}/responses",
         json={"response_text": RESPONSE_TEXT},
         headers=headers,
+    )
+    assert response.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_create_employer_response_wrong_company_returns_403(
+    client: AsyncClient,
+    db_session: AsyncSession,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
+) -> None:
+    """Verified employers cannot respond to reports for another company's posting."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+
+    other_company = Company(
+        name=f"Other Corp {uuid4().hex[:8]}",
+        domain="other.example.com",
+        industry="Technology",
+        size="1-50",
+        locations=["Remote"],
+        integrity_score=Decimal("50.0"),
+        verified_status=VerifiedStatus.UNVERIFIED,
+        total_postings=0,
+        total_hires=0,
+        report_count=0,
+    )
+    db_session.add(other_company)
+    await db_session.flush()
+
+    suffix = uuid4().hex[:8]
+    register = await client.post(
+        "/api/v1/auth/register",
+        json={
+            "email": f"other-employer-{suffix}@example.com",
+            "username": f"other_employer_{suffix}",
+            "password": "StrongPass123!",
+        },
+    )
+    assert register.status_code == 200
+    employer_headers = {"Authorization": f"Bearer {register.json()['access_token']}"}
+
+    claim = await client.post(
+        "/api/v1/employer-claims",
+        json={
+            "company_id": str(other_company.id),
+            "verification_documents": ["https://example.com/other-verify.txt"],
+        },
+        headers=employer_headers,
+    )
+    assert claim.status_code == 201
+
+    approve = await client.post(
+        f"/api/v1/employer-claims/{claim.json()['id']}/approve",
+        headers=admin_auth_headers,
+    )
+    assert approve.status_code == 200
+
+    response = await client.post(
+        f"/api/v1/reports/{report_id}/responses",
+        json={"response_text": RESPONSE_TEXT},
+        headers=employer_headers,
     )
     assert response.status_code == 403
 

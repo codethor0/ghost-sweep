@@ -17,6 +17,59 @@ See claim routes under `/api/v1/employer-claims`:
 
 Claim approval links the user to the company (`is_employer = true`, `employer_company_id` set). It does **not** change `company.verified_status`.
 
+### POST /api/v1/employer-claims
+
+Submit an employer claim for a company. Requires bearer authentication.
+
+Request:
+
+```json
+{
+  "company_id": "550e8400-e29b-41d4-a716-446655440000",
+  "verification_documents": [
+    "https://example.com/domain-verification.pdf"
+  ]
+}
+```
+
+`verification_documents` is **required**: 1 to 10 URL or reference strings (max 2048 characters each). Claims without this field return `422`.
+
+Response `201`:
+
+```json
+{
+  "id": "660e8400-e29b-41d4-a716-446655440001",
+  "company_id": "550e8400-e29b-41d4-a716-446655440000",
+  "user_id": "770e8400-e29b-41d4-a716-446655440002",
+  "status": "pending",
+  "verification_documents": [
+    "https://example.com/domain-verification.pdf"
+  ],
+  "created_at": "2026-06-29T12:00:00Z",
+  "updated_at": "2026-06-29T12:00:00Z"
+}
+```
+
+Errors:
+
+- `401` when authentication is missing or invalid
+- `409` when the user already has a pending or approved claim for the company
+- `422` when validation fails (including missing `verification_documents`)
+
+### Admin approve and reject
+
+`POST /api/v1/employer-claims/{claim_id}/approve` requires an admin bearer token. Returns `200` with updated claim status `approved`.
+
+`POST /api/v1/employer-claims/{claim_id}/reject` requires an admin bearer token. Optional JSON body:
+
+```json
+{
+  "reason": "Domain verification documents were insufficient."
+}
+```
+
+Reject reasons are stored in audit metadata only.
+
 Admin bootstrap:
 
 ```sql

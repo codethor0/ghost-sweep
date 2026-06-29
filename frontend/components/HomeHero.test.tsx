@@ -4,7 +4,7 @@ import { HomeHero } from "@/components/HomeHero";
 
 jest.mock("@/hooks/useHealthStatus", () => ({
   useHealthStatus: () => ({
-    health: { status: "healthy", database: "healthy", redis: "healthy" },
+    health: { status: "ok", service: "ghost-sweep" },
     error: null,
     loading: false,
   }),
@@ -17,6 +17,21 @@ describe("HomeHero", () => {
     expect(screen.getByText("Test title")).toBeInTheDocument();
     expect(screen.getByText("Test subtitle")).toBeInTheDocument();
     expect(screen.getByText("Platform status")).toBeInTheDocument();
-    expect(screen.getAllByText("healthy")).toHaveLength(3);
+    expect(screen.getByText("ok")).toBeInTheDocument();
+    expect(screen.getByText("ghost-sweep")).toBeInTheDocument();
+  });
+
+  it("renders posting URL notice when provided", () => {
+    render(
+      <HomeHero
+        title="Test title"
+        subtitle="Test subtitle"
+        postingUrl="https://example.com/jobs/123"
+      />,
+    );
+
+    expect(screen.getByText("Posting URL from extension")).toBeInTheDocument();
+    expect(screen.getByText("https://example.com/jobs/123")).toBeInTheDocument();
+    expect(screen.getByText(/Report submission from the browser extension is not yet available/)).toBeInTheDocument();
   });
 });

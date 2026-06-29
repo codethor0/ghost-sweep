@@ -31,7 +31,7 @@ ghost-sweep processes job posting URLs, employer names, report narratives, and u
 - HttpOnly cookie transport for refresh tokens is deferred future work
 - Access tokens must not be stored in browser localStorage
 - Auth endpoints are rate limited
-- Dependencies are audited in CI
+- Dependencies are audited in CI; see [docs/dependency-audit.md](docs/dependency-audit.md) for known deferred advisories
 
 ## Disclosure policy
 

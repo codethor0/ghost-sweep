@@ -6,6 +6,19 @@ ghost-sweep publishes transparent scores on a 0 to 100 scale. Scores are risk si
 
 Range: 0 to 100. Higher values indicate stronger ghost-job risk signals.
 
+## Inactive scoring inputs (current implementation)
+
+The scoring engine in `backend/app/services/scoring.py` supports all documented components. The scoring pipeline (`scoring_pipeline.py`) passes fixed defaults for inputs that do not yet have live data sources. These components appear in breakdowns but contribute zero or default points until a future batch wires real inputs.
+
+| Input field | Score component | Pipeline default | Effect today |
+| ----------- | --------------- | ---------------- | ------------ |
+| `language_risk_signal` | language_risk_signals (max 10) | `0.0` | **Inactive — contributes 0 points** |
+| `recruiter_follow_through_rate` | recruiter_follow_through (max 10) | `0.0` | **Inactive — contributes 0 points** |
+| `correction_count` | correction_history (max 5) | `0` | **Inactive — contributes 0 points** |
+| `average_days_to_fill` | average_time_to_fill (max 10) | `None` | **Deferred — uses 5-point default when null** |
+
+Future batches may add language analysis, recruiter follow-through metrics, correction tracking, and fill-time ingestion. Until then, documented weights apply only when non-default inputs are supplied (for example in unit tests).
+
 ### Components
 
 | Component | Max points | Input signal |

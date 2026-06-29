@@ -1,6 +1,8 @@
 # Local Docker Validation Checkpoint
 
-This document records the first live-validated milestone for ghost-sweep after Batch 4 (commit `6a0e6c0`) was pushed to the private GitHub repository.
+This document records live-validated milestones for ghost-sweep on Docker Compose.
+
+Latest validation baseline: commit `682e349` (Batch 6B backend complete; pre-6C remediation may add frontend health and extension handoff fixes locally).
 
 ## Validated Docker services
 
@@ -111,17 +113,39 @@ curl -s -X POST "http://localhost:8000/api/v1/reports/${REPORT_ID}/votes" \
 
 See [domain-api.md](domain-api.md) for request and response details.
 
+## Batch 6B endpoints (employer and moderation)
+
+Batch 6B APIs are committed at `27dada0`. Admin and employer flows require SQL bootstrap in development:
+
+```sql
+UPDATE users SET is_admin = true WHERE email = 'your@email.com';
+```
+
+Validated live (with bootstrapped company and job posting data):
+
+| Endpoint | Auth | Expected result |
+| -------- | ---- | --------------- |
+| `POST /api/v1/employer-claims` | Bearer | HTTP 201 |
+| `POST /api/v1/employer-claims/{id}/approve` | Admin bearer | HTTP 200 |
+| `GET /api/v1/moderation/reports` | Admin bearer | HTTP 200 |
+| `GET /api/v1/moderation/reports` | Non-admin bearer | HTTP 403 |
+| `POST /api/v1/moderation/reports/{id}/verify` | Admin bearer | HTTP 200 |
+| `POST /api/v1/moderation/reports/{id}/dismiss` | Admin bearer | HTTP 200 |
+| `POST /api/v1/reports/{id}/responses` | Approved employer | HTTP 201; may move report to `disputed` |
+
+See [employer-api.md](employer-api.md) and [moderation-api.md](moderation-api.md).
+
 ## Frontend status
 
 The frontend container serves at `http://localhost:3000` and returns the Next.js app shell with title `ghost-sweep`.
 
-The frontend is scaffold only. It is not wired to the current auth API or domain endpoints.
+The frontend calls `GET /health` only for platform status. It displays a posting URL when opened with `?posting_url=` from the browser extension. Auth, report submission, and domain browse UI are not implemented.
 
 ## Extension status
 
-The browser extension exists in the repository under `extension/` for Chrome and Firefox Manifest V3.
+The browser extension exists under `extension/` for Chrome and Firefox Manifest V3.
 
-The extension was not live-tested against the current API during this checkpoint. Extension integration remains deferred.
+The popup reads the active tab URL and opens the frontend with `?posting_url=`. Extension smoke tests validate manifest structure. Backend API integration remains deferred.
 
 ## Existing local Postgres: empty alembic_version
 

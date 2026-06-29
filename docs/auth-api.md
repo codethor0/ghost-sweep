@@ -11,7 +11,6 @@ Deferred to future batches:
 - HttpOnly cookies (refresh tokens are JSON-body delivered today)
 - Redis health reporting in `/health`
 - Evidence upload
-- Moderation status transition APIs
 
 ## POST /api/v1/auth/register
 

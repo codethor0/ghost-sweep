@@ -49,9 +49,9 @@ Frontend: http://localhost:3000
 
 ## Current project status
 
-Latest pushed baseline: `949b401` (Batch 6B moderation and employer responses, plus CI workflow alignment).
+Latest pushed baseline: `682e349` (README Batch 6 status alignment; includes Batch 6B and CI workflow at `949b401`).
 
-Batch 6A and Batch 6B are committed and pushed on `main`. This is active development, not a release-ready product.
+Batch 6A and Batch 6B are committed and pushed on `main`. Pre-6C remediation may exist locally and is not yet pushed. This is active development, not a release-ready product.
 
 **CI:**
 
@@ -75,8 +75,8 @@ Batch 6A and Batch 6B are committed and pushed on `main`. This is active develop
 
 **Scaffold (not wired to API):**
 
-- Frontend: Next.js scaffold only
-- Browser extension: present under `extension/`; smoke-tested only, not integrated with the live API
+- Frontend: Next.js scaffold; health probe and extension `posting_url` display only
+- Browser extension: popup links to frontend with posting URL query parameter; no backend API calls
 
 **Deferred:**
 
@@ -85,7 +85,7 @@ Batch 6A and Batch 6B are committed and pushed on `main`. This is active develop
 - Frontend wiring to the API
 - Extension API integration
 - Release hardening
-- Dependency audit advisories (documented deferred findings in dev/transitive tooling)
+- Dependency audit advisories (see [docs/dependency-audit.md](docs/dependency-audit.md))
 
 GitHub repository: https://github.com/codethor0/ghost-sweep (private)
 
@@ -115,11 +115,11 @@ npm run dev
 Backend verification:
 
 ```bash
-python -m py_compile $(find backend -name "*.py")
-cd backend && black --check .
-cd backend && flake8 .
+cd backend && python3.11 -m py_compile $(find app tests alembic -name "*.py")
+cd backend && black --check --quiet app tests alembic
+cd backend && flake8 app tests alembic
 cd backend && mypy --strict .
-cd backend && pytest
+cd backend && TEST_DATABASE_URL="postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5433/ghost_sweep_test" TEST_REDIS_URL="redis://localhost:6379/1" pytest -v --cov=app --cov-report=term-missing --cov-fail-under=80
 cd backend && bandit -r app
 cd backend && pip-audit
 ```
@@ -130,7 +130,13 @@ Frontend verification:
 cd frontend && npm run lint
 cd frontend && npm run typecheck
 cd frontend && npm test
-cd frontend && npm audit
+cd frontend && npm audit --audit-level=high
+```
+
+Extension verification:
+
+```bash
+node extension/tests/smoke.test.mjs
 ```
 
 Docker verification:

@@ -5,9 +5,10 @@ import { useHealthStatus } from "@/hooks/useHealthStatus";
 export interface HomeHeroProps {
   title: string;
   subtitle: string;
+  postingUrl?: string;
 }
 
-export function HomeHero({ title, subtitle }: HomeHeroProps) {
+export function HomeHero({ title, subtitle, postingUrl }: HomeHeroProps) {
   const { health, error, loading } = useHealthStatus();
 
   return (
@@ -15,6 +16,17 @@ export function HomeHero({ title, subtitle }: HomeHeroProps) {
       <p className="text-sm font-semibold uppercase tracking-[0.2em] text-signal">Job Integrity Database</p>
       <h1 className="mt-4 text-5xl font-bold tracking-tight text-ink">{title}</h1>
       <p className="mt-6 max-w-3xl text-lg leading-8 text-slate">{subtitle}</p>
+
+      {postingUrl ? (
+        <div className="mt-8 rounded-xl border border-slate/10 bg-white p-6">
+          <h2 className="text-base font-semibold text-ink">Posting URL from extension</h2>
+          <p className="mt-2 break-all text-sm text-slate">{postingUrl}</p>
+          <p className="mt-2 text-sm text-slate">
+            Report submission from the browser extension is not yet available. This URL is displayed
+            for review only until frontend report flows are implemented.
+          </p>
+        </div>
+      ) : null}
 
       <div className="mt-10 grid gap-4 md:grid-cols-3">
         <article className="rounded-xl border border-slate/10 bg-white p-6 shadow-sm">
@@ -42,18 +54,14 @@ export function HomeHero({ title, subtitle }: HomeHeroProps) {
         {loading ? <p className="mt-2 text-sm text-slate">Checking API health...</p> : null}
         {error ? <p className="mt-2 text-sm text-alert">API unavailable: {error}</p> : null}
         {health ? (
-          <dl className="mt-4 grid gap-2 text-sm text-slate md:grid-cols-3">
+          <dl className="mt-4 grid gap-2 text-sm text-slate md:grid-cols-2">
             <div>
-              <dt className="font-medium text-ink">Service</dt>
+              <dt className="font-medium text-ink">Status</dt>
               <dd>{health.status}</dd>
             </div>
             <div>
-              <dt className="font-medium text-ink">Database</dt>
-              <dd>{health.database}</dd>
-            </div>
-            <div>
-              <dt className="font-medium text-ink">Redis</dt>
-              <dd>{health.redis}</dd>
+              <dt className="font-medium text-ink">Service</dt>
+              <dd>{health.service}</dd>
             </div>
           </dl>
         ) : null}

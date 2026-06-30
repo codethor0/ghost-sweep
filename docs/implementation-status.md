@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6C. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 6D. For API details see [api.md](api.md).
 
 ## Authentication
 
@@ -12,6 +12,15 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Company and job posting read APIs with score breakdowns
 - Reports, votes, employer claims, moderation, employer responses
 - Scoring recalculation, score snapshots, audit logging
+
+## Job URL validation (Batch 6D foundation)
+
+- Offline helper module: `backend/app/services/job_url_validation.py`
+- Normalizes http/https job posting URLs and detects likely ATS or career-page providers
+- Workday, Greenhouse, Lever, Ashby, SmartRecruiters, and generic company career paths
+- No network calls, scraping, or third-party API usage
+- Not wired to backend API routes yet
+- Future work may add controlled validation against company career pages only after policy and design review
 
 ## Frontend (Batch 6C complete)
 
@@ -48,7 +57,8 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 
 - Evidence file upload
 - Public company and job posting write APIs
-- Extension API integration (Batch 6D)
+- Extension API integration (Batch 6D extension wiring)
+- Live URL fetching or career-page cross-check validation
 - Frontend moderation, employer, and admin UI
 - Frontend refresh-token persistence
 - Release hardening

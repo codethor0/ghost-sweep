@@ -69,6 +69,8 @@ python3 -m http.server 8080 --directory public-mvp
 
 See the GitHub issue titled **Contributor onboarding: job URL validation pipeline**.
 
+Batch 6D adds an offline URL validation foundation in `backend/app/services/job_url_validation.py`. It does not scrape or call third-party sites. Future work can add controlled validation against company career pages only after policy and design review.
+
 Scope summary:
 
 - Pure Python helper module for URL normalization and ATS/platform detection
@@ -77,7 +79,7 @@ Scope summary:
 - No backend API behavior changes unless separately approved
 - No new dependencies without discussion
 
-Platforms to cover in tests: Workday, Greenhouse, Lever, Ashby, SmartRecruiters, generic company career pages, invalid URLs.
+Platforms covered in tests: Workday, Greenhouse, Lever, Ashby, SmartRecruiters, generic company career pages, invalid URLs.
 
 ## Pull request expectations
 

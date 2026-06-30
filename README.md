@@ -92,9 +92,9 @@ The Google Form URL in `public-mvp/index.html` is a placeholder until the real f
 
 ## Current project status
 
-Latest pushed baseline: Batch 6F contributor-readiness sync on `main` (includes Batch 6E at `6074691`).
+Latest pushed baseline: `fee68e1` (Batch 6F public-readiness sync on `main`).
 
-Batches 6A through 6E are committed on `main`. Batch 6F adds post-6E validation, docs sync, and launch preflight. This is active development, not a release-ready product. Public launch is not started.
+Batches 6A through 6F are committed on `main`. Batch 6G covers contributor handoff and launch-blocker preflight. This is active development, not a release-ready product. Public launch is not started.
 
 **Repository:** private. GitHub Pages is not enabled. Public MVP static files exist in `public-mvp/` but are not live.
 

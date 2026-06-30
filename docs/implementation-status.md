@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6F. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 6G. For API details see [api.md](api.md).
 
 ## Authentication
 
@@ -38,11 +38,19 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 ## Documentation sync and launch preflight (Batch 6F)
 
 - Post-6E validation: labels, Issue #1 taxonomy, templates, and local gates verified
-- Stale baseline references updated to `6074691` across README and launch docs
+- Stale baseline references updated to `fee68e1` across README and launch docs
 - GitHub tracking issues created: #2 Form/Pages launch, #3 CI billing, #4 dependency advisories, #5 URL validation API design
 - Greg Write invite pending acceptance (`gmcguirk-contractor`); not Admin/Maintain
 - Public launch remains blocked: Form URL placeholder, Pages off, repository private
 - GitHub Actions billing-blocked before job steps; local validation is source of truth
+- No application, schema, API, Docker, CI, or dependency changes
+
+## Contributor handoff and launch preflight (Batch 6G)
+
+- Post-6F checkpoint verified: labels, Issues #1-#5, templates, and local gates
+- Issue #1 handoff comment posted: Batch 6D foundation on main; first PR extends offline helper/tests only
+- Launch blocker preflight documented (Form URL, Pages, checklist, CI billing, dependency advisories)
+- Greg Write invite still pending acceptance; not Admin/Maintain
 - No application, schema, API, Docker, CI, or dependency changes
 
 ## Frontend (Batch 6C complete)

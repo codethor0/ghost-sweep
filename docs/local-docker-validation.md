@@ -2,7 +2,7 @@
 
 This document records live-validated milestones for ghost-sweep on Docker Compose.
 
-Latest validation baseline: commit `6074691` (Batch 6E on `main`; includes Batch 6D offline URL validation and prior API/frontend scope).
+Latest validation baseline: commit `fee68e1` (Batch 6F on `main`; includes Batch 6D offline URL validation and prior API/frontend scope).
 
 ## Validated Docker services
 

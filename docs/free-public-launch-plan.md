@@ -8,9 +8,13 @@ This document defines a practical zero-cost path to make ghost-sweep publicly vi
 | ----- | ------ |
 | Backend (Batch 6B) | Works locally via Docker Compose (FastAPI, PostgreSQL, Redis) |
 | Frontend (Batch 6C) | Wired to backend APIs for local development |
-| Extension | MV3 scaffold only; Batch 6D not started |
-| Public hosting | Not deployed |
-| CI | GitHub Actions blocked by account billing limits before job steps run |
+| Job URL validation (Batch 6D) | Offline foundation complete; not API-wired |
+| Extension | MV3 scaffold only; no backend API integration |
+| Public MVP | Static files in `public-mvp/`; not live; Form URL placeholder |
+| Public hosting | Not deployed; GitHub Pages not enabled |
+| Repository | Private |
+| CI | GitHub Actions blocked by billing/spending limits before job steps run |
+| Latest baseline | `cc202d2` (Batch 6E contributor readiness) |
 
 The full database-backed application remains a local development stack. Public launch uses static hosting plus manual intake until traction justifies paid infrastructure.
 
@@ -289,7 +293,7 @@ Before making the repository public:
 ## Deferred until post-MVP
 
 - Evidence file upload
-- Browser extension backend integration (Batch 6D)
+- Browser extension backend API integration (deferred; offline URL validation foundation exists from Batch 6D but is not API-wired)
 - Public backend API hosting
 - Live integrity scores and company browse on the public site
 - Frontend moderation, employer, and admin UI

@@ -82,7 +82,7 @@ Complete this checklist before making the ghost-sweep repository public and enab
 
 - [ ] Public backend hosting (Render, Fly, Railway, etc.)
 - [ ] Live scoring database on public site
-- [ ] Extension API integration (Batch 6D)
+- [ ] Extension backend API integration (deferred; offline URL validation foundation exists from Batch 6D but is not API-wired)
 - [ ] Evidence file upload
 - [ ] Automated Google Sheet to PostgreSQL import
 - [ ] Dependency advisory remediation batches

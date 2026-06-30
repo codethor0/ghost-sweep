@@ -9,7 +9,7 @@ Onboarding guide for private collaborators on ghost-sweep. Read `CONTRIBUTING.md
 | `public-mvp/` | Static GitHub Pages landing site (Google Form intake) |
 | `backend/` | FastAPI API, services, tests |
 | `frontend/` | Next.js app (local Docker) |
-| `extension/` | MV3 scaffold (Batch 6D not started) |
+| `extension/` | MV3 scaffold; no backend API integration |
 | `docs/` | Architecture, API, launch plans |
 
 Public MVP uses Google Form intake. The full database-backed app runs locally only until hosted infrastructure is approved.

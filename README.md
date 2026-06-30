@@ -88,18 +88,20 @@ python3.11 scripts/validate_public_mvp.py
 
 See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), and [docs/public-launch-checklist.md](docs/public-launch-checklist.md).
 
-The Google Form URL in `public-mvp/index.html` is a placeholder until the real form is created. Raw applicant emails must not be published. The repository is not yet public-contributor-ready until docs, audits, and the launch checklist are complete.
+The Google Form URL in `public-mvp/index.html` is a placeholder until the real form is created. Raw applicant emails must not be published. The repository is private. Public launch is not started and the launch checklist remains incomplete. Private collaborators can onboard via `docs/contributor-onboarding.md`.
 
 ## Current project status
 
-Latest pushed baseline: `3453fb8` (Batch 6C frontend API wiring on `main`).
+Latest pushed baseline: `cc202d2` (Batch 6E contributor readiness on `main`).
 
-Batch 6A through Batch 6C are committed and pushed on `main`. This is active development, not a release-ready product and not yet public-contributor-ready.
+Batches 6A through 6E are committed on `main`. This is active development, not a release-ready product. Public launch is not started.
+
+**Repository:** private. GitHub Pages is not enabled. Public MVP static files exist in `public-mvp/` but are not live.
 
 **CI:**
 
 - GitHub Actions workflow is aligned with verified local backend gates (Python 3.11, postgres:15, redis:7, coverage >= 80%, advisory-only pip-audit for documented deferred advisories).
-- GitHub Actions is currently blocked by account billing/spending limits before job steps execute, not by failing tests. Local verification is the current source of truth until billing is resolved.
+- GitHub Actions is blocked by account billing/spending limits before job steps execute. This is an infrastructure blocker, not evidence of failing tests. Local verification is the source of truth until billing is resolved.
 
 **Implemented backend (through Batch 6B):**
 
@@ -116,6 +118,17 @@ Batch 6A through Batch 6C are committed and pushed on `main`. This is active dev
 - Scoring recalculation and score snapshots
 - Audit logging (reports, votes, claims, moderation, employer responses)
 
+**Job URL validation (Batch 6D foundation, offline only):**
+
+- Pure Python helper module: `backend/app/services/job_url_validation.py`
+- Normalizes http/https URLs and detects likely ATS or career-page providers
+- Unit tests only; not wired to backend API routes; no network calls
+
+**Contributor readiness (Batch 6E):**
+
+- GitHub issue templates, PR template, CODEOWNERS, label taxonomy doc
+- CONTRIBUTING and onboarding doc polish; no application behavior changes
+
 **Implemented frontend (Batch 6C):**
 
 - API client for existing backend read and write endpoints
@@ -129,13 +142,14 @@ Batch 6A through Batch 6C are committed and pushed on `main`. This is active dev
 
 **Scaffold (not backend-wired):**
 
-- Browser extension: MV3 popup reads active tab URL and opens frontend with `?posting_url=`; no backend API calls; Batch 6D not started
+- Browser extension: MV3 popup reads active tab URL and opens frontend with `?posting_url=`; no backend API calls
 
 **Deferred:**
 
 - Evidence file upload
 - Company and job posting write APIs (public)
-- Extension API integration (Batch 6D)
+- Extension backend API integration
+- Wiring job URL validation into API or intake flows
 - Frontend moderation, employer, and admin UI
 - Frontend refresh-token handling
 - Release hardening

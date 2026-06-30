@@ -10,7 +10,8 @@ Deferred to later batches:
 
 - Evidence upload
 - Company and job posting create/update/delete (public write APIs)
-- Extension API integration (Batch 6D)
+- Extension backend API integration (deferred)
+- Job URL validation API wiring (deferred; offline helper exists from Batch 6D)
 - URL-to-posting lookup from extension handoff
 
 ## GET /api/v1/companies

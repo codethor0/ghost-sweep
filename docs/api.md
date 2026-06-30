@@ -86,7 +86,8 @@ Deferred to future batches:
 - Redis health reporting in `/health`
 - Evidence file upload
 - Company and job posting write APIs (public)
-- Extension API integration (Batch 6D)
+- Extension backend API integration (deferred)
+- Job URL validation API wiring (deferred; offline helper exists from Batch 6D)
 - Frontend moderation, employer, and admin UI
 - URL-to-posting lookup from extension handoff
 

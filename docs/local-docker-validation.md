@@ -2,7 +2,7 @@
 
 This document records live-validated milestones for ghost-sweep on Docker Compose.
 
-Latest validation baseline: commit `3453fb8` (Batch 6C frontend API wiring; backend through Batch 6B).
+Latest validation baseline: commit `cc202d2` (Batch 6E on `main`; includes Batch 6D offline URL validation and prior API/frontend scope).
 
 ## Validated Docker services
 
@@ -224,7 +224,7 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 
 The browser extension exists under `extension/` for Chrome and Firefox Manifest V3.
 
-The popup reads the active tab URL and opens the frontend with `?posting_url=`. Extension smoke tests validate manifest structure only. Browser manual testing and backend API integration remain deferred (Batch 6D not started).
+The popup reads the active tab URL and opens the frontend with `?posting_url=`. Extension smoke tests validate manifest structure only. Browser manual testing and backend API integration remain deferred. Batch 6D added an offline URL validation helper only; it is not wired to the extension or API.
 
 ## Existing local Postgres: empty alembic_version
 

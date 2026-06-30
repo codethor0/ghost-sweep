@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6E. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 6F. For API details see [api.md](api.md).
 
 ## Authentication
 
@@ -32,6 +32,15 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - No application behavior changes
 - No backend, auth, schema, or API changes
 - No public launch changes
+
+## Documentation sync (Batch 6F)
+
+- README and launch docs updated to baseline `cc202d2`
+- Stale Batch 6C/6D status references corrected across docs
+- Clarified: Batch 6D offline URL validation is complete but not API-wired; extension remains scaffold only
+- Clarified: public MVP static files exist but are not live; Form URL placeholder; GitHub Pages not enabled; repository private
+- Clarified: GitHub Actions failures are billing/spending infrastructure blockers before job steps run; local validation is source of truth
+- No application, schema, API, Docker, CI, or dependency changes
 
 ## Frontend (Batch 6C complete)
 
@@ -68,8 +77,8 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 
 - Evidence file upload
 - Public company and job posting write APIs
-- Extension API integration (Batch 6D extension wiring)
-- Live URL fetching or career-page cross-check validation
+- Extension backend API integration (deferred)
+- Job URL validation API wiring (deferred; offline helper exists from Batch 6D)
 - Frontend moderation, employer, and admin UI
 - Frontend refresh-token persistence
 - Release hardening

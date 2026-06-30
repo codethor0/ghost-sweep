@@ -1,0 +1,78 @@
+name: Bug report
+description: Report a reproducible defect with environment and validation context
+title: "[Bug] "
+labels:
+  - type:bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not paste secrets, JWTs, refresh tokens, API keys, or unredacted `.env` values.
+        Redact tokens in logs before attaching output.
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: One or two sentences describing the defect.
+    validations:
+      required: true
+
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, browser, commit hash, Docker vs local, and relevant configuration.
+      placeholder: |
+        OS: macOS 15
+        Commit: 254e5f9
+        Setup: docker compose up backend frontend postgres redis
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: Numbered steps that reliably trigger the issue.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or command output
+      description: Paste relevant logs with tokens redacted.
+      placeholder: Include pytest, curl, or browser console output as applicable.
+
+  - type: textarea
+    id: validation_output
+    attributes:
+      label: Local validation command output
+      description: Output from the verification gates you ran (optional but helpful).
+      placeholder: |
+        pytest -v ...
+        npm test
+        python3.11 scripts/validate_public_mvp.py
+
+  - type: checkboxes
+    id: secrets_check
+    attributes:
+      label: Security hygiene
+      options:
+        - label: I confirm this issue contains no secrets or unredacted credentials
+          required: true

@@ -1,0 +1,50 @@
+name: Documentation task
+description: Propose a documentation correction or gap fill with no app behavior change
+title: "[Docs] "
+labels:
+  - type:docs
+body:
+  - type: input
+    id: doc_file
+    attributes:
+      label: Documentation file
+      description: Primary file path to update.
+      placeholder: docs/contributor-onboarding.md
+    validations:
+      required: true
+
+  - type: textarea
+    id: stale_section
+    attributes:
+      label: Stale or missing section
+      description: What is wrong, outdated, or missing today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_correction
+    attributes:
+      label: Proposed correction
+      description: What should the documentation say instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: implementation_impact
+    attributes:
+      label: Implementation impact
+      description: Confirm whether any application code must change. Docs-only tasks should say none.
+      value: None. Documentation only.
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation_needed
+    attributes:
+      label: Validation needed
+      description: How will you verify the docs are accurate?
+      placeholder: |
+        Cross-check against README and implementation-status.md
+        python3.11 scripts/validate_public_mvp.py (if public-mvp docs changed)
+    validations:
+      required: true

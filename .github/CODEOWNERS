@@ -1,0 +1,10 @@
+# Default maintainer review for all paths.
+* @codethor0
+
+# High-risk areas require explicit maintainer review.
+/backend/app/api/ @codethor0
+/backend/alembic/ @codethor0
+/.github/ @codethor0
+/docker-compose.yml @codethor0
+/public-mvp/ @codethor0
+/docs/ @codethor0

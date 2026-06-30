@@ -1,0 +1,101 @@
+name: Contributor task
+description: Propose a scoped contribution with clear boundaries and validation plan
+title: "[Contributor] "
+labels:
+  - help wanted
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this template for scoped contributor work. Open a draft pull request early when possible.
+        First-time contributors should read [contributor-onboarding.md](../../docs/contributor-onboarding.md).
+
+  - type: input
+    id: title_summary
+    attributes:
+      label: Task title
+      description: Short summary of the work (also edit the issue title above).
+      placeholder: Add offline URL normalization tests for SmartRecruiters edge cases
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      description: Primary part of the repository affected.
+      options:
+        - backend
+        - frontend
+        - docs
+        - public-mvp
+        - extension
+        - tests
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope_summary
+    attributes:
+      label: Scope summary
+      description: What you will implement and why it matters.
+      placeholder: Extend job_url_validation helpers with additional ATS path patterns and unit tests.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_files
+    attributes:
+      label: Expected files
+      description: Files you plan to create or modify.
+      placeholder: |
+        backend/app/services/job_url_validation.py
+        backend/tests/test_job_url_validation.py
+    validations:
+      required: true
+
+  - type: textarea
+    id: out_of_scope
+    attributes:
+      label: Out-of-scope files
+      description: Areas you will not touch in this task.
+      placeholder: |
+        backend/app/api/
+        backend/alembic/
+        docker-compose.yml
+        .github/workflows/
+        public-mvp/index.html
+    validations:
+      required: true
+
+  - type: textarea
+    id: validation_commands
+    attributes:
+      label: Validation commands
+      description: Commands you will run before requesting review.
+      value: |
+        cd backend && python3.11 -m py_compile $(find app tests alembic -name "*.py")
+        cd backend && black --check --quiet app tests alembic
+        cd backend && flake8 app tests alembic
+        cd backend && mypy --strict .
+        cd backend && TEST_DATABASE_URL="postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5433/ghost_sweep_test" TEST_REDIS_URL="redis://localhost:6379/1" pytest -v --cov=app --cov-fail-under=80
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Contributor checklist
+      options:
+        - label: No database schema or migration changes unless separately approved
+          required: true
+        - label: No backend API or auth behavior changes unless separately approved
+          required: true
+        - label: No Docker or CI workflow changes unless separately approved
+          required: true
+        - label: No secrets, tokens, or .env files will be committed
+          required: true
+        - label: No generated artifacts will be committed (__pycache__, .pyc, node_modules, .next, caches)
+          required: true
+        - label: I will open a draft PR early for feedback when implementation starts
+          required: false

@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6D. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 6E. For API details see [api.md](api.md).
 
 ## Authentication
 
@@ -22,6 +22,17 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Not wired to backend API routes yet
 - Future work may add controlled validation against company career pages only after policy and design review
 
+## Contributor readiness (Batch 6E)
+
+- GitHub issue templates: contributor task, bug report, documentation task (`.github/ISSUE_TEMPLATE/*.yml`)
+- Pull request template with scope and risk checklists (`.github/pull_request_template.md`)
+- CODEOWNERS for maintainer review on high-risk paths (`.github/CODEOWNERS`)
+- Label taxonomy documented in [labels.md](labels.md); label creation deferred to maintainer approval
+- CONTRIBUTING.md polish: onboarding link, approval gates, local verification, log redaction
+- No application behavior changes
+- No backend, auth, schema, or API changes
+- No public launch changes
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints
@@ -35,7 +46,7 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 
 - MV3 popup for Chrome and Firefox
 - Reads active tab URL and opens frontend with `?posting_url=`
-- No backend API calls; Batch 6D not started
+- No backend API calls; extension wiring deferred
 
 ## Local demo seed
 

@@ -1,6 +1,31 @@
 # Dependency Audit Status
 
-This document records known dependency advisories after Batch 7C frontend remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+This document records known dependency advisories after Batch 7D backend dev/tooling remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+
+## Batch 7D summary
+
+| Item | Result |
+| ---- | ------ |
+| Audit date | 2026-06-30 |
+| Starting commit | `f14f630` (Batch 7C) |
+| black | 24.10.0 → **26.3.1** |
+| pytest | 8.3.4 → **9.0.3** |
+| pytest-asyncio | 0.24.0 → **1.4.0** |
+| pip-audit (project-pinned dev deps) | 9 vulnerabilities in 5 packages → **7 in 3 packages** |
+| black/pytest advisories | **Cleared** |
+| Host-only findings | loguru (via ciphey), pip, wheel — not pinned in pyproject.toml |
+| npm audit --audit-level=high | **PASS** (unchanged from Batch 7C) |
+| Issue #4 | **Remains open** (moderate npm PostCSS + host pip/wheel/loguru) |
+
+Batch 7D upgraded pinned dev dependencies in `backend/pyproject.toml` only. Black 26 required cosmetic reformat of three files (one Alembic migration version file, two test modules); no migration logic or schema changes. No backend API/auth/schema, runtime dependencies, Docker, CI, frontend, extension, or public-mvp changes. Full backend and unchanged-project gates pass.
+
+### Remaining pip advisories (post Batch 7D)
+
+| Package | Installed | Severity | Advisory ID | Direct/Transitive | Runtime/Dev | Action |
+| ------- | --------- | -------- | ----------- | ----------------- | ----------- | ------ |
+| loguru | 0.5.3 | low | PYSEC-2022-14 | transitive via **host ciphey** | host-only | **Not project dependency** — pip-audit scans host site-packages |
+| pip | 25.1.1 | high | multiple | host tooling | dev-only | **Documented** — upgrade host pip outside pyproject.toml |
+| wheel | 0.45.1 | high | GHSA-8rrh-rw8j-w5fx | host tooling | dev-only | **Documented** — upgrade host wheel outside pyproject.toml |
 
 ## Batch 7C summary
 
@@ -87,26 +112,36 @@ Command:
 cd backend && pip-audit
 ```
 
-Exit code: **1** (9 known vulnerabilities in 5 packages — dev/tooling only after Batch 7B)
+Exit code: **1** (7 known vulnerabilities in 3 packages — host tooling + non-project loguru after Batch 7D)
 
 Backend dependency manager: **pyproject.toml** with pinned versions in `[project.dependencies]` and `[project.optional-dependencies.dev]`. No requirements.txt lockfile; Docker installs from pyproject.toml.
 
-### Remediated in Batch 7B (runtime)
+### Remediated in Batch 7D (dev, pinned in pyproject.toml)
 
 | Package | Before | After | Result |
 | ------- | ------ | ----- | ------ |
-| fastapi | 0.115.6 | 0.138.2 | Upgraded in pyproject.toml |
-| starlette | 0.41.3 | 1.3.1 (transitive) | All 7 runtime Starlette advisories **cleared** |
+| black | 24.10.0 | 26.3.1 | GHSA-3936-cmfr-pm3m **cleared** |
+| pytest | 8.3.4 | 9.0.3 | GHSA-6w46-j5rx-g56g **cleared** |
+| pytest-asyncio | 0.24.0 | 1.4.0 | Required for pytest 9 compatibility |
 
-### Remaining pip advisories (post Batch 7B)
+### Remaining pip advisories (post Batch 7D, project-pinned)
+
+None. All pyproject.toml-pinned packages pass pip-audit when host contamination is excluded.
+
+### Remaining pip advisories (full host scan, post Batch 7D)
 
 | Package | Installed | Severity | Advisory ID | Direct/Transitive | Runtime/Dev | Action |
 | ------- | --------- | -------- | ----------- | ----------------- | ----------- | ------ |
-| black | 24.10.0 | moderate | GHSA-3936-cmfr-pm3m | direct (dev) | dev-only | **Deferred** — requires black 26.x major |
-| pytest | 8.3.4 | high | GHSA-6w46-j5rx-g56g | direct (dev) | dev-only | **Deferred** — requires pytest 9.x major |
-| pip | 25.1.1 | high | multiple | tooling (not in pyproject) | dev-only | **Deferred** — host tooling |
-| wheel | 0.45.1 | high | GHSA-8rrh-rw8j-w5fx | tooling (not in pyproject) | dev-only | **Deferred** — host tooling |
-| loguru | 0.5.3 | low | PYSEC-2022-14 | transitive | unknown/local-only | **Deferred** — not pinned in pyproject |
+| loguru | 0.5.3 | low | PYSEC-2022-14 | host ciphey (not in pyproject) | host-only | **Not actionable in repo** |
+| pip | 25.1.1 | high | multiple | host tooling | dev-only | Upgrade host pip to >= 26.1.2 |
+| wheel | 0.45.1 | high | GHSA-8rrh-rw8j-w5fx | host tooling | dev-only | Upgrade host wheel to >= 0.46.2 |
+
+### Prior remaining pip advisories (pre Batch 7D, for reference)
+
+| Package | Installed (was) | Severity | Status |
+| ------- | --------------- | -------- | ------ |
+| black | 24.10.0 | moderate | **Remediated Batch 7D** (26.3.1) |
+| pytest | 8.3.4 | high | **Remediated Batch 7D** (9.0.3) |
 
 ### Prior pip advisory table (pre Batch 7B, for reference)
 
@@ -118,8 +153,14 @@ Starlette runtime advisories listed below were **cleared** by FastAPI 0.138.2 up
 
 ### pip future remediation plan
 
-1. **Optional dev batch (Batch 7D+):** pytest 9.x and black 26.x with test/format verification
-2. **Future hardening:** consider pip-tools or uv lockfile for reproducible backend installs
+1. **Host tooling (outside repo):** upgrade host `pip` to >= 26.1.2 and `wheel` to >= 0.46.2 on developer machines
+2. **Future hardening:** consider pip-tools or uv lockfile for reproducible backend installs; isolate dev venv from unrelated host packages (loguru/ciphey)
+
+## Remediated in Batch 7D
+
+- `black==26.3.1`, `pytest==9.0.3`, `pytest-asyncio==1.4.0` in pyproject.toml dev extras
+- Clears all project-pinned pip-audit advisories (black, pytest)
+- Validated: 154 pytest @ 84.34%, black --check, mypy, bandit; frontend/extension/public-mvp unchanged
 
 ## Remediated in Batch 7C
 
@@ -142,12 +183,13 @@ None. Triage-only batch; no safe patch/minor upgrades cleared high-severity runt
 
 ## Issue #4 status
 
-**Issue #4 remains open.** Runtime advisories (Starlette, npm high) are remediated. Remaining blockers:
+**Issue #4 remains open.** Runtime advisories (Starlette, npm high, project-pinned pip dev) are remediated. Remaining blockers:
 
 - Frontend npm moderate PostCSS advisories (build-time; bundled in next)
-- Backend dev/tooling pip advisories (black, pytest, pip, wheel, loguru)
+- Host pip/wheel advisories (not pinned in pyproject.toml)
+- Host loguru via ciphey (not a project dependency; pip-audit noise)
 
-Do not close until remaining moderate/dev-tooling advisories are remediated or formally accepted.
+Do not close until remaining moderate/host-tooling advisories are remediated or formally accepted.
 
 Do not claim all dependencies are clean — full `npm audit` and `pip-audit` still report findings.
 

@@ -12,20 +12,16 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     """Create partial unique indexes for approved and pending employer claims."""
-    op.execute(
-        """
+    op.execute("""
         CREATE UNIQUE INDEX uq_employer_claims_company_approved
         ON employer_claims (company_id)
         WHERE status = 'approved'
-        """
-    )
-    op.execute(
-        """
+        """)
+    op.execute("""
         CREATE UNIQUE INDEX uq_employer_claims_user_company_pending
         ON employer_claims (user_id, company_id)
         WHERE status = 'pending'
-        """
-    )
+        """)
 
 
 def downgrade() -> None:

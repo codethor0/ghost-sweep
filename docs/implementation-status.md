@@ -92,6 +92,15 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - No backend API/auth/schema, Alembic, Docker config, CI, extension, or public-mvp changes
 - Issue #4 remains open for moderate npm PostCSS + dev/tooling pip advisories
 
+## Backend dev/tooling advisory remediation (Batch 7D)
+
+- Upgraded dev pins in `backend/pyproject.toml`: `black==26.3.1`, `pytest==9.0.3`, `pytest-asyncio==1.4.0`
+- Project-pinned pip-audit advisories cleared (black, pytest); host pip/wheel/loguru documented as out-of-scope
+- Black 26 cosmetic reformat: `002_employer_claim_constraints.py`, `test_migrations.py`, `test_reports.py` (no logic changes)
+- Backend gates pass: py_compile, black, flake8, mypy, 154 pytest @ 84.34%, bandit
+- Frontend, extension, public-mvp, Docker, CI unchanged
+- Issue #4 remains open for moderate npm PostCSS + host pip/wheel
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints

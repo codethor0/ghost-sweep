@@ -71,15 +71,11 @@ async def test_initial_migration_creates_core_tables() -> None:
     assert TEST_DATABASE_URL is not None
     engine = create_async_engine(TEST_DATABASE_URL, pool_pre_ping=True)
     async with engine.connect() as connection:
-        result = await connection.execute(
-            text(
-                """
+        result = await connection.execute(text("""
                 SELECT tablename
                 FROM pg_tables
                 WHERE schemaname = 'public'
-                """
-            )
-        )
+                """))
         table_names = {row[0] for row in result.fetchall()}
     await engine.dispose()
     assert EXPECTED_TABLES.issubset(table_names)
@@ -92,13 +88,11 @@ async def test_initial_migration_creates_postgresql_enum_types() -> None:
     engine = create_async_engine(TEST_DATABASE_URL, pool_pre_ping=True)
     async with engine.connect() as connection:
         result = await connection.execute(
-            text(
-                """
+            text("""
                 SELECT typname
                 FROM pg_type
                 WHERE typname = ANY(:enum_names)
-                """
-            ),
+                """),
             {"enum_names": list(EXPECTED_ENUM_TYPES)},
         )
         enum_names = {row[0] for row in result.fetchall()}
@@ -112,16 +106,12 @@ async def test_votes_table_has_unique_report_user_constraint() -> None:
     assert TEST_DATABASE_URL is not None
     engine = create_async_engine(TEST_DATABASE_URL, pool_pre_ping=True)
     async with engine.connect() as connection:
-        result = await connection.execute(
-            text(
-                """
+        result = await connection.execute(text("""
                 SELECT 1
                 FROM pg_constraint
                 WHERE conname = 'uq_votes_report_user'
                   AND contype = 'u'
-                """
-            )
-        )
+                """))
         constraint_exists = result.first() is not None
     await engine.dispose()
     assert constraint_exists is True
@@ -133,9 +123,7 @@ async def test_employer_claims_have_partial_unique_indexes() -> None:
     assert TEST_DATABASE_URL is not None
     engine = create_async_engine(TEST_DATABASE_URL, pool_pre_ping=True)
     async with engine.connect() as connection:
-        result = await connection.execute(
-            text(
-                """
+        result = await connection.execute(text("""
                 SELECT indexname
                 FROM pg_indexes
                 WHERE schemaname = 'public'
@@ -143,9 +131,7 @@ async def test_employer_claims_have_partial_unique_indexes() -> None:
                     'uq_employer_claims_company_approved',
                     'uq_employer_claims_user_company_pending'
                   )
-                """
-            )
-        )
+                """))
         index_names = {row[0] for row in result.fetchall()}
     await engine.dispose()
     assert index_names == {

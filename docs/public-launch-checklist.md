@@ -25,8 +25,10 @@ Complete this checklist before making the ghost-sweep repository public and enab
 - [x] Backend `pip-audit` post-7B: 9 advisories in 5 packages (dev/tooling only); documented in [dependency-audit.md](dependency-audit.md)
 - [x] Frontend npm high advisories remediated (Batch 7C): `next@16.2.9`, `eslint-config-next@16.2.9`, `eslint@9.39.1`; ESLint 9 flat config; async params migration
 - [x] Frontend `npm audit --audit-level=high` passes (Batch 7C); 2 moderate PostCSS advisories remain (build-time)
-- [ ] Backend dev/tooling pip advisories remediated or formally accepted (black, pytest, pip, wheel)
-- [ ] Dependency audit fully clean (Issue #4 open until moderate npm + dev/tooling resolved or accepted)
+- [x] Backend project-pinned dev advisories remediated (Batch 7D): `black==26.3.1`, `pytest==9.0.3`, `pytest-asyncio==1.4.0`
+- [x] Backend `pip-audit` project-pinned dev deps clean; host pip/wheel/loguru documented as out-of-repo scope
+- [ ] Host pip/wheel upgraded or formally accepted on developer machines
+- [ ] Dependency audit fully clean (Issue #4 open until moderate npm PostCSS + host tooling resolved or accepted)
 
 ## GitHub Actions billing status
 

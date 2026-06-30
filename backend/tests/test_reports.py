@@ -13,7 +13,6 @@ from app.models.audit_log import AuditLog
 from app.models.enums import ReportType
 from app.models.job_posting import JobPosting
 
-
 REPORT_DESCRIPTION = (
     "The posting remained active for several months without recruiter follow-up or status updates."
 )

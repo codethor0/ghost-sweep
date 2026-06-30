@@ -14,7 +14,9 @@ This document defines a practical zero-cost path to make ghost-sweep publicly vi
 | Public hosting | Not deployed; GitHub Pages not enabled |
 | Repository | Private |
 | CI | GitHub Actions blocked by billing/spending limits before job steps run |
-| Latest baseline | `cc202d2` (Batch 6E contributor readiness) |
+| Latest baseline | `6074691` (Batch 6E contributor readiness; Batch 6F docs sync) |
+| Contributor readiness | Batch 6E complete: labels, templates, CODEOWNERS, Issue #1 |
+| Tracking issues | #2 Form/Pages launch, #3 CI billing, #4 dependency advisories, #5 URL validation API design |
 
 The full database-backed application remains a local development stack. Public launch uses static hosting plus manual intake until traction justifies paid infrastructure.
 

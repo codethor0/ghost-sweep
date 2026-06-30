@@ -25,7 +25,7 @@ body:
       description: OS, browser, commit hash, Docker vs local, and relevant configuration.
       placeholder: |
         OS: macOS 15
-        Commit: 254e5f9
+        Commit: 6074691
         Setup: docker compose up backend frontend postgres redis
     validations:
       required: true

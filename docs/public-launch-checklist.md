@@ -28,8 +28,8 @@ Complete this checklist before making the ghost-sweep repository public and enab
 ## GitHub Actions billing status
 
 - [ ] Account billing/spending limits resolved OR documented as blocker
-- [ ] Local verification documented as source of truth if CI is blocked
-- [ ] Pages deploy plan does not require Actions if billing is blocked (use branch/folder publish)
+- [x] Local verification documented as source of truth if CI is blocked (see Issue #3)
+- [x] Pages deploy plan does not require Actions if billing is blocked (use branch/folder publish)
 
 ## Google Form intake
 
@@ -48,12 +48,12 @@ Complete this checklist before making the ghost-sweep repository public and enab
 
 ## Documentation
 
-- [ ] [README.md](../README.md) updated with public MVP section
-- [ ] [CONTRIBUTING.md](../CONTRIBUTING.md) updated with MVP vs full-stack paths
-- [ ] [SECURITY.md](../SECURITY.md) updated with Form data handling
-- [ ] [implementation-status.md](implementation-status.md) updated
-- [ ] [free-public-launch-plan.md](free-public-launch-plan.md) reflects `public-mvp/` approach
-- [ ] [local-docker-validation.md](local-docker-validation.md) current
+- [x] [README.md](../README.md) updated with public MVP section
+- [x] [CONTRIBUTING.md](../CONTRIBUTING.md) updated with MVP vs full-stack paths
+- [x] [SECURITY.md](../SECURITY.md) updated with Form data handling
+- [x] [implementation-status.md](implementation-status.md) updated
+- [x] [free-public-launch-plan.md](free-public-launch-plan.md) reflects `public-mvp/` approach
+- [x] [local-docker-validation.md](local-docker-validation.md) current
 
 ## Validation bundle
 

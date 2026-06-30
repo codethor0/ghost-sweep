@@ -92,9 +92,9 @@ The Google Form URL in `public-mvp/index.html` is a placeholder until the real f
 
 ## Current project status
 
-Latest pushed baseline: `cc202d2` (Batch 6E contributor readiness on `main`).
+Latest pushed baseline: Batch 6F contributor-readiness sync on `main` (includes Batch 6E at `6074691`).
 
-Batches 6A through 6E are committed on `main`. This is active development, not a release-ready product. Public launch is not started.
+Batches 6A through 6E are committed on `main`. Batch 6F adds post-6E validation, docs sync, and launch preflight. This is active development, not a release-ready product. Public launch is not started.
 
 **Repository:** private. GitHub Pages is not enabled. Public MVP static files exist in `public-mvp/` but are not live.
 
@@ -124,10 +124,12 @@ Batches 6A through 6E are committed on `main`. This is active development, not a
 - Normalizes http/https URLs and detects likely ATS or career-page providers
 - Unit tests only; not wired to backend API routes; no network calls
 
-**Contributor readiness (Batch 6E):**
+**Contributor readiness (Batch 6E complete):**
 
+- 22 GitHub labels live; Issue #1 labeled for first contributor lane
 - GitHub issue templates, PR template, CODEOWNERS, label taxonomy doc
 - CONTRIBUTING and onboarding doc polish; no application behavior changes
+- Private collaborator Write invite for Greg (`gmcguirk-contractor`) pending acceptance; not Admin/Maintain
 
 **Implemented frontend (Batch 6C):**
 

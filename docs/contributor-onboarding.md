@@ -2,6 +2,10 @@
 
 Onboarding guide for private collaborators on ghost-sweep. Read `CONTRIBUTING.md` and `AGENTS.md` first.
 
+## Collaborator access
+
+Greg (`gmcguirk-contractor`) has a Write collaborator invite pending acceptance. Permission level is Write only, not Admin or Maintain. Do not request elevated permissions without maintainer approval.
+
 ## Repository layout
 
 | Path | Purpose |
@@ -114,5 +118,16 @@ Use draft PRs early. Keep scope small. Match existing code style (type hints, no
 
 - [CONTRIBUTING.md](../CONTRIBUTING.md)
 - [implementation-status.md](implementation-status.md)
+- [labels.md](labels.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [public-launch-checklist.md](public-launch-checklist.md)
+
+## GitHub tracking issues
+
+| Issue | Purpose |
+| ----- | ------- |
+| [#1](https://github.com/codethor0/ghost-sweep/issues/1) | First contributor lane: job URL validation helpers |
+| [#2](https://github.com/codethor0/ghost-sweep/issues/2) | Public launch: Form URL and static Pages |
+| [#3](https://github.com/codethor0/ghost-sweep/issues/3) | CI billing infrastructure blocker |
+| [#4](https://github.com/codethor0/ghost-sweep/issues/4) | Deferred dependency advisories |
+| [#5](https://github.com/codethor0/ghost-sweep/issues/5) | URL validation API integration design |

@@ -43,7 +43,7 @@ See [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md).
 - Access tokens must not be stored in browser localStorage
 - Docker Compose defaults in `.env.example` are development-only placeholders, not production values
 - Auth endpoints are rate limited
-- Dependencies are audited in CI; see [docs/dependency-audit.md](docs/dependency-audit.md) for known deferred advisories
+- Dependencies are audited locally and in CI when billing permits; see [docs/dependency-audit.md](docs/dependency-audit.md) for known deferred advisories (Issue #4)
 - External validation bundles and review artifacts must redact access and refresh tokens; see [docs/validation-artifacts.md](docs/validation-artifacts.md)
 
 ## Disclosure policy

@@ -35,13 +35,14 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - No Docker, CI, or dependency changes
 - No public launch changes (Form URL placeholder, Pages off, repository private)
 
-## Documentation sync (Batch 6F)
+## Documentation sync and launch preflight (Batch 6F)
 
-- README and launch docs updated to baseline `cc202d2`
-- Stale Batch 6C/6D status references corrected across docs
-- Clarified: Batch 6D offline URL validation is complete but not API-wired; extension remains scaffold only
-- Clarified: public MVP static files exist but are not live; Form URL placeholder; GitHub Pages not enabled; repository private
-- Clarified: GitHub Actions failures are billing/spending infrastructure blockers before job steps run; local validation is source of truth
+- Post-6E validation: labels, Issue #1 taxonomy, templates, and local gates verified
+- Stale baseline references updated to `6074691` across README and launch docs
+- GitHub tracking issues created: #2 Form/Pages launch, #3 CI billing, #4 dependency advisories, #5 URL validation API design
+- Greg Write invite pending acceptance (`gmcguirk-contractor`); not Admin/Maintain
+- Public launch remains blocked: Form URL placeholder, Pages off, repository private
+- GitHub Actions billing-blocked before job steps; local validation is source of truth
 - No application, schema, API, Docker, CI, or dependency changes
 
 ## Frontend (Batch 6C complete)

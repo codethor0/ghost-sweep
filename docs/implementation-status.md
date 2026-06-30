@@ -72,6 +72,15 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Issue #4 remains open with documented classification and future upgrade plan
 - No backend API/auth/schema, Docker, CI, frontend, or extension behavior changes
 
+## Backend runtime dependency remediation (Batch 7B)
+
+- Upgraded `fastapi==0.138.2` in `backend/pyproject.toml` (transitive `starlette==1.3.1`)
+- Starlette runtime advisories cleared; pip-audit reduced from 16 to 9 (dev/tooling only)
+- Backend gates pass: py_compile, black, flake8, mypy, 154 pytest @ 84.34%, bandit
+- Live E2E pass: report 201, get 200, vote 201, auth lifecycle, moderation ACL, all frontend routes
+- No backend API/auth/schema, Alembic, Docker config, CI, frontend, extension, or public-mvp changes
+- Frontend Next.js 16 deferred to Batch 7C; Issue #4 remains open
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints

@@ -1,6 +1,21 @@
 # Dependency Audit Status
 
-This document records known dependency advisories after Batch 6I triage (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+This document records known dependency advisories after Batch 7B backend remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+
+## Batch 7B summary
+
+| Item | Result |
+| ---- | ------ |
+| Audit date | 2026-06-30 |
+| Starting commit | `f9bf756` (Batch 6I) |
+| FastAPI | 0.115.6 → **0.138.2** |
+| Starlette (transitive) | 0.41.3 → **1.3.1** |
+| pip-audit | **FAIL** — 9 vulnerabilities in 5 packages (dev/tooling only) |
+| Starlette runtime advisories | **Cleared** |
+| npm audit --audit-level=high | **FAIL** — 5 vulnerabilities (unchanged; deferred to Batch 7C) |
+| Issue #4 | **Remains open** (frontend npm + dev/tooling pip advisories) |
+
+Batch 7B upgraded `fastapi==0.138.2` in `backend/pyproject.toml`. No backend app source, API, auth, schema, Docker, or CI changes. Full backend gates and live E2E pass on Next.js 14 frontend.
 
 ## Batch 6I summary
 
@@ -59,30 +74,45 @@ Command:
 cd backend && pip-audit
 ```
 
-Exit code: **1** (16 known vulnerabilities in 6 packages)
+Exit code: **1** (9 known vulnerabilities in 5 packages — dev/tooling only after Batch 7B)
 
 Backend dependency manager: **pyproject.toml** with pinned versions in `[project.dependencies]` and `[project.optional-dependencies.dev]`. No requirements.txt lockfile; Docker installs from pyproject.toml.
 
-### Advisory table (pip)
+### Remediated in Batch 7B (runtime)
 
-| Package | Installed | Severity | Advisory ID | Direct/Transitive | Runtime/Dev | Reachability | Fix version | Fix class | Action |
-| ------- | --------- | -------- | ----------- | ----------------- | ----------- | ------------ | ----------- | --------- | ------ |
-| starlette | 0.41.3 | high | PYSEC-2026-161, PYSEC-2026-249, PYSEC-2026-248, GHSA-wqp7-x3pw-xc5r, GHSA-x746-7m8f-x49c | transitive via fastapi | **runtime** | production HTTP layer | 1.0.1–1.3.1 | **major** (0.x → 1.x) | **Deferred** — FastAPI 0.115.6 requires `starlette<0.42.0,>=0.40.0` |
-| starlette | 0.41.3 | high | GHSA-2c2j-9gv5-cj73 | transitive via fastapi | runtime | multipart upload paths | 0.47.2 | patch (within 0.x) | **Deferred** — blocked by FastAPI starlette upper bound |
-| starlette | 0.41.3 | high | GHSA-7f5h-v6xp-fcq8 | transitive via fastapi | runtime | FileResponse/static (not used in current API) | 0.49.1 | minor (within 0.x) | **Deferred** — blocked by FastAPI starlette upper bound; low immediate exposure |
-| black | 24.10.0 | moderate | GHSA-3936-cmfr-pm3m | direct (dev) | dev-only | local formatter CLI | 26.3.1 | **major** (24 → 26) | **Deferred** — dev-only |
-| pytest | 8.3.4 | high | GHSA-6w46-j5rx-g56g | direct (dev) | dev-only | local test runner | 9.0.3 | **major** (8 → 9) | **Deferred** — dev-only |
-| pip | 25.1.1 | high | PYSEC-2026-196, GHSA-4xh5-x5gv-qwph, etc. | tooling (not in pyproject) | dev-only | local pip CLI | 26.1.2 | **major** | **Deferred** — host tooling, not app dependency |
-| wheel | 0.45.1 | high | GHSA-8rrh-rw8j-w5fx | tooling (not in pyproject) | dev-only | wheel unpack CLI | 0.46.2 | patch | **Deferred** — host tooling |
-| loguru | 0.5.3 | low | PYSEC-2022-14 | transitive | unknown/local-only | not used by app code directly | 0.5.3 listed / 0.7.3 available | patch | **Deferred** — transitive; not pinned in pyproject |
+| Package | Before | After | Result |
+| ------- | ------ | ----- | ------ |
+| fastapi | 0.115.6 | 0.138.2 | Upgraded in pyproject.toml |
+| starlette | 0.41.3 | 1.3.1 (transitive) | All 7 runtime Starlette advisories **cleared** |
+
+### Remaining pip advisories (post Batch 7B)
+
+| Package | Installed | Severity | Advisory ID | Direct/Transitive | Runtime/Dev | Action |
+| ------- | --------- | -------- | ----------- | ----------------- | ----------- | ------ |
+| black | 24.10.0 | moderate | GHSA-3936-cmfr-pm3m | direct (dev) | dev-only | **Deferred** — requires black 26.x major |
+| pytest | 8.3.4 | high | GHSA-6w46-j5rx-g56g | direct (dev) | dev-only | **Deferred** — requires pytest 9.x major |
+| pip | 25.1.1 | high | multiple | tooling (not in pyproject) | dev-only | **Deferred** — host tooling |
+| wheel | 0.45.1 | high | GHSA-8rrh-rw8j-w5fx | tooling (not in pyproject) | dev-only | **Deferred** — host tooling |
+| loguru | 0.5.3 | low | PYSEC-2022-14 | transitive | unknown/local-only | **Deferred** — not pinned in pyproject |
+
+### Prior pip advisory table (pre Batch 7B, for reference)
+
+Starlette runtime advisories listed below were **cleared** by FastAPI 0.138.2 upgrade:
+
+| Package | Installed (was) | Severity | Advisory ID | Status |
+| ------- | --------------- | -------- | ----------- | ------ |
+| starlette | 0.41.3 | high | PYSEC-2026-161, PYSEC-2026-249, PYSEC-2026-248, GHSA-wqp7-x3pw-xc5r, GHSA-x746-7m8f-x49c, GHSA-2c2j-9gv5-cj73, GHSA-7f5h-v6xp-fcq8 | **Remediated Batch 7B** |
 
 ### pip future remediation plan
 
-1. **Batch 7+ (requires explicit approval):** FastAPI/Starlette upgrade batch
-   - Upgrade FastAPI to a release that supports Starlette 1.x (currently pinned at 0.115.6 with `starlette<0.42.0`)
-   - Full backend pytest, mypy, bandit, and live E2E validation
+1. **Batch 7C (requires explicit approval):** Next.js 14 → 16 major upgrade for frontend npm high advisories
 2. **Optional dev batch:** pytest 9.x and black 26.x with test/format verification
 3. **Future hardening:** consider pip-tools or uv lockfile for reproducible backend installs
+
+## Remediated in Batch 7B
+
+- `fastapi==0.138.2` (from 0.115.6) — clears all Starlette runtime advisories via transitive `starlette==1.3.1`
+- Validated: 154 pytest @ 84.34%, mypy, bandit, live E2E (report 201, vote 201)
 
 ## Remediated in Batch 6I
 
@@ -94,10 +124,14 @@ None. Triage-only batch; no safe patch/minor upgrades cleared high-severity runt
 
 ## Issue #4 status
 
-**Issue #4 remains open.** Dependency advisories are documented with classification and deferred remediation plans. Do not close until either:
+**Issue #4 remains open.** Backend Starlette runtime advisories are remediated. Remaining blockers:
 
-- Safe upgrades are applied and audits pass, or
-- Remaining advisories are formally accepted with signed-off risk rationale for launch
+- Frontend npm high advisories (Next.js 14 → 16, Batch 7C)
+- Backend dev/tooling pip advisories (black, pytest, pip, wheel, loguru)
+
+Do not close until frontend npm advisories are remediated or formally accepted, and remaining dev/tooling risk is documented or resolved.
+
+Do not claim all dependencies are clean — npm audit still fails.
 
 ## Re-check commands
 

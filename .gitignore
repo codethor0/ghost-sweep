@@ -36,7 +36,14 @@ ghost-sweep
 .DS_Store
 ._*
 
-# Local env
+# Local audit artifacts (do not commit)
+*.log
+*.tmp
+*.tar.gz
+*.zip
+
+# Python tooling caches
+.ruff_cache/
 .env
 .env.*
 !.env.example

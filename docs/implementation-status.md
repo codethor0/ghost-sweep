@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6G. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 6H. For API details see [api.md](api.md).
 
 ## Authentication
 
@@ -52,6 +52,16 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Launch blocker preflight documented (Form URL, Pages, checklist, CI billing, dependency advisories)
 - Greg Write invite still pending acceptance; not Admin/Maintain
 - No application, schema, API, Docker, CI, or dependency changes
+
+## Evidence hardening (Batch 6H)
+
+- Added `scripts/live_e2e_validation.py` for corrected auth/report/vote/frontend/public-MVP proof
+- Added `scripts/create_audit_bundle.py` with strict exclusions for AppleDouble, caches, secrets, archives
+- `.env.example` header clarified; `.gitignore` hardened for audit artifact patterns
+- Docs updated: exact API paths, expected status codes (report 201, vote 201), no overstated CI success
+- Audit bundles must contain real evidence reports, not placeholder stubs
+- No backend API/auth/schema, Docker, CI, frontend, or extension behavior changes
+- No public launch changes
 
 ## Frontend (Batch 6C complete)
 

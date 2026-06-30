@@ -88,6 +88,8 @@ Scope summary:
 
 Platforms covered in tests: Workday, Greenhouse, Lever, Ashby, SmartRecruiters, generic company career pages, invalid URLs.
 
+For live Docker proof of auth, report, and vote flows, run `python3.11 scripts/live_e2e_validation.py` after starting the stack. The script expects report create **201**, report get **200**, and vote create **201** using `report_type`, `description`, and `vote: "up"`.
+
 ## Pull request expectations
 
 Every PR must include:

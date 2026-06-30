@@ -61,7 +61,9 @@ Complete this checklist before making the ghost-sweep repository public and enab
 - [ ] No ANSI escape codes, emoji, AppleDouble, or `.DS_Store` in bundle
 - [ ] No unredacted tokens in bundle
 - [ ] `public-mvp/` included in bundle snapshot
-- [ ] `.env.example` included; `.env` absent
+- [ ] `.env.example` present and referenced by onboarding docs
+- [ ] Live E2E script passes with report 201, report get 200, vote 201
+- [ ] Audit bundles exclude AppleDouble (`._*`), `.DS_Store`, caches, and archives
 
 ## Human review
 

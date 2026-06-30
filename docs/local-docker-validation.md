@@ -2,7 +2,27 @@
 
 This document records live-validated milestones for ghost-sweep on Docker Compose.
 
-Latest validation baseline: commit `fee68e1` (Batch 6F on `main`; includes Batch 6D offline URL validation and prior API/frontend scope).
+Latest validation baseline: commit `2f14a42` (Batch 6G on `main`; Batch 6H adds corrected E2E proof scripts).
+
+## Live E2E validation script
+
+Run against Docker backend, frontend, and optional public MVP preview:
+
+```bash
+docker compose up -d postgres postgres_test redis backend frontend
+cd backend && python3.11 scripts/seed_demo_data.py
+python3 -m http.server 8080 --directory public-mvp &
+python3.11 scripts/live_e2e_validation.py \
+  --backend-url http://localhost:8000 \
+  --frontend-url http://localhost:3000 \
+  --public-mvp-url http://localhost:8080 \
+  --output-md /Users/thor/Downloads/ghost-sweep-live-e2e.md \
+  --output-json /Users/thor/Downloads/ghost-sweep-live-e2e.json
+```
+
+The script exits nonzero if report create (201), report get (200), or vote create (201) fail.
+
+Auth register uses `username` (not `full_name`). Login uses `identifier`.
 
 ## Validated Docker services
 
@@ -84,19 +104,18 @@ JOB_POSTING_ID="<job_posting_uuid>"
 curl -s -X POST http://localhost:8000/api/v1/reports \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
-  -d "{\"job_posting_id\":\"${JOB_POSTING_ID}\",\"report_type\":\"stale_posting\",\"description\":\"The posting remained active without recruiter follow-up for several months.\"}" \
-  | jq .
+  -d "{\"job_posting_id\":\"${JOB_POSTING_ID}\",\"report_type\":\"ghost_job\",\"description\":\"The posting remained active without recruiter follow-up for several months.\"}" \
+  -w "\nHTTP:%{http_code}\n"
 
 REPORT_ID="<report_uuid_from_create_response>"
 
-curl -s "http://localhost:8000/api/v1/reports?job_posting_id=${JOB_POSTING_ID}" | jq .
-curl -s http://localhost:8000/api/v1/reports/${REPORT_ID} | jq .
+curl -s http://localhost:8000/api/v1/reports/${REPORT_ID} -w "\nHTTP:%{http_code}\n"
 
 curl -s -X POST "http://localhost:8000/api/v1/reports/${REPORT_ID}/votes" \
   -H "Authorization: Bearer ${ACCESS_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"vote":"up"}' \
-  | jq .
+  -w "\nHTTP:%{http_code}\n"
 ```
 
 | Endpoint | Auth | Expected result |

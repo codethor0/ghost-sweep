@@ -3,12 +3,13 @@ description: Propose a documentation correction or gap fill with no app behavior
 title: "[Docs] "
 labels:
   - type:docs
+  - area:docs
 body:
   - type: input
     id: doc_file
     attributes:
-      label: Documentation file
-      description: Primary file path to update.
+      label: Document or section
+      description: Primary file path or section to update.
       placeholder: docs/contributor-onboarding.md
     validations:
       required: true
@@ -16,7 +17,7 @@ body:
   - type: textarea
     id: stale_section
     attributes:
-      label: Stale or missing section
+      label: Problem
       description: What is wrong, outdated, or missing today?
     validations:
       required: true
@@ -24,8 +25,19 @@ body:
   - type: textarea
     id: proposed_correction
     attributes:
-      label: Proposed correction
+      label: Proposed fix
       description: What should the documentation say instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance criteria
+      description: How will reviewers know the docs task is complete?
+      placeholder: |
+        Section X matches current implementation-status.md
+        No stale commit hashes or batch references remain
     validations:
       required: true
 
@@ -48,3 +60,15 @@ body:
         python3.11 scripts/validate_public_mvp.py (if public-mvp docs changed)
     validations:
       required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Documentation checklist
+      options:
+        - label: Documentation only; no application behavior changes
+          required: true
+        - label: No secrets, tokens, or credentials will be committed
+          required: true
+        - label: No generated artifacts will be committed
+          required: true

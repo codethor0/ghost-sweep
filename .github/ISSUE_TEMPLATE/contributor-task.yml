@@ -1,6 +1,6 @@
 name: Contributor task
-description: Propose a scoped contribution with clear boundaries and validation plan
-title: "[Contributor] "
+description: Scoped contributor work item
+title: "[Task]: "
 labels:
   - help wanted
 body:
@@ -8,7 +8,7 @@ body:
     attributes:
       value: |
         Use this template for scoped contributor work. Open a draft pull request early when possible.
-        First-time contributors should read [contributor-onboarding.md](../../docs/contributor-onboarding.md).
+        First-time contributors should read [contributor-onboarding.md](../../docs/contributor-onboarding.md) and Issue #1.
 
   - type: input
     id: title_summary
@@ -72,7 +72,7 @@ body:
     id: validation_commands
     attributes:
       label: Validation commands
-      description: Commands you will run before requesting review.
+      description: Commands you will run before requesting review. List each command explicitly.
       value: |
         cd backend && python3.11 -m py_compile $(find app tests alembic -name "*.py")
         cd backend && black --check --quiet app tests alembic
@@ -81,6 +81,15 @@ body:
         cd backend && TEST_DATABASE_URL="postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5433/ghost_sweep_test" TEST_REDIS_URL="redis://localhost:6379/1" pytest -v --cov=app --cov-fail-under=80
     validations:
       required: true
+
+  - type: textarea
+    id: maintainer_approval_notes
+    attributes:
+      label: Maintainer approval notes
+      description: Call out anything that may need maintainer approval before you start (API, schema, Docker, CI, dependencies, public launch).
+      placeholder: None expected. Offline helper and unit tests only.
+    validations:
+      required: false
 
   - type: checkboxes
     id: checklist
@@ -96,6 +105,8 @@ body:
         - label: No secrets, tokens, or .env files will be committed
           required: true
         - label: No generated artifacts will be committed (__pycache__, .pyc, node_modules, .next, caches)
+          required: true
+        - label: Local validation commands are listed above and will be run before review
           required: true
         - label: I will open a draft PR early for feedback when implementation starts
           required: false

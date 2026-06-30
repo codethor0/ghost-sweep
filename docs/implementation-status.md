@@ -22,16 +22,18 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Not wired to backend API routes yet
 - Future work may add controlled validation against company career pages only after policy and design review
 
-## Contributor readiness (Batch 6E)
+## Contributor readiness (Batch 6E complete)
 
 - GitHub issue templates: contributor task, bug report, documentation task (`.github/ISSUE_TEMPLATE/*.yml`)
-- Pull request template with scope and risk checklists (`.github/pull_request_template.md`)
+- Pull request template with scope, out-of-scope, risk level, and hygiene checklists (`.github/pull_request_template.md`)
 - CODEOWNERS for maintainer review on high-risk paths (`.github/CODEOWNERS`)
-- Label taxonomy documented in [labels.md](labels.md); label creation deferred to maintainer approval
-- CONTRIBUTING.md polish: onboarding link, approval gates, local verification, log redaction
+- Label taxonomy live on GitHub (22 labels); documented in [labels.md](labels.md)
+- Issue #1 labeled: `help wanted`, `good first issue`, `area:backend`, `batch-6e`
+- CONTRIBUTING.md and [contributor-onboarding.md](contributor-onboarding.md) polished for first PR lanes and Issue #1
 - No application behavior changes
 - No backend, auth, schema, or API changes
-- No public launch changes
+- No Docker, CI, or dependency changes
+- No public launch changes (Form URL placeholder, Pages off, repository private)
 
 ## Documentation sync (Batch 6F)
 

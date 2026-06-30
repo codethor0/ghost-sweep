@@ -4,7 +4,11 @@
 
 ## Scope
 
-<!-- Keep the change small and intentional. List what is in scope and out of scope. -->
+<!-- Keep the change small and intentional. List what is in scope. -->
+
+## Out-of-scope areas
+
+<!-- Explicitly list paths or systems you did not touch. -->
 
 ## Related issue
 
@@ -26,9 +30,13 @@ cd backend && pytest -v --cov=app --cov-fail-under=80
 cd frontend && npm run lint && npm run typecheck && npm test
 ```
 
-## Screenshots (if UI)
+## Screenshots (if UI or public-mvp changed)
 
 <!-- Required for visible frontend or public-mvp changes. -->
+
+## Risk level
+
+<!-- Low / Medium / High and why. -->
 
 ## Risk checklist
 
@@ -38,8 +46,10 @@ cd frontend && npm run lint && npm run typecheck && npm test
 - [ ] **No backend API, auth, or schema changes** (or separately approved and called out below)
 - [ ] **No Docker or CI workflow changes** (or separately approved and called out below)
 - [ ] **No secrets or generated artifacts committed** (`.env`, `__pycache__`, `.pyc`, `node_modules`, `.next`, caches, validation logs with tokens)
+- [ ] **No tool attribution** in commits, code, comments, or documentation
 - [ ] Security and privacy impact considered
 - [ ] Rollback plan described for non-trivial changes
+- [ ] Draft PR opened early when scope was uncertain
 
 ## Approval notes
 

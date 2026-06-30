@@ -6,5 +6,6 @@
 /backend/alembic/ @codethor0
 /.github/ @codethor0
 /docker-compose.yml @codethor0
+/Dockerfile @codethor0
 /public-mvp/ @codethor0
 /docs/ @codethor0

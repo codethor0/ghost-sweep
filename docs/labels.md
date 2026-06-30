@@ -1,8 +1,22 @@
 # GitHub Label Taxonomy
 
-Recommended labels for ghost-sweep issues and pull requests. Maintainers create these in the GitHub UI or via API when ready.
+Recommended labels for ghost-sweep issues and pull requests. The taxonomy below reflects the live label set on GitHub (22 labels total).
 
-This document does not create labels automatically. See [Creating labels](#creating-labels) for optional commands.
+## Default and legacy labels (preserved)
+
+GitHub default labels remain for backward compatibility. Do not delete them.
+
+| Label | Purpose |
+| ----- | ------- |
+| `bug` | Legacy default defect label |
+| `documentation` | Legacy default documentation label |
+| `duplicate` | Duplicate issue or pull request |
+| `enhancement` | Legacy default feature request label |
+| `invalid` | Invalid or off-topic report |
+| `question` | Further information requested |
+| `wontfix` | Will not be worked on |
+
+Prefer the `type:*` labels for new issues when the taxonomy below is active.
 
 ## Contributor discovery
 
@@ -42,7 +56,16 @@ This document does not create labels automatically. See [Creating labels](#creat
 
 | Label | Purpose |
 | ----- | ------- |
-| `batch-6e` | Contributor readiness batch (templates, labels docs, PR guardrails) |
+| `batch-6e` | Contributor readiness batch (templates, labels, PR guardrails) |
+
+## Recommended labels for Issue #1
+
+Issue #1 (Contributor onboarding: job URL validation pipeline) uses:
+
+- `help wanted`
+- `good first issue`
+- `area:backend`
+- `batch-6e`
 
 ## Usage guidance
 
@@ -50,30 +73,18 @@ This document does not create labels automatically. See [Creating labels](#creat
 - Use `help wanted` or `good first issue` for contributor lanes with clear acceptance criteria.
 - Use `blocked:*` instead of closing when work depends on maintainer input.
 - Do not use labels to bypass review requirements in `CONTRIBUTING.md` or `AGENTS.md`.
+- Do not delete legacy labels; prefer `type:*` for new issues.
 
-## Creating labels
+## Label inventory (22 total)
 
-Run only when explicitly approved. Example commands for maintainers:
-
-```bash
-gh label create "good first issue" --color "7057ff" --description "Good for newcomers"
-gh label create "help wanted" --color "008672" --description "Extra attention is needed"
-gh label create "area:backend" --color "1d76db" --description "Backend Python/FastAPI"
-gh label create "area:frontend" --color "1d76db" --description "Next.js frontend"
-gh label create "area:docs" --color "1d76db" --description "Documentation"
-gh label create "area:public-mvp" --color "1d76db" --description "Static public MVP site"
-gh label create "area:extension" --color "1d76db" --description "Browser extension"
-gh label create "area:tests" --color "1d76db" --description "Tests and verification"
-gh label create "type:bug" --color "d73a4a" --description "Something is not working"
-gh label create "type:docs" --color "0075ca" --description "Documentation improvement"
-gh label create "type:feature" --color "a2eeef" --description "New feature or request"
-gh label create "type:validation" --color "fbca04" --description "Verification or audit work"
-gh label create "blocked:needs-design" --color "b60205" --description "Needs maintainer design decision"
-gh label create "blocked:external" --color "b60205" --description "Blocked on external dependency"
-gh label create "batch-6e" --color "5319e7" --description "Batch 6E contributor readiness"
-```
-
-Existing labels such as `bug` and `enhancement` may remain from earlier templates. Prefer the `type:*` labels for new issues when the taxonomy above is active.
+| Category | Count | Labels |
+| -------- | ----- | ------ |
+| Legacy/default | 7 | bug, documentation, duplicate, enhancement, invalid, question, wontfix |
+| Contributor discovery | 2 | good first issue, help wanted |
+| Area | 6 | area:backend, area:frontend, area:docs, area:public-mvp, area:extension, area:tests |
+| Type | 4 | type:bug, type:docs, type:feature, type:validation |
+| Blocked | 2 | blocked:needs-design, blocked:external |
+| Batch | 1 | batch-6e |
 
 ## Related documents
 

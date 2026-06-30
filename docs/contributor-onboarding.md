@@ -67,9 +67,11 @@ python3 -m http.server 8080 --directory public-mvp
 
 ## First contributor lane: job URL validation pipeline
 
-See the GitHub issue titled **Contributor onboarding: job URL validation pipeline**.
+Start with [Issue #1](https://github.com/codethor0/ghost-sweep/issues/1): **Contributor onboarding: job URL validation pipeline**.
 
 Batch 6D adds an offline URL validation foundation in `backend/app/services/job_url_validation.py`. It does not scrape or call third-party sites. Future work can add controlled validation against company career pages only after policy and design review.
+
+Greg and other contributors should extend the offline helpers and unit tests first. Do not wire API routes, add network calls in tests, or change schema in the first PR.
 
 Scope summary:
 
@@ -78,6 +80,7 @@ Scope summary:
 - No database schema changes in the first PR
 - No backend API behavior changes unless separately approved
 - No new dependencies without discussion
+- Open a draft PR early for feedback
 
 Platforms covered in tests: Workday, Greenhouse, Lever, Ashby, SmartRecruiters, generic company career pages, invalid URLs.
 

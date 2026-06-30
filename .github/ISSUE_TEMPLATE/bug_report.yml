@@ -8,7 +8,7 @@ body:
     attributes:
       value: |
         Do not paste secrets, JWTs, refresh tokens, API keys, or unredacted `.env` values.
-        Redact tokens in logs before attaching output.
+        Redact tokens in logs and screenshots before attaching output.
 
   - type: textarea
     id: summary
@@ -56,8 +56,15 @@ body:
     id: logs
     attributes:
       label: Logs or command output
-      description: Paste relevant logs with tokens redacted.
+      description: Paste relevant logs with tokens redacted. Do not include secrets or credentials.
       placeholder: Include pytest, curl, or browser console output as applicable.
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Attach screenshots if UI-related. Redact any tokens, emails, or credentials visible in the image.
+      placeholder: Drag and drop images here or describe what you observed.
 
   - type: textarea
     id: validation_output
@@ -70,9 +77,11 @@ body:
         python3.11 scripts/validate_public_mvp.py
 
   - type: checkboxes
-    id: secrets_check
+    id: scope_check
     attributes:
-      label: Security hygiene
+      label: Scope and security checklist
       options:
         - label: I confirm this issue contains no secrets or unredacted credentials
+          required: true
+        - label: I identified whether this affects local/Docker full-stack or the static public-MVP path only
           required: true

@@ -6,10 +6,13 @@ Thank you for helping improve hiring transparency.
 
 1. Read `README.md`, `AGENTS.md`, and `docs/architecture.md`
 2. First-time contributors should read [docs/contributor-onboarding.md](docs/contributor-onboarding.md)
-3. Search existing issues and pull requests
-4. Start with an issue or a **draft pull request** for substantial work
+3. Start with [Issue #1](https://github.com/codethor0/ghost-sweep/issues/1) or another scoped contributor lane
+4. Search existing issues and pull requests
+5. Open a **draft pull request** early for substantial or uncertain work
 
-Use the GitHub issue templates under `.github/ISSUE_TEMPLATE/` when opening contributor tasks, bugs, or documentation work. See [docs/labels.md](docs/labels.md) for the recommended label taxonomy.
+Use the GitHub issue templates under `.github/ISSUE_TEMPLATE/` when opening contributor tasks, bugs, or documentation work. See [docs/labels.md](docs/labels.md) for the live label taxonomy (22 labels; legacy defaults preserved).
+
+First pull requests should stay small: extend offline helpers and unit tests before touching API routes, schema, Docker, or CI.
 
 ## Maintainer approval required before you start
 
@@ -94,6 +97,7 @@ node extension/tests/smoke.test.mjs
 
 - Do not commit `.env`, secrets, tokens, or validation logs with unredacted credentials
 - Do not commit generated artifacts (`__pycache__`, `.pyc`, `node_modules`, `.next`, caches, build info files)
+- Do not include tool attribution in commits, code, comments, or documentation
 - Redact JWTs, refresh tokens, and API keys before pasting logs in issues or pull requests
 - See [docs/validation-artifacts.md](docs/validation-artifacts.md)
 

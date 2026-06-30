@@ -1,9 +1,10 @@
 import { ReportForm } from "@/components/reports/ReportForm";
 
 interface ReportPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function ReportPage({ params }: ReportPageProps) {
-  return <ReportForm jobPostingId={params.id} />;
+export default async function ReportPage({ params }: ReportPageProps) {
+  const { id } = await params;
+  return <ReportForm jobPostingId={id} />;
 }

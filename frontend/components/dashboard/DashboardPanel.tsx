@@ -12,23 +12,23 @@ export function DashboardPanel() {
   const { accessToken, isAuthenticated } = useSession();
   const [user, setUser] = useState<UserResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loadedToken, setLoadedToken] = useState<string | null>(null);
+
+  const loading = isAuthenticated && accessToken !== loadedToken;
 
   useEffect(() => {
     if (!accessToken) {
-      setUser(null);
-      setLoading(false);
       return;
     }
 
     let cancelled = false;
-    setLoading(true);
-    setError(null);
 
     fetchCurrentUser(accessToken)
       .then((profile) => {
         if (!cancelled) {
           setUser(profile);
+          setError(null);
+          setLoadedToken(accessToken);
         }
       })
       .catch((err: unknown) => {
@@ -38,11 +38,7 @@ export function DashboardPanel() {
           } else {
             setError("Unable to load profile.");
           }
-        }
-      })
-      .finally(() => {
-        if (!cancelled) {
-          setLoading(false);
+          setLoadedToken(accessToken);
         }
       });
 

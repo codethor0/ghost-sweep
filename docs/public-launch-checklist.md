@@ -23,10 +23,10 @@ Complete this checklist before making the ghost-sweep repository public and enab
 
 - [x] Backend Starlette runtime advisories remediated (Batch 7B): `fastapi==0.138.2`, `starlette==1.3.1`
 - [x] Backend `pip-audit` post-7B: 9 advisories in 5 packages (dev/tooling only); documented in [dependency-audit.md](dependency-audit.md)
-- [x] Frontend `npm audit --audit-level=high` reviewed (Batch 6I); 5 advisories (4 high) — deferred to Batch 7C
-- [ ] Frontend npm high advisories remediated (Batch 7C: Next.js 16 + ESLint 9 migration)
+- [x] Frontend npm high advisories remediated (Batch 7C): `next@16.2.9`, `eslint-config-next@16.2.9`, `eslint@9.39.1`; ESLint 9 flat config; async params migration
+- [x] Frontend `npm audit --audit-level=high` passes (Batch 7C); 2 moderate PostCSS advisories remain (build-time)
 - [ ] Backend dev/tooling pip advisories remediated or formally accepted (black, pytest, pip, wheel)
-- [ ] Dependency audit fully clean (Issue #4 open until frontend + dev/tooling resolved or accepted)
+- [ ] Dependency audit fully clean (Issue #4 open until moderate npm + dev/tooling resolved or accepted)
 
 ## GitHub Actions billing status
 

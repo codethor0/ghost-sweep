@@ -9,17 +9,18 @@ import { ApiError } from "@/lib/api/client";
 import { DeferredNotice } from "@/components/DeferredNotice";
 
 interface PostingDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function PostingDetailPage({ params }: PostingDetailPageProps) {
+  const { id } = await params;
   let posting = null;
   let riskScore = null;
   let companyName: string | null = null;
 
   try {
-    posting = await fetchJobPosting(params.id);
-    riskScore = await fetchJobPostingRiskScore(params.id);
+    posting = await fetchJobPosting(id);
+    riskScore = await fetchJobPostingRiskScore(id);
     const company = await fetchCompany(posting.company_id);
     companyName = company.name;
   } catch (err) {

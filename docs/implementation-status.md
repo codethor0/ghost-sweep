@@ -81,6 +81,17 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - No backend API/auth/schema, Alembic, Docker config, CI, frontend, extension, or public-mvp changes
 - Frontend Next.js 16 deferred to Batch 7C; Issue #4 remains open
 
+## Frontend Next.js 16 migration (Batch 7C)
+
+- Upgraded `next@16.2.9`, `eslint-config-next@16.2.9`, `eslint@9.39.1` in `frontend/package.json`
+- ESLint 9 flat config (`eslint.config.mjs`); lint script `eslint .` (replaces removed `next lint`)
+- Dynamic route async `params` migration: `/companies/[id]`, `/postings/[id]`, `/postings/[id]/report`
+- Minimal lint fixes: `HomeHero` Link usage, `DashboardPanel` loading-state pattern
+- Frontend gates pass: lint, typecheck, 25 Jest tests, build; npm high advisories cleared
+- Live E2E pass on Next 16 Docker stack: dynamic routes 200, report 201, vote 201
+- No backend API/auth/schema, Alembic, Docker config, CI, extension, or public-mvp changes
+- Issue #4 remains open for moderate npm PostCSS + dev/tooling pip advisories
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints

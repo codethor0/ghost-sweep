@@ -1,6 +1,29 @@
 # Dependency Audit Status
 
-This document records known dependency advisories after Batch 7B backend remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+This document records known dependency advisories after Batch 7C frontend remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+
+## Batch 7C summary
+
+| Item | Result |
+| ---- | ------ |
+| Audit date | 2026-06-30 |
+| Starting commit | `6f724b4` (Batch 7B) |
+| next | 14.2.35 → **16.2.9** |
+| eslint-config-next | 14.2.35 → **16.2.9** |
+| eslint | 8.57.1 → **9.39.1** |
+| npm audit (all) | 5 vulnerabilities (1 moderate, 4 high) → **2 moderate only** |
+| npm audit --audit-level=high | **PASS** — no high-severity findings |
+| pip-audit | **FAIL** — 9 vulnerabilities in 5 packages (dev/tooling only; unchanged from Batch 7B) |
+| Starlette runtime advisories | **Cleared** (Batch 7B) |
+| Issue #4 | **Remains open** (moderate npm PostCSS advisories + dev/tooling pip advisories) |
+
+Batch 7C upgraded `next@16.2.9`, `eslint-config-next@16.2.9`, and `eslint@9.39.1` in `frontend/package.json`. Migrated ESLint to flat config (`eslint.config.mjs`); lint script changed from `next lint` to `eslint .`. Migrated dynamic route pages to async `params` (Next 15+/16 requirement). No backend API/auth/schema, Alembic, Docker, CI, extension, or public-mvp changes. Full frontend gates and live E2E pass on Next.js 16 stack.
+
+### Remaining npm advisories (post Batch 7C)
+
+| Package | Installed | Severity | Advisory | Direct/Transitive | Runtime/Dev | Action |
+| ------- | --------- | -------- | -------- | ----------------- | ----------- | ------ |
+| postcss | 8.4.49 (direct); bundled in next | moderate | GHSA-qx2v-qp2m-jg93 | direct devDep + transitive in next | dev/build | **Deferred** — bundled postcss in next@16.2.9 still flagged; no safe patch without next canary or postcss major in next dependency tree |
 
 ## Batch 7B summary
 
@@ -38,33 +61,23 @@ Command:
 cd frontend && npm audit --audit-level=high
 ```
 
-Exit code: **1** (5 vulnerabilities: 1 moderate, 4 high)
+Exit code: **0** (no high-severity findings; 2 moderate remain in full audit)
 
-### Advisory table (npm)
+Full audit (`npm audit` without level filter): **2 moderate** — postcss bundled in next and direct devDep (GHSA-qx2v-qp2m-jg93). No safe fix without `npm audit fix --force` (would downgrade next to 9.x).
 
-| Package | Installed | Severity | Advisory | Direct/Transitive | Runtime/Dev | Reachability | Fix version | Fix class | Action |
-| ------- | --------- | -------- | -------- | ----------------- | ----------- | ------------ | ----------- | --------- | ------ |
-| next | 14.2.35 | high | GHSA-h25m-26qc-wcjf and related Next.js advisories | direct | runtime (local Docker frontend) | production runtime when frontend is deployed | 16.2.9 | **major** (Next 14 → 16) | **Deferred** — requires dedicated Next.js major upgrade batch with full frontend verification |
-| glob | 10.3.10 | high | GHSA-5j98-mcp5-4vw2 | transitive via eslint-config-next | dev-only (lint CLI) | local-only during `npm run lint` | eslint-config-next@16.2.9 | **major** | **Deferred** — fix path requires eslint-config-next 16.x |
-| eslint-config-next | 14.2.35 | high | via @next/eslint-plugin-next → glob | direct (devDep) | dev-only | local-only | 16.2.9 | **major** | **Deferred** |
-| postcss | 8.4.49 (direct); bundled in next | moderate | GHSA-qx2v-qp2m-jg93 | direct devDep + transitive in next | dev/build (Tailwind/PostCSS pipeline) | build-time only | 8.5.16 (direct) or next@16.2.9 (bundled) | patch (direct) / **major** (via next) | **Deferred** — direct postcss patch to 8.5.16 does not clear audit because next bundles its own postcss |
+### Prior npm advisory table (pre Batch 7C, for reference)
 
-### npm dry-run analysis
-
-```bash
-cd frontend && npm audit fix --dry-run
-cd frontend && npm audit fix --package-lock-only --dry-run
-```
-
-Both commands report **no safe fixes**. All remediations require `npm audit fix --force`, which would install `next@16.2.9` and `eslint-config-next@16.2.9` (breaking major upgrades).
+| Package | Installed (was) | Severity | Status |
+| ------- | --------------- | -------- | ------ |
+| next | 14.2.35 | high | **Remediated Batch 7C** (16.2.9) |
+| glob | 10.3.10 | high | **Remediated Batch 7C** (via eslint-config-next 16.2.9) |
+| eslint-config-next | 14.2.35 | high | **Remediated Batch 7C** (16.2.9) |
+| postcss | 8.4.49 | moderate | **Remains** — build-time only |
 
 ### npm future remediation plan
 
-1. **Batch 7+ (requires explicit approval):** Next.js 14 → 16 major upgrade
-   - Upgrade `next` and `eslint-config-next` together
-   - Full frontend lint, typecheck, test, build, and live E2E validation
-   - Review App Router, middleware, and image optimizer configuration for advisory-specific mitigations
-2. Until then: local Docker frontend remains the validated runtime; public MVP is static HTML with no npm dependencies
+1. Monitor next releases for bundled postcss >= 8.5.10
+2. Optional: bump direct `postcss` devDep when next dependency tree clears
 
 ## pip-audit summary
 
@@ -105,9 +118,14 @@ Starlette runtime advisories listed below were **cleared** by FastAPI 0.138.2 up
 
 ### pip future remediation plan
 
-1. **Batch 7C (requires explicit approval):** Next.js 14 → 16 major upgrade for frontend npm high advisories
-2. **Optional dev batch:** pytest 9.x and black 26.x with test/format verification
-3. **Future hardening:** consider pip-tools or uv lockfile for reproducible backend installs
+1. **Optional dev batch (Batch 7D+):** pytest 9.x and black 26.x with test/format verification
+2. **Future hardening:** consider pip-tools or uv lockfile for reproducible backend installs
+
+## Remediated in Batch 7C
+
+- `next@16.2.9`, `eslint-config-next@16.2.9`, `eslint@9.39.1` — clears all npm high advisories
+- ESLint 9 flat config migration; dynamic route async `params` migration
+- Validated: lint, typecheck, 25 Jest tests, build, live E2E (dynamic routes 200, report 201, vote 201)
 
 ## Remediated in Batch 7B
 
@@ -124,14 +142,14 @@ None. Triage-only batch; no safe patch/minor upgrades cleared high-severity runt
 
 ## Issue #4 status
 
-**Issue #4 remains open.** Backend Starlette runtime advisories are remediated. Remaining blockers:
+**Issue #4 remains open.** Runtime advisories (Starlette, npm high) are remediated. Remaining blockers:
 
-- Frontend npm high advisories (Next.js 14 → 16, Batch 7C)
+- Frontend npm moderate PostCSS advisories (build-time; bundled in next)
 - Backend dev/tooling pip advisories (black, pytest, pip, wheel, loguru)
 
-Do not close until frontend npm advisories are remediated or formally accepted, and remaining dev/tooling risk is documented or resolved.
+Do not close until remaining moderate/dev-tooling advisories are remediated or formally accepted.
 
-Do not claim all dependencies are clean — npm audit still fails.
+Do not claim all dependencies are clean — full `npm audit` and `pip-audit` still report findings.
 
 ## Re-check commands
 

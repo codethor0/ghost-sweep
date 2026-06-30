@@ -8,16 +8,17 @@ import { ApiError } from "@/lib/api/client";
 import { DeferredNotice } from "@/components/DeferredNotice";
 
 interface CompanyDetailPageProps {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
 export default async function CompanyDetailPage({ params }: CompanyDetailPageProps) {
+  const { id } = await params;
   let company = null;
   let score = null;
 
   try {
-    company = await fetchCompany(params.id);
-    score = await fetchCompanyIntegrityScore(params.id);
+    company = await fetchCompany(id);
+    score = await fetchCompanyIntegrityScore(id);
   } catch (err) {
     if (err instanceof ApiError && err.status === 404) {
       notFound();

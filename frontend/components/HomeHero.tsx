@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useHealthStatus } from "@/hooks/useHealthStatus";
 
 export interface HomeHeroProps {
@@ -23,9 +24,9 @@ export function HomeHero({ title, subtitle, postingUrl }: HomeHeroProps) {
           <p className="mt-2 break-all text-sm text-slate">{postingUrl}</p>
           <p className="mt-2 text-sm text-slate">
             Extension handoff is display-only. Look up the matching posting in{" "}
-            <a href="/companies" className="font-medium text-signal hover:underline">
+            <Link href="/companies" className="font-medium text-signal hover:underline">
               companies
-            </a>
+            </Link>
             , sign in, and submit a report from the posting detail page. Direct URL-to-posting lookup
             is not wired yet.
           </p>

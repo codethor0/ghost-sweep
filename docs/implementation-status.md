@@ -63,6 +63,15 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - No backend API/auth/schema, Docker, CI, frontend, or extension behavior changes
 - No public launch changes
 
+## Dependency advisory triage (Batch 6I)
+
+- Fresh npm audit and pip-audit captured at commit `6c81064`; see [dependency-audit.md](dependency-audit.md)
+- npm: 5 vulnerabilities (1 moderate, 4 high); all high fixes require Next.js 16 major upgrade
+- pip: 16 vulnerabilities in 6 packages; runtime Starlette advisories blocked by FastAPI 0.115.6 upper bound
+- No safe patch/minor remediation applied; dependency manifests unchanged
+- Issue #4 remains open with documented classification and future upgrade plan
+- No backend API/auth/schema, Docker, CI, frontend, or extension behavior changes
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints

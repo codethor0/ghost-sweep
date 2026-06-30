@@ -21,9 +21,11 @@ Complete this checklist before making the ghost-sweep repository public and enab
 
 ## Dependency audit status
 
-- [ ] Backend `pip-audit` reviewed; deferred advisories documented in [dependency-audit.md](dependency-audit.md)
-- [ ] Frontend `npm audit --audit-level=high` reviewed; deferred advisories documented
-- [ ] No undeclared dependency additions in this batch
+- [x] Backend `pip-audit` reviewed (Batch 6I); 16 advisories in 6 packages — deferred, documented in [dependency-audit.md](dependency-audit.md)
+- [x] Frontend `npm audit --audit-level=high` reviewed (Batch 6I); 5 advisories (4 high) — deferred, documented
+- [x] No undeclared dependency additions in Batch 6I (triage-only; manifests unchanged)
+- [ ] Dependency advisories remediated or formally accepted for launch (Issue #4 open)
+- [ ] Next.js major upgrade batch completed if npm high advisories must be cleared before public frontend deploy
 
 ## GitHub Actions billing status
 

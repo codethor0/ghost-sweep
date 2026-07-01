@@ -60,13 +60,13 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 - Maintainers review in linked Sheet only
 - Backend moderation APIs exist for in-app reports but are not wired to Form intake
 
-**Near-term (operational, no code required):**
+**Near-term (operational, Batch 10C complete):**
 
-1. Sheet review SOP: triage, duplicate check, approve/reject values for `review_status`
-2. Response SLAs and escalation (see [moderation-model.md](moderation-model.md))
-3. Redaction checklist before any public summary
+1. Sheet review SOP: [moderation-sop.md](moderation-sop.md) — triage, review states, decline codes, import-readiness
+2. Response SLAs and escalation documented in SOP
+3. Redaction and email privacy rules documented in SOP
 
-**Product milestones (Issue #7, future batches):**
+**Product milestones (Issue #7, still deferred):**
 
 1. Moderation queue UI in frontend (admin)
 2. Bridge Sheet-approved rows to backend (Track 1)
@@ -117,7 +117,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 | #1 URL validation onboarding | Refocus -- 6D foundation done; extend tests/docs |
 | #5 URL validation API design | Keep open -- design gate before API wiring |
 | #6 Sheet import planning | New -- design only |
-| #7 Moderation workflow | New -- SOP + product plan |
+| #7 Moderation workflow | SOP complete (10C); product UI still deferred |
 | #8 Extension API wiring plan | New -- design only |
 
 ## Recommended batch sequence
@@ -126,11 +126,11 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 | ----- | ----- | ---------- |
 | **10A** | Roadmap + issue tracker sync | No |
 | **10B** | Public audit remediation (docs, MVP copy, bundle hygiene, URL validation) | Request validation only |
-| **10C** | Moderation SOP doc + Sheet column conventions | No |
+| **10C** | Moderation SOP + Sheet column conventions ([moderation-sop.md](moderation-sop.md)) | No |
 | **10D** | Sheet import design doc (field mapping) | No |
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
-| **12A** | Sheet import script (after 10C approval) | May require schema approval |
+| **12A** | Sheet import script (after 10D approval) | May require schema approval |
 
 ## Related documents
 
@@ -138,5 +138,6 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 - [implementation-status.md](implementation-status.md)
 - [archive/free-public-launch-plan.md](archive/free-public-launch-plan.md) (historical)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
+- [moderation-sop.md](moderation-sop.md)
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)

@@ -63,6 +63,8 @@ These workflows are planned; employer claim and response APIs are implemented. F
 
 Moderators review evidence quality, redact sensitive personal data, and mark reports as reviewed when support is sufficient. Moderators do not assign legal conclusions. Moderation tooling is future work.
 
+**Public MVP (Google Form / Sheet):** Manual review follows [moderation-sop.md](moderation-sop.md). In-app moderation APIs exist for local Docker use but are not wired to Form intake.
+
 ## PII handling
 
 Reports should reference posting URLs, public hiring content, and user-supplied timelines. Moderators remove unnecessary personal contact details for third parties when found in evidence.

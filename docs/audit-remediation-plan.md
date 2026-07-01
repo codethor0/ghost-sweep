@@ -46,7 +46,7 @@ Batch 7E classified remaining advisories as accepted deferred (PostCSS moderate)
 
 ## Deferred: moderation SOP (Batch 10C)
 
-Sheet column conventions and maintainer triage SOP remain planning work (Issue #7). No code in Batch 10B.
+Complete. See [moderation-sop.md](moderation-sop.md). Product moderation UI remains deferred (Issue #7).
 
 ## Related documents
 

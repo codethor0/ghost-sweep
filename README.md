@@ -75,7 +75,7 @@ python3.11 scripts/validate_public_mvp.py
 | Layer | Hosting | Status |
 | ----- | ------- | ------ |
 | Public landing + report CTA | GitHub Pages (root mirror of `public-mvp/`) | Live at https://codethor0.github.io/ghost-sweep/ |
-| Report intake | Google Form -> Google Sheet | Live; manual review |
+| Report intake | Google Form -> Google Sheet | Live; manual review per [moderation-sop.md](docs/moderation-sop.md) |
 | Full app (FastAPI/Postgres/Redis) | Local Docker only | Not publicly hosted |
 | Live scoring database | Not hosted | Deferred |
 

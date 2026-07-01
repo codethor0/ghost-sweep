@@ -92,16 +92,17 @@ Include in the Form description or a dedicated section:
 2. Open **Responses** tab
 3. Click the Google Sheets icon to create a linked spreadsheet
 4. Restrict Sheet access to maintainers only
-5. Add columns for review status if needed (e.g. `review_status`, `reviewer`, `notes`)
+5. Add maintainer review columns per [moderation-sop.md](moderation-sop.md) (`review_status`, `reviewer`, `reviewed_at`, `decline_reason_code`, `notes`, and related fields)
 
-## Replacing the placeholder URL
+## Form URL (live)
 
-Batch 8A (complete):
+Public Send link: `https://forms.gle/PsjaYrbrCjAgZXjW8`
 
-1. Public Send link: `https://forms.gle/PsjaYrbrCjAgZXjW8`
-2. `public-mvp/index.html` contains two matching occurrences of the real URL
-3. `python3.11 scripts/validate_public_mvp.py` rejects the placeholder and requires matching real Form URLs
-4. GitHub Pages is still disabled; public launch not performed
+- `public-mvp/index.html` contains two matching occurrences of the real URL
+- `python3.11 scripts/validate_public_mvp.py` rejects placeholder URLs and requires the live Form URL
+- GitHub Pages serves the static MVP from repository root (mirrors `public-mvp/`)
+
+See [moderation-sop.md](moderation-sop.md) for Sheet review workflow after submission.
 
 ## Data handling
 
@@ -114,7 +115,7 @@ Batch 8A (complete):
 
 ## Related documents
 
-- [free-public-launch-plan.md](free-public-launch-plan.md)
+- [moderation-sop.md](moderation-sop.md)
 - [public-launch-checklist.md](public-launch-checklist.md)
 - [validation-artifacts.md](validation-artifacts.md)
 - [SECURITY.md](../SECURITY.md)

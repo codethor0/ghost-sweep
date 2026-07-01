@@ -73,7 +73,7 @@ All services below should be owned by the **project Google account** (`ghostswee
 | Purpose | Manual moderation queue linked to Form responses |
 | Owner | Project Google account |
 | Access | Maintainers only; no public link |
-| Review columns | `review_status`, `reviewer`, `notes` (manual) |
+| Review columns | See [moderation-sop.md](moderation-sop.md) (`review_status`, `reviewer`, `reviewed_at`, `decline_reason_code`, `notes`, and related fields) |
 | Not | Personal Gmail |
 
 ### Google Drive

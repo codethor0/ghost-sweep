@@ -196,6 +196,13 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - GitHub repository description and homepage metadata updated
 - No database schema, Docker, CI workflow, or extension behavior changes
 
+## Moderation SOP (Batch 10C)
+
+- Added [moderation-sop.md](moderation-sop.md): Sheet review states, reviewer workflow, decline/spam/duplicate codes, evidence and email privacy rules, escalation, import-readiness, audit trail
+- Updated [google-form-intake-spec.md](google-form-intake-spec.md), [moderation-model.md](moderation-model.md), [post-launch-roadmap.md](post-launch-roadmap.md)
+- Issue #7: operational SOP complete; product moderation UI still deferred
+- No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+
 ## Deferred
 
 - Evidence file upload

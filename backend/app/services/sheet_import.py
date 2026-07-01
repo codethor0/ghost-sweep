@@ -378,7 +378,23 @@ def plan_row_import(
 
     job_url = _cell(row, column_map, "job_posting_url")
     normalized = normalize_job_url(job_url)
-    assert normalized is not None
+    if normalized is None:
+        return DryRunPlan(
+            row_number=row_number,
+            action="skip",
+            reason_code="invalid_job_url",
+            message="Job posting URL is not a valid http or https URL",
+            company_action=None,
+            company_name=None,
+            company_domain=None,
+            posting_action=None,
+            original_job_url=job_url or None,
+            normalized_job_url=None,
+            posting_source=None,
+            report_type=None,
+            description_preview=None,
+            row_fingerprint=None,
+        )
 
     company_name = _cell(row, column_map, "company_name")
     job_title = _cell(row, column_map, "job_title")

@@ -86,7 +86,7 @@ Validate before deploy:
 python3.11 scripts/validate_public_mvp.py
 ```
 
-See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), and [docs/public-launch-checklist.md](docs/public-launch-checklist.md).
+See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), [docs/public-launch-checklist.md](docs/public-launch-checklist.md), and [docs/post-launch-roadmap.md](docs/post-launch-roadmap.md).
 
 The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emails must not be published. Edit `public-mvp/` and re-copy to root when updating the live Pages site.
 

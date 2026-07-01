@@ -1,6 +1,8 @@
 # Contributor Onboarding
 
-Onboarding guide for private collaborators on ghost-sweep. Read `CONTRIBUTING.md` and `AGENTS.md` first.
+Onboarding guide for ghost-sweep contributors. Read `CONTRIBUTING.md` and `AGENTS.md` first.
+
+The repository is **public**. The static MVP is live at https://codethor0.github.io/ghost-sweep/. Report intake uses Google Form; the full app runs locally with Docker.
 
 ## Collaborator access
 
@@ -16,7 +18,7 @@ Greg (`gmcguirk-contractor`) has a Write collaborator invite pending acceptance.
 | `extension/` | MV3 scaffold; no backend API integration |
 | `docs/` | Architecture, API, launch plans |
 
-Public MVP uses Google Form intake. The full database-backed app runs locally only until hosted infrastructure is approved.
+Public MVP uses Google Form intake. The full database-backed app runs locally only until hosted infrastructure is approved. See [post-launch-roadmap.md](post-launch-roadmap.md) for product tracks after launch.
 
 ## Local setup (Docker)
 

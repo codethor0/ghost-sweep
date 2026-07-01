@@ -159,6 +159,12 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 - Greg Write invite (`gmcguirk-contractor`) still pending acceptance
 - Issue #4 dependency tracking: maintainer decision to close/update
 
+## Post-launch roadmap (Batch 10A)
+
+- Added [post-launch-roadmap.md](post-launch-roadmap.md): Sheet import planning, moderation workflow, extension API wiring plan, contributor lanes
+- Issue tracker sync: close completed launch issues; open planning issues #6--#8
+- No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+
 ## Deferred
 
 - Evidence file upload

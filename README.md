@@ -18,7 +18,7 @@ The platform uses risk-signal language. It does not make unsupported legal accus
 ghost-sweep/
   backend/     FastAPI API, scoring engine, auth, moderation services
   frontend/    Next.js web application (local Docker; server-mode)
-  public-mvp/  Static GitHub Pages landing site (free public MVP)
+  public-mvp/  Canonical static MVP source (mirrored to repo root for GitHub Pages)
   extension/   Manifest V3 browser extension for job board overlays
   docs/        Architecture, API, scoring, moderation, legal guidance
   .github/     CI workflows and community templates
@@ -63,13 +63,13 @@ Frontend: http://localhost:3000
 
 ## Public MVP (static site)
 
-The free public launch path uses a standalone static site in `public-mvp/`, not the full Next.js app.
+The free public launch path uses a standalone static site. Source files live in `public-mvp/`; root `index.html`, `styles.css`, and `.nojekyll` mirror that folder for GitHub Pages (branch deploy supports `/` or `/docs` only).
 
 | Layer | Hosting | Status |
 | ----- | ------- | ------ |
-| Public landing + report CTA | GitHub Pages (`public-mvp/`) | Static site files are ready; replace the Google Form URL before enabling GitHub Pages |
-| Report intake | Google Form -> Google Sheet | Temporary; manual review |
-| Full app (FastAPI/Postgres/Redis) | Local Docker only | Batch 6B/6C; not publicly hosted |
+| Public landing + report CTA | GitHub Pages (root mirror of `public-mvp/`) | Live at https://codethor0.github.io/ghost-sweep/ |
+| Report intake | Google Form -> Google Sheet | Manual review |
+| Full app (FastAPI/Postgres/Redis) | Local Docker only | Not publicly hosted |
 | Live scoring database | Not hosted | Deferred |
 
 GitHub Pages serves static HTML/CSS/JS only. It cannot run FastAPI, PostgreSQL, or Redis. The Batch 6C Next.js frontend is server-mode and is not GitHub Pages-ready without separate changes.
@@ -88,20 +88,20 @@ python3.11 scripts/validate_public_mvp.py
 
 See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), and [docs/public-launch-checklist.md](docs/public-launch-checklist.md).
 
-The Google Form URL in `public-mvp/index.html` is a placeholder until the real form is created. Raw applicant emails must not be published. The repository is private. Public launch is not started and the launch checklist remains incomplete. Private collaborators can onboard via `docs/contributor-onboarding.md`.
+The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emails must not be published. Edit `public-mvp/` and re-copy to root when updating the live Pages site.
 
 ## Current project status
 
-Latest pushed baseline: `fee68e1` (Batch 6F public-readiness sync on `main`).
+Latest pushed baseline: `95fd21e` (Batch 8A Form URL on `main`).
 
-Batches 6A through 6F are committed on `main`. Batch 6G covers contributor handoff and launch-blocker preflight. This is active development, not a release-ready product. Public launch is not started.
+Batches 6A through 7F and public MVP launch batches (8A, 9B) are on `main`. The full application remains local Docker only; the public site is the static MVP on GitHub Pages.
 
-**Repository:** private. GitHub Pages is not enabled. Public MVP static files exist in `public-mvp/` but are not live.
+**Repository:** public. **GitHub Pages:** enabled from `main` / root (mirrors `public-mvp/`). Live site: https://codethor0.github.io/ghost-sweep/
 
 **CI:**
 
-- GitHub Actions workflow is aligned with verified local backend gates (Python 3.11, postgres:15, redis:7, coverage >= 80%, advisory-only pip-audit for documented deferred advisories).
-- GitHub Actions is blocked by account billing/spending limits before job steps execute. This is an infrastructure blocker, not evidence of failing tests. Local verification is the source of truth until billing is resolved.
+- GitHub Actions CI passes on latest `main` (backend, frontend, extension smoke, public-mvp validator).
+- Local verification remains the source of truth for pre-push checks.
 
 **Implemented backend (through Batch 6B):**
 
@@ -157,7 +157,7 @@ Batches 6A through 6F are committed on `main`. Batch 6G covers contributor hando
 - Release hardening
 - Dependency audit advisories (see [docs/dependency-audit.md](docs/dependency-audit.md))
 
-GitHub repository: https://github.com/codethor0/ghost-sweep (private)
+GitHub repository: https://github.com/codethor0/ghost-sweep (public)
 
 Live Docker validation notes: [docs/local-docker-validation.md](docs/local-docker-validation.md)
 

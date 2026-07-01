@@ -132,15 +132,23 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 
 ## Public MVP (static site)
 
-- Standalone static site in `public-mvp/` for GitHub Pages (HTML/CSS only; no build step)
-- Report intake via Google Form placeholder URL; manual review via Google Sheet
+- Canonical static site source in `public-mvp/` (HTML/CSS only; no build step)
+- Root `index.html`, `styles.css`, and `.nojekyll` mirror `public-mvp/` for GitHub Pages (branch deploy supports `/` or `/docs` only)
+- Live site: https://codethor0.github.io/ghost-sweep/
+- Report intake via Google Form (`https://forms.gle/PsjaYrbrCjAgZXjW8`); manual review via Google Sheet
 - GitHub Pages hosts static content only; no FastAPI, PostgreSQL, or Redis
 - Full Next.js frontend remains server-mode for local Docker; not deployed to Pages
 - Live public scoring database not hosted yet
-- Google Form URL is placeholder until form is created
 - Validation: `python3.11 scripts/validate_public_mvp.py`
 
 See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-intake-spec.md](google-form-intake-spec.md).
+
+## Public repo and Pages (Batch 9B)
+
+- Repository visibility: public
+- GitHub Pages: enabled from `main` / root (mirrors `public-mvp/`)
+- No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+- When updating the live MVP, edit `public-mvp/` and copy to repo root
 
 ## Deferred
 

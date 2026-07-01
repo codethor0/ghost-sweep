@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="ghost-sweep is a community-driven job posting integrity project. Report suspected ghost jobs for manual review."
+    />
+    <title>ghost-sweep | Job Posting Integrity</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container">
+        <p class="eyebrow">Job Integrity Database</p>
+        <h1>ghost-sweep</h1>
+        <p class="subtitle">Community-driven job posting integrity project</p>
+      </div>
+    </header>
+
+    <div class="disclaimer-banner" role="status">
+      <div class="container">
+        <strong>Early public MVP.</strong>
+        Not a final production service. Community reports require review.
+      </div>
+    </div>
+
+    <main id="main-content">
+      <section class="hero container">
+        <h2>Suspected ghost jobs waste applicant time</h2>
+        <p>
+          Job seekers invest hours in postings that stay open without hiring intent, never receive
+          recruiter follow-up, or get reposted without closure. Hiring transparency is uneven, and
+          public information is scattered across boards, employer sites, and anecdotal reports.
+        </p>
+        <p>
+          ghost-sweep helps the community document suspected ghost jobs through structured
+          reporting, maintainer review, integrity scoring, and an audit trail. The full
+          database-backed application is under active development; this public site is the first
+          step toward transparent, evidence-based hiring accountability.
+        </p>
+        <div class="cta-row">
+          <a
+            class="btn btn-primary"
+            href="https://forms.gle/PsjaYrbrCjAgZXjW8"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Submit a report
+          </a>
+          <a
+            class="btn btn-secondary"
+            href="https://github.com/codethor0/ghost-sweep"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            View on GitHub
+          </a>
+        </div>
+      </section>
+
+      <section class="section container" aria-labelledby="how-it-works-heading">
+        <h2 id="how-it-works-heading">How it works</h2>
+        <ol class="steps">
+          <li>
+            <strong>Submit a suspected ghost job.</strong>
+            Use the report form to share the job URL, company, title, location, and why you suspect
+            the posting is not a genuine hire.
+          </li>
+          <li>
+            <strong>Maintainers review submissions.</strong>
+            Reports are reviewed manually. Submissions may be moderated, deduplicated, or declined
+            before any public use.
+          </li>
+          <li>
+            <strong>Validated data can be imported into the full backend.</strong>
+            Approved records can later enter the PostgreSQL database when the hosted application is
+            ready.
+          </li>
+          <li>
+            <strong>Community contributors improve the open-source project.</strong>
+            Backend, frontend, extension, docs, moderation workflows, and evidence upload are open
+            contribution areas.
+          </li>
+        </ol>
+      </section>
+
+      <section class="section container" aria-labelledby="status-heading">
+        <h2 id="status-heading">Current status</h2>
+        <ul class="status-list">
+          <li>This public site is a static MVP hosted on GitHub Pages (when enabled).</li>
+          <li>Report submissions are reviewed manually via Google Form and Google Sheet intake.</li>
+          <li>
+            The full database-backed app (FastAPI, PostgreSQL, Redis) runs locally with Docker
+            only.
+          </li>
+          <li>A live public scoring database is not hosted yet.</li>
+          <li>Frontend and backend integration exists locally through Batch 6C.</li>
+          <li>Offline job URL validation foundation is complete; API wiring and extension integration remain deferred.</li>
+          <li>Evidence file upload is deferred.</li>
+        </ul>
+      </section>
+
+      <section class="section container" aria-labelledby="privacy-heading">
+        <h2 id="privacy-heading">Privacy and moderation</h2>
+        <ul class="status-list">
+          <li>Do not submit sensitive personal information (government IDs, home addresses, phone numbers).</li>
+          <li>Do not submit credentials, passwords, or confidential employer documents.</li>
+          <li>Optional email is for follow-up only. Raw emails will not be published.</li>
+          <li>Submissions may be moderated before public use. Public data may be anonymized or summarized.</li>
+          <li>
+            This site does not use analytics or tracking. The report form is hosted by Google Forms
+            under Google's terms of service.
+          </li>
+        </ul>
+      </section>
+
+      <section class="section container" aria-labelledby="contribute-heading">
+        <h2 id="contribute-heading">Contribute</h2>
+        <p>
+          ghost-sweep is open source. Private collaborators can onboard via the contributing guide
+          and Issue #1. Public launch remains blocked until the Form URL, GitHub Pages, and launch
+          checklist are complete.
+        </p>
+        <p>
+          See the
+          <a href="https://github.com/codethor0/ghost-sweep/blob/main/CONTRIBUTING.md">contributing guide</a>
+          and
+          <a href="https://github.com/codethor0/ghost-sweep/blob/main/SECURITY.md">security policy</a>
+          on GitHub.
+        </p>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>
+          ghost-sweep uses risk-signal language. It does not make unsupported legal accusations.
+        </p>
+        <p>
+          <a href="https://github.com/codethor0/ghost-sweep">GitHub</a>
+          &middot;
+          <a href="https://forms.gle/PsjaYrbrCjAgZXjW8">Submit a report</a>
+        </p>
+        <p class="footer-note">Static public MVP. Full application: local Docker only.</p>
+      </div>
+    </footer>
+  </body>
+</html>

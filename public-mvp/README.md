@@ -1,6 +1,8 @@
 # public-mvp
 
-This folder is the free GitHub Pages public MVP for ghost-sweep. It is a standalone static site with no build step, no backend calls, and no secrets.
+This folder is the **canonical source** for the ghost-sweep public MVP static site. It is a standalone site with no build step, no backend calls, and no secrets.
+
+GitHub Pages branch deploy supports **`/` (root) or `/docs` only** — not arbitrary folders. For publishing, root `index.html`, `styles.css`, and `.nojekyll` mirror this folder. Edit files here first, then copy to the repository root when updating the live Pages site.
 
 ## What this is
 
@@ -36,16 +38,26 @@ Open http://localhost:8080/ in a browser.
 
 GitHub Pages serves static files only. It cannot run FastAPI, PostgreSQL, or Redis.
 
-Recommended manual setup (no GitHub Actions required):
+Branch deploy source folders are limited to **`/` (root) or `/docs`**. This project publishes from **root**, with files copied from `public-mvp/`.
+
+Setup:
 
 1. Open repository **Settings** -> **Pages**
 2. Under **Build and deployment**, set **Source** to **Deploy from a branch**
-3. Select branch **main** and folder **/public-mvp**
-4. Save
+3. Select branch **main** and folder **`/` (root)**
+4. Ensure root has `index.html`, `styles.css`, and `.nojekyll` (mirrors of this folder)
+5. Save
 
-The site will be available at `https://<username>.github.io/ghost-sweep/` for project Pages.
+Live site: https://codethor0.github.io/ghost-sweep/
 
-**Note:** GitHub Actions may be billing-blocked on this account. Branch and folder publishing avoids Actions for Pages deploy. If Actions is unavailable, do not rely on workflow-based Pages deploy until billing is resolved.
+When changing MVP content:
+
+```bash
+cp public-mvp/index.html index.html
+cp public-mvp/styles.css styles.css
+cp public-mvp/.nojekyll .nojekyll
+python3.11 scripts/validate_public_mvp.py
+```
 
 ## Before going live
 

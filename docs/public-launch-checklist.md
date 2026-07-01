@@ -2,6 +2,22 @@
 
 Complete this checklist before making the ghost-sweep repository public and enabling GitHub Pages.
 
+## Launch readiness checkpoint (Batch 9B — 2026-07-01)
+
+Commit baseline: `95fd21e` (pre-9B-fix). Local validation is source of truth.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Google Form + Sheet | Complete (G1A) | No |
+| public-mvp Form URL | Replaced (8A) | No |
+| Manual Form -> Sheet test | Confirmed | No |
+| Repository visibility | Public (9B) | No |
+| GitHub Pages | Enabled from `main` / root | No (after root mirror fix) |
+| Live MVP at Pages URL | Pending root mirror deploy | **Yes** until 9B-fix pushed |
+| Full app publicly hosted | No | No — intentional |
+
+**Note:** GitHub Pages branch deploy supports `/` or `/docs` only. Root `index.html` mirrors `public-mvp/` for publishing; `public-mvp/` remains the canonical source.
+
 ## Launch readiness checkpoint (Batch 8A — 2026-06-30)
 
 Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
@@ -75,10 +91,11 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 
 ## GitHub Pages
 
-- [ ] `public-mvp/` contains `index.html`, `styles.css`, `.nojekyll`
-- [ ] Local preview verified: `python3 -m http.server 8080 --directory public-mvp`
-- [ ] Pages source configured: Settings -> Pages -> Deploy from branch -> main -> /public-mvp
-- [ ] Site loads at project Pages URL after enable
+- [x] `public-mvp/` contains `index.html`, `styles.css`, `.nojekyll`
+- [x] Root mirror: `index.html`, `styles.css`, `.nojekyll` (Batch 9B-fix; Pages branch deploy supports `/` or `/docs` only)
+- [x] Local preview verified: `python3 -m http.server 8080 --directory public-mvp`
+- [x] Pages source configured: Settings -> Pages -> Deploy from branch -> main -> `/` (root)
+- [ ] Site loads public MVP (not README/Jekyll) at https://codethor0.github.io/ghost-sweep/ after 9B-fix deploy
 
 ## Documentation
 

@@ -36,6 +36,11 @@ LOCALHOST_API_PATTERN = re.compile(
 
 FORM_PLACEHOLDER = "https://forms.gle/REPLACE_WITH_REAL_FORM_URL"
 
+FORM_URL_PATTERN = re.compile(
+    r"https://(?:forms\.gle/[A-Za-z0-9_-]+|docs\.google\.com/forms/[^\s\"'<>]+)",
+    re.IGNORECASE,
+)
+
 EMOJI_PATTERN = re.compile(
     "["
     "\U0001F600-\U0001F64F"
@@ -79,11 +84,30 @@ def validate_no_forbidden_files() -> None:
             fail(f"Forbidden archive in public-mvp: {path.relative_to(REPO_ROOT)}")
 
 
-def validate_index_content(index_html: str) -> None:
+def extract_form_urls(index_html: str) -> list[str]:
+    return FORM_URL_PATTERN.findall(index_html)
+
+
+def validate_index_content(index_html: str) -> list[str]:
     if "Submit a report" not in index_html:
         fail("index.html missing 'Submit a report' CTA text")
-    if FORM_PLACEHOLDER not in index_html:
-        fail(f"index.html missing placeholder Google Form URL: {FORM_PLACEHOLDER}")
+    if FORM_PLACEHOLDER in index_html:
+        fail(f"index.html still contains placeholder Google Form URL: {FORM_PLACEHOLDER}")
+
+    form_urls = extract_form_urls(index_html)
+    if len(form_urls) < 2:
+        fail(
+            "index.html must contain at least two real Google Form URLs "
+            f"(found {len(form_urls)})"
+        )
+
+    unique_urls = set(form_urls)
+    if len(unique_urls) != 1:
+        fail(
+            "index.html Google Form URLs must all match; "
+            f"found {len(unique_urls)} distinct URLs: {sorted(unique_urls)}"
+        )
+
     if LOCALHOST_API_PATTERN.search(index_html):
         fail("index.html contains localhost or backend API URL")
     for pattern in FORBIDDEN_SECRET_PATTERNS:
@@ -93,6 +117,8 @@ def validate_index_content(index_html: str) -> None:
         fail("index.html contains forbidden attribution string")
     if EMOJI_PATTERN.search(index_html):
         fail("index.html contains emoji characters")
+
+    return form_urls
 
 
 def validate_styles(styles_css: str) -> None:
@@ -111,13 +137,13 @@ def main() -> None:
     index_html = read_text(PUBLIC_MVP / "index.html")
     styles_css = read_text(PUBLIC_MVP / "styles.css")
 
-    validate_index_content(index_html)
+    form_urls = validate_index_content(index_html)
     validate_styles(styles_css)
 
     print("PASS: public-mvp validation succeeded")
     print(f"  - Required files present under {PUBLIC_MVP.relative_to(REPO_ROOT)}/")
     print("  - No localhost backend API URLs")
-    print(f"  - Placeholder Google Form URL present: {FORM_PLACEHOLDER}")
+    print(f"  - Real Google Form URL present ({len(form_urls)} occurrences)")
     print("  - No forbidden attribution strings")
     print("  - No suspected secrets")
     print("  - No emoji characters")

@@ -2,9 +2,9 @@
 
 Complete this checklist before making the ghost-sweep repository public and enabling GitHub Pages.
 
-## Launch readiness checkpoint (Batch 7E — 2026-06-30)
+## Launch readiness checkpoint (Batch 8A — 2026-06-30)
 
-Commit baseline: `a8e2906`. Local validation is source of truth; GitHub Actions billing-blocked.
+Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 
 | Gate | Status | Blocker? |
 | ---- | ------ | -------- |
@@ -13,17 +13,20 @@ Commit baseline: `a8e2906`. Local validation is source of truth; GitHub Actions 
 | Backend project-pinned dev advisories | Cleared (Batch 7D) | No |
 | PostCSS moderate (npm) | Accepted deferred (Batch 7E) | No — build-time; public MVP has no npm |
 | Host pip/wheel/loguru | Local-environment noise (Batch 7E) | No — not project deps |
-| Full local backend/frontend gates | Pass | No |
-| Extension smoke / public-mvp validator | Pass | No |
-| Google Form URL | Placeholder | **Yes** |
+| Full local backend/frontend gates | Pass (re-run in 8A) | No |
+| Extension smoke / public-mvp validator | Pass (re-run in 8A) | No |
+| Google Form | Created (Batch G1A) | No |
+| Google Sheet | Linked (Batch G1A) | No |
+| public-mvp Form URL | Replaced (Batch 8A) | No |
+| Final post-fix Form submission test | PARTIAL — form loads at public URL; automated submit blocked; manual Sheet verify recommended | No |
 | GitHub Pages | Not enabled | **Yes** (for public site) |
 | Repository visibility | Private | **Yes** (for public repo) |
-| GitHub Actions CI | Billing-blocked | **Yes** (Issue #3; local gates substitute) |
+| GitHub Actions CI | Monitor ongoing | No at `b4018b7` |
 | Issue #4 dependency tracking | Ready to narrow/close | Maintainer decision |
 
-**Public repo readiness:** Dependency advisories no longer block going public after maintainer accepts Batch 7E classification. Remaining blockers are Form URL, Pages configuration, repo visibility decision, and CI billing.
+**Public repo readiness:** Form URL replaced in repo; Google Form and Sheet exist on project account. Remaining blockers are Pages configuration, repo visibility decision, and maintainer sign-off.
 
-**Public site readiness:** Static `public-mvp/` is validated locally; Form URL replacement and Pages enable are required before public site launch.
+**Public site readiness:** Static `public-mvp/` validated locally with real Form URL; Pages enable and public launch not performed.
 
 ## Repo hygiene
 
@@ -63,11 +66,12 @@ Commit baseline: `a8e2906`. Local validation is source of truth; GitHub Actions 
 
 ## Google Form intake
 
-- [ ] Google Form created per [google-form-intake-spec.md](google-form-intake-spec.md)
-- [ ] Google Sheet linked to Form responses
-- [ ] Sheet access restricted to maintainers
-- [ ] Placeholder URL replaced in `public-mvp/index.html`
-- [ ] Form privacy/moderation wording reviewed
+- [x] Google Form created per [google-form-intake-spec.md](google-form-intake-spec.md) (Batch G1A)
+- [x] Google Sheet linked to Form responses (Batch G1A)
+- [x] Sheet access restricted to project account (Batch G1A)
+- [x] Placeholder URL replaced in `public-mvp/index.html` (Batch 8A)
+- [x] Form privacy/moderation wording reviewed (Batch G1A)
+- [ ] End-to-end Form submission verified in linked Sheet (Batch 8A: form loads; automated submit blocked; manual verify recommended)
 
 ## GitHub Pages
 

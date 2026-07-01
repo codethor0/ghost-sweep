@@ -5,7 +5,7 @@ This folder is the free GitHub Pages public MVP for ghost-sweep. It is a standal
 ## What this is
 
 - A static landing and report-intake page for early public visibility
-- Report submissions route to a Google Form (placeholder URL until the real form is created)
+- Report submissions route to a Google Form at `https://forms.gle/PsjaYrbrCjAgZXjW8`
 - Manual review via Google Sheet before any backend import
 
 ## What this is not
@@ -49,8 +49,8 @@ The site will be available at `https://<username>.github.io/ghost-sweep/` for pr
 
 ## Before going live
 
-1. Create the Google Form per [docs/google-form-intake-spec.md](../docs/google-form-intake-spec.md)
-2. Replace `https://forms.gle/REPLACE_WITH_REAL_FORM_URL` in `index.html` with the real Form URL
+1. Google Form and linked Sheet exist on the project Google account (Batch G1A complete)
+2. Real Form URL is set in `index.html`: `https://forms.gle/PsjaYrbrCjAgZXjW8` (Batch 8A)
 3. Complete [docs/public-launch-checklist.md](../docs/public-launch-checklist.md)
 4. Run validation:
 

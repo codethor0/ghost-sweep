@@ -388,7 +388,8 @@ def run_validation(
         ok = (
             status == 200
             and "Submit a report" in html
-            and "REPLACE_WITH_REAL_FORM_URL" in html
+            and "REPLACE_WITH_REAL_FORM_URL" not in html
+            and "forms.gle/" in html
             and "manual review" in html.lower()
         )
         report.add("public mvp preview", ok, f"status={status}", status)

@@ -1,6 +1,6 @@
 # Google Form Intake Specification
 
-This document defines the recommended Google Form fields for ghost-sweep public MVP report intake. The Form URL in `public-mvp/index.html` is a placeholder until the real form is created.
+This document defines the Google Form fields for ghost-sweep public MVP report intake. The live Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8` (Batch G1A / 8A).
 
 ## Architecture
 
@@ -96,12 +96,12 @@ Include in the Form description or a dedicated section:
 
 ## Replacing the placeholder URL
 
-After creating the Form:
+Batch 8A (complete):
 
-1. Copy the Form share URL (format: `https://forms.gle/...`)
-2. Replace `https://forms.gle/REPLACE_WITH_REAL_FORM_URL` in `public-mvp/index.html` (two occurrences)
-3. Run `python3.11 scripts/validate_public_mvp.py` (update script if placeholder check should pass with real URL)
-4. Redeploy GitHub Pages or push the updated branch
+1. Public Send link: `https://forms.gle/PsjaYrbrCjAgZXjW8`
+2. `public-mvp/index.html` contains two matching occurrences of the real URL
+3. `python3.11 scripts/validate_public_mvp.py` rejects the placeholder and requires matching real Form URLs
+4. GitHub Pages is still disabled; public launch not performed
 
 ## Data handling
 

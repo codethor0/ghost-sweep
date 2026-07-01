@@ -1,6 +1,51 @@
 # Dependency Audit Status
 
-This document records known dependency advisories after Batch 7D backend dev/tooling remediation (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+This document records known dependency advisories after Batch 7E triage (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
+
+## Batch 7E summary (triage — docs only)
+
+| Item | Result |
+| ---- | ------ |
+| Audit date | 2026-06-30 |
+| Starting commit | `a8e2906` (Batch 7D) |
+| npm audit --audit-level=high | **PASS** (unchanged since Batch 7C) |
+| npm audit (full) | **2 moderate** — PostCSS GHSA-qx2v-qp2m-jg93 only |
+| pip-audit (full host scan) | **7 findings in 3 packages** — host-only noise |
+| pip-audit (project-pinned) | **PASS** — no pyproject.toml advisories |
+| Runtime advisories | **All cleared** (Starlette Batch 7B; npm high Batch 7C) |
+| Project-pinned dev advisories | **All cleared** (black/pytest Batch 7D) |
+| Issue #4 | **Ready to narrow/close** — see recommended update below |
+
+Batch 7E is a triage-only checkpoint. No dependency manifest or application changes. Re-ran audits at `a8e2906` and classified all remaining findings as accepted deferred risk or local-environment noise.
+
+### Remediation history (project scope)
+
+| Batch | Scope | Result |
+| ----- | ----- | ------ |
+| 7B | Backend runtime (`fastapi==0.138.2`) | Starlette runtime advisories **cleared** |
+| 7C | Frontend (`next@16.2.9`, ESLint 9) | npm **high** advisories **cleared** |
+| 7D | Backend dev pins (`black`, `pytest`) | Project-pinned pip dev advisories **cleared** |
+| 7E | Triage only | PostCSS moderate + host noise **documented as accepted** |
+
+### Accepted deferred findings (post Batch 7E)
+
+| Finding | Severity | Classification | Rationale | Revisit trigger |
+| ------- | -------- | -------------- | --------- | --------------- |
+| postcss GHSA-qx2v-qp2m-jg93 | moderate | **Accepted deferred** | Build-time Tailwind/PostCSS pipeline only; bundled in `next@16.2.9`; no safe fix without `npm audit fix --force` (downgrades next to 9.x) | `next` release bundles postcss >= 8.5.10 |
+| host pip 25.1.1 | high | **Local-environment noise** | Not pinned in pyproject.toml; host Python installer tooling | Upgrade host pip to >= 26.1.2 on dev machines |
+| host wheel 0.45.1 | high | **Local-environment noise** | Not pinned in pyproject.toml; host build tooling | Upgrade host wheel to >= 0.46.2 on dev machines |
+| host loguru 0.5.3 via ciphey | low | **Local-environment noise** | Not a ghost-sweep dependency; pip-audit scans unrelated host site-packages | Use isolated venv; ignore or uninstall ciphey |
+
+### Issue #4 recommended update
+
+After Batch 7E docs land, Issue #4 should be updated to reflect:
+
+1. **Remediated:** Starlette runtime (7B), npm high (7C), project-pinned pip dev (7D).
+2. **Accepted deferred:** PostCSS moderate (build-time; monitor next releases).
+3. **Out of repo scope:** host pip, wheel, loguru (local dev machine hygiene).
+4. **Launch impact:** Public MVP uses static HTML/CSS with no npm dependencies; accepted PostCSS risk applies to local Docker frontend build only. Public launch is not blocked by remaining audit noise when classified as above.
+
+Issue #4 may be **closed** after maintainer accepts the classification, or kept open as a low-priority monitor for PostCSS/next releases.
 
 ## Batch 7D summary
 
@@ -99,6 +144,15 @@ Full audit (`npm audit` without level filter): **2 moderate** — postcss bundle
 | eslint-config-next | 14.2.35 | high | **Remediated Batch 7C** (16.2.9) |
 | postcss | 8.4.49 | moderate | **Remains** — build-time only |
 
+### npm accepted deferred (Batch 7E)
+
+PostCSS GHSA-qx2v-qp2m-jg93 is **formally accepted deferred risk** as of Batch 7E:
+
+- Reachability: build-time CSS pipeline only; not exposed in public MVP static site
+- Fix path: requires `npm audit fix --force` which downgrades `next` to 9.x (breaking)
+- Direct `postcss` patch does not clear audit because `next` bundles its own postcss copy
+- `npm audit --audit-level=high` **passes**; only moderate severity remains
+
 ### npm future remediation plan
 
 1. Monitor next releases for bundled postcss >= 8.5.10
@@ -183,15 +237,19 @@ None. Triage-only batch; no safe patch/minor upgrades cleared high-severity runt
 
 ## Issue #4 status
 
-**Issue #4 remains open.** Runtime advisories (Starlette, npm high, project-pinned pip dev) are remediated. Remaining blockers:
+**Issue #4 ready for maintainer triage close (Batch 7E).** All project-scoped runtime and dev-tooling advisories are remediated or formally accepted:
 
-- Frontend npm moderate PostCSS advisories (build-time; bundled in next)
-- Host pip/wheel advisories (not pinned in pyproject.toml)
-- Host loguru via ciphey (not a project dependency; pip-audit noise)
+| Category | Status |
+| -------- | ------ |
+| Backend runtime (Starlette) | **Remediated** (Batch 7B) |
+| Frontend npm high | **Remediated** (Batch 7C) |
+| Backend project-pinned dev | **Remediated** (Batch 7D) |
+| PostCSS moderate (npm) | **Accepted deferred** — build-time; no safe non-force fix |
+| Host pip/wheel/loguru | **Out of scope** — local-environment noise |
 
-Do not close until remaining moderate/host-tooling advisories are remediated or formally accepted.
+Full `npm audit` still reports 2 moderate PostCSS entries. Full host `pip-audit` still reports 7 entries in pip/wheel/loguru. These are documented accepted risk or environment noise, not project dependency failures.
 
-Do not claim all dependencies are clean — full `npm audit` and `pip-audit` still report findings.
+Do not claim zero audit findings exist — claim that **project-scoped advisories requiring repo changes are resolved or accepted with rationale**.
 
 ## Re-check commands
 

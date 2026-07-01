@@ -101,6 +101,16 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Frontend, extension, public-mvp, Docker, CI unchanged
 - Issue #4 remains open for moderate npm PostCSS + host pip/wheel
 
+## Dependency advisory triage and launch readiness (Batch 7E)
+
+- Triage-only docs checkpoint at commit `a8e2906`; no application or dependency manifest changes
+- Confirmed remediated: Starlette runtime (7B), npm high (7C), project-pinned pip dev (7D)
+- PostCSS moderate (GHSA-qx2v-qp2m-jg93) classified as **accepted deferred** — build-time, no safe non-force fix
+- Host pip/wheel/loguru classified as **local-environment noise** — not project dependencies
+- Full local validation gates pass; CI still billing-blocked (Issue #3)
+- Public launch still blocked by Form URL, Pages off, repo private — not by remaining audit classifications
+- Issue #4 ready for maintainer update/close per [dependency-audit.md](dependency-audit.md) Batch 7E section
+
 ## Frontend (Batch 6C complete)
 
 - API client for health, auth, companies, job postings, reports, and score endpoints

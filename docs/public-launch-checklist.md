@@ -2,6 +2,29 @@
 
 Complete this checklist before making the ghost-sweep repository public and enabling GitHub Pages.
 
+## Launch readiness checkpoint (Batch 7E — 2026-06-30)
+
+Commit baseline: `a8e2906`. Local validation is source of truth; GitHub Actions billing-blocked.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Backend runtime advisories | Cleared (Batch 7B) | No |
+| Frontend npm high advisories | Cleared (Batch 7C) | No |
+| Backend project-pinned dev advisories | Cleared (Batch 7D) | No |
+| PostCSS moderate (npm) | Accepted deferred (Batch 7E) | No — build-time; public MVP has no npm |
+| Host pip/wheel/loguru | Local-environment noise (Batch 7E) | No — not project deps |
+| Full local backend/frontend gates | Pass | No |
+| Extension smoke / public-mvp validator | Pass | No |
+| Google Form URL | Placeholder | **Yes** |
+| GitHub Pages | Not enabled | **Yes** (for public site) |
+| Repository visibility | Private | **Yes** (for public repo) |
+| GitHub Actions CI | Billing-blocked | **Yes** (Issue #3; local gates substitute) |
+| Issue #4 dependency tracking | Ready to narrow/close | Maintainer decision |
+
+**Public repo readiness:** Dependency advisories no longer block going public after maintainer accepts Batch 7E classification. Remaining blockers are Form URL, Pages configuration, repo visibility decision, and CI billing.
+
+**Public site readiness:** Static `public-mvp/` is validated locally; Form URL replacement and Pages enable are required before public site launch.
+
 ## Repo hygiene
 
 - [ ] All intended changes committed (docs, tests, public-mvp, scripts)
@@ -27,8 +50,10 @@ Complete this checklist before making the ghost-sweep repository public and enab
 - [x] Frontend `npm audit --audit-level=high` passes (Batch 7C); 2 moderate PostCSS advisories remain (build-time)
 - [x] Backend project-pinned dev advisories remediated (Batch 7D): `black==26.3.1`, `pytest==9.0.3`, `pytest-asyncio==1.4.0`
 - [x] Backend `pip-audit` project-pinned dev deps clean; host pip/wheel/loguru documented as out-of-repo scope
-- [ ] Host pip/wheel upgraded or formally accepted on developer machines
-- [ ] Dependency audit fully clean (Issue #4 open until moderate npm PostCSS + host tooling resolved or accepted)
+- [x] PostCSS moderate advisory formally accepted as deferred risk (Batch 7E); build-time only; public MVP unaffected
+- [x] Host pip/wheel/loguru classified as local-environment noise, not project dependencies (Batch 7E)
+- [ ] Maintainer accepts Batch 7E classification and updates/closes Issue #4
+- [ ] Host pip/wheel upgraded on developer machines (optional hygiene; not a repo blocker)
 
 ## GitHub Actions billing status
 

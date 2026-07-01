@@ -68,7 +68,7 @@ The free public launch path uses a standalone static site. Source files live in 
 | Layer | Hosting | Status |
 | ----- | ------- | ------ |
 | Public landing + report CTA | GitHub Pages (root mirror of `public-mvp/`) | Live at https://codethor0.github.io/ghost-sweep/ |
-| Report intake | Google Form -> Google Sheet | Manual review |
+| Report intake | Google Form -> Google Sheet | Live; manual review |
 | Full app (FastAPI/Postgres/Redis) | Local Docker only | Not publicly hosted |
 | Live scoring database | Not hosted | Deferred |
 
@@ -92,9 +92,9 @@ The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emai
 
 ## Current project status
 
-Latest pushed baseline: `95fd21e` (Batch 8A Form URL on `main`).
+Latest pushed baseline: `b4d397b` (Batch 9B public MVP on GitHub Pages).
 
-Batches 6A through 7F and public MVP launch batches (8A, 9B) are on `main`. The full application remains local Docker only; the public site is the static MVP on GitHub Pages.
+Batches 6A through 7F and public launch batches (8A, 9B, 9C) are on `main`. The public static MVP is live; the full application remains local Docker only.
 
 **Repository:** public. **GitHub Pages:** enabled from `main` / root (mirrors `public-mvp/`). Live site: https://codethor0.github.io/ghost-sweep/
 

@@ -59,12 +59,16 @@ cp public-mvp/.nojekyll .nojekyll
 python3.11 scripts/validate_public_mvp.py
 ```
 
-## Before going live
+## Launch status
 
-1. Google Form and linked Sheet exist on the project Google account (Batch G1A complete)
-2. Real Form URL is set in `index.html`: `https://forms.gle/PsjaYrbrCjAgZXjW8` (Batch 8A)
-3. Complete [docs/public-launch-checklist.md](../docs/public-launch-checklist.md)
-4. Run validation:
+Public MVP is **live** at https://codethor0.github.io/ghost-sweep/
+
+- Google Form and linked Sheet on project account (G1A)
+- Real Form URL in `index.html` (8A)
+- GitHub Pages from repo root mirror (9B)
+- Full application remains local Docker only
+
+Before editing the live site, run validation:
 
 ```bash
 python3.11 scripts/validate_public_mvp.py

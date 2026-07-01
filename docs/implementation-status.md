@@ -150,6 +150,15 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 - No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
 - When updating the live MVP, edit `public-mvp/` and copy to repo root
 
+## Post-launch docs sync (Batch 9C)
+
+- Public MVP copy updated: live Pages URL, live Form intake, full app local Docker only
+- Removed stale pre-launch blocker language from static MVP pages
+- Launch checklist updated for completed go-live gates
+- Remaining deferred: public backend hosting, live scoring database, extension API integration, frontend moderation UI, evidence upload, Google Sheet import automation
+- Greg Write invite (`gmcguirk-contractor`) still pending acceptance
+- Issue #4 dependency tracking: maintainer decision to close/update
+
 ## Deferred
 
 - Evidence file upload

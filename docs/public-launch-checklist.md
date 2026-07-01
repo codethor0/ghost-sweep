@@ -1,6 +1,28 @@
 # Public Launch Checklist
 
-Complete this checklist before making the ghost-sweep repository public and enabling GitHub Pages.
+Static public MVP launch status and remaining deferred work. Historical checkpoints below document pre-launch batches.
+
+## Launch readiness checkpoint (Batch 9C — 2026-07-01)
+
+Commit baseline: `b4d397b`. Public static MVP is live.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Public MVP on GitHub Pages | Live at https://codethor0.github.io/ghost-sweep/ | No |
+| Google Form intake | Live; manual Sheet review | No |
+| Repository visibility | Public | No |
+| Full app publicly hosted | No | No — intentional |
+| Live public scoring database | Not hosted | Deferred |
+| Public backend hosting | Not deployed | Deferred |
+| Extension backend API integration | Not wired | Deferred |
+| Frontend moderation / employer / admin UI | Not built | Deferred |
+| Evidence file upload | Deferred | Deferred |
+| Greg Write invite (`gmcguirk-contractor`) | Pending acceptance | Operational |
+| Issue #4 dependency tracking | Open | Maintainer decision |
+
+**Public MVP launch:** Complete (Batches G1A, 8A, 9B, 9C).
+
+**Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet-to-PostgreSQL import.
 
 ## Launch readiness checkpoint (Batch 9B — 2026-07-01)
 
@@ -13,7 +35,7 @@ Commit baseline: `95fd21e` (pre-9B-fix). Local validation is source of truth.
 | Manual Form -> Sheet test | Confirmed | No |
 | Repository visibility | Public (9B) | No |
 | GitHub Pages | Enabled from `main` / root | No (after root mirror fix) |
-| Live MVP at Pages URL | Pending root mirror deploy | **Yes** until 9B-fix pushed |
+| Live MVP at Pages URL | Live (9B-fix) | No |
 | Full app publicly hosted | No | No — intentional |
 
 **Note:** GitHub Pages branch deploy supports `/` or `/docs` only. Root `index.html` mirrors `public-mvp/` for publishing; `public-mvp/` remains the canonical source.
@@ -87,7 +109,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 - [x] Sheet access restricted to project account (Batch G1A)
 - [x] Placeholder URL replaced in `public-mvp/index.html` (Batch 8A)
 - [x] Form privacy/moderation wording reviewed (Batch G1A)
-- [ ] End-to-end Form submission verified in linked Sheet (Batch 8A: form loads; automated submit blocked; manual verify recommended)
+- [x] End-to-end Form submission verified in linked Sheet (manual test confirmed)
 
 ## GitHub Pages
 
@@ -95,7 +117,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 - [x] Root mirror: `index.html`, `styles.css`, `.nojekyll` (Batch 9B-fix; Pages branch deploy supports `/` or `/docs` only)
 - [x] Local preview verified: `python3 -m http.server 8080 --directory public-mvp`
 - [x] Pages source configured: Settings -> Pages -> Deploy from branch -> main -> `/` (root)
-- [ ] Site loads public MVP (not README/Jekyll) at https://codethor0.github.io/ghost-sweep/ after 9B-fix deploy
+- [x] Site loads public MVP at https://codethor0.github.io/ghost-sweep/
 
 ## Documentation
 
@@ -126,10 +148,10 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 
 ## Go public
 
-- [ ] Repository visibility changed to public
-- [ ] GitHub Pages enabled
-- [ ] Form URL live and tested end-to-end
-- [ ] Issue tracker and CONTRIBUTING link verified from public site
+- [x] Repository visibility changed to public (Batch 9B)
+- [x] GitHub Pages enabled (Batch 9B; root mirror of `public-mvp/`)
+- [x] Form URL live and tested end-to-end
+- [x] Issue tracker and CONTRIBUTING link verified from public site
 
 ## Post-launch (deferred)
 

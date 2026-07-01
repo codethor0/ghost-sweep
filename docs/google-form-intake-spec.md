@@ -93,6 +93,7 @@ Include in the Form description or a dedicated section:
 3. Click the Google Sheets icon to create a linked spreadsheet
 4. Restrict Sheet access to maintainers only
 5. Add maintainer review columns per [moderation-sop.md](moderation-sop.md) (`review_status`, `reviewer`, `reviewed_at`, `decline_reason_code`, `notes`, and related fields)
+6. Verify columns on CSV export: `python3.11 scripts/verify_sheet_columns.py export.csv`
 
 ## Form URL (live)
 

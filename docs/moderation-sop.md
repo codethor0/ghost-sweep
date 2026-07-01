@@ -284,7 +284,7 @@ Future import pipeline (Issue #6) should:
 - Normalize job URL via offline helper before dedupe
 - Record Sheet row id and `reviewed_at` in import audit metadata
 
-Full design: [sheet-import-design.md](sheet-import-design.md). Implementation deferred to Batch 12A+.
+Full design: [sheet-import-design.md](sheet-import-design.md). Dry-run CLI: `python3.11 scripts/sheet_import_dry_run.py export.csv`. Implementation `--apply` deferred to Batch 12B.
 
 ## Audit trail expectations
 

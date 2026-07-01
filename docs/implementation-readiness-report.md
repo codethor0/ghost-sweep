@@ -181,7 +181,7 @@ From [sheet-import-design.md](sheet-import-design.md) maintainer approval checkl
 | Local Docker stack validated | Available (existing gates) |
 | Issue #5 URL validation API design | Not required if 12A stays offline-only per design |
 
-**Verdict:** Batch 12A is **design-ready** but **not approval-ready**. Do not start implementation until checklist is signed off and Sheet columns verified.
+**Verdict:** Batch 12A dry-run CLI is available. `--apply` mode (Batch 12B) requires maintainer checklist sign-off and live Sheet column verification via `scripts/verify_sheet_columns.py`.
 
 ## Recommended batch sequence (reset)
 

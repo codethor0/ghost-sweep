@@ -48,7 +48,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 5. PII redaction rules before public use
 6. Explicit v1 non-goals (no scraping, no auto-verify)
 
-Implementation (CLI import script) deferred to Batch 12A.
+Implementation: Batch 12A dry-run CLI shipped; `--apply` deferred to Batch 12B.
 
 **Dependencies:** Manual moderation SOP (Track 2), URL validation rules (Issue #5)
 
@@ -133,7 +133,8 @@ Implementation (CLI import script) deferred to Batch 12A.
 | **10E** | Implementation readiness checkpoint ([implementation-readiness-report.md](implementation-readiness-report.md)) | No |
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
-| **12A** | Sheet import script (after 10D approval + 10E checklist) | May require schema approval |
+| **12A** | Sheet import dry-run CLI ([sheet_import_dry_run.py](../scripts/sheet_import_dry_run.py)) | No |
+| **12B** | Sheet import apply mode (local/admin-only) | May require schema approval |
 
 ## Related documents
 

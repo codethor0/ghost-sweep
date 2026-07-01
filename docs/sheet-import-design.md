@@ -368,8 +368,9 @@ Google Sheet is **untrusted input** even though maintainers review it. Formula i
 | Phase | Batch | Scope |
 | ----- | ----- | ----- |
 | **10D** | This doc | Design only |
-| **12A** | Import CLI | Dry-run + apply; local Docker; CSV or Sheets API export |
-| **12B** | Scheduled import | Maintainer-triggered or cron; still admin-only |
+| **12A** | Import dry-run CLI | Dry-run only; CSV export; no DB writes |
+| **12B** | Import apply mode | Local Docker; `--apply`; audit logs |
+| **12C** | Scheduled import | Maintainer-triggered or cron; still admin-only |
 | **13A** | Hosted import | Runs against production DB with approval |
 | **13B** | Moderation UI link | Show Sheet origin on imported reports |
 | **Future** | Evidence files | Upload pipeline + link evidence URLs to `evidence_files` |

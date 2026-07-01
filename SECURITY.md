@@ -25,7 +25,7 @@ ghost-sweep processes job posting URLs, employer names, report narratives, and u
 
 ## Public MVP and Google Form intake
 
-The static public site in `public-mvp/` has no backend, no secrets, and no analytics. Report intake uses Google Forms (temporary). Form responses are stored in a maintainer-only Google Sheet.
+The static public site in `public-mvp/` has no backend, no secrets, and no analytics. Report intake uses Google Forms at `https://forms.gle/PsjaYrbrCjAgZXjW8`. Form responses are stored in a maintainer-only Google Sheet.
 
 - Do not submit credentials or confidential documents through the Form.
 - Optional contact email is for follow-up only. Raw emails must not be published.

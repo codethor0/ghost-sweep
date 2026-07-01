@@ -49,7 +49,7 @@ Backend:
 
 Frontend:
 
-- Next.js 14
+- Next.js 16.2.9
 - React
 - TypeScript strict mode
 - Tailwind CSS

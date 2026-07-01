@@ -90,6 +90,24 @@ async def test_submit_claim_unknown_company_returns_404(
 
 
 @pytest.mark.asyncio
+async def test_submit_claim_rejects_javascript_verification_document(
+    client: AsyncClient,
+    sample_company: Company,
+    auth_headers: dict[str, str],
+) -> None:
+    """Verification documents must use http or https URLs."""
+    response = await client.post(
+        "/api/v1/employer-claims",
+        json={
+            "company_id": str(sample_company.id),
+            "verification_documents": ["javascript:alert(1)"],
+        },
+        headers=auth_headers,
+    )
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
 async def test_submit_duplicate_pending_claim_returns_409(
     client: AsyncClient,
     sample_company: Company,

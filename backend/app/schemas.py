@@ -15,6 +15,7 @@ from app.models.enums import (
     VerifiedStatus,
     VoteValue,
 )
+from app.services.job_url_validation import validate_http_https_url
 
 
 class HealthResponse(BaseModel):
@@ -227,16 +228,8 @@ class CreateEmployerClaimRequest(BaseModel):
     @field_validator("verification_documents")
     @classmethod
     def validate_verification_documents(cls, documents: list[str]) -> list[str]:
-        """Ensure each verification document reference is non-empty and bounded."""
-        validated: list[str] = []
-        for document in documents:
-            trimmed = document.strip()
-            if not trimmed:
-                raise ValueError("Verification documents must be non-empty strings")
-            if len(trimmed) > 2048:
-                raise ValueError("Verification documents must be 2048 characters or fewer")
-            validated.append(trimmed)
-        return validated
+        """Ensure each verification document is a safe http or https URL."""
+        return [validate_http_https_url(document) for document in documents]
 
 
 class RejectEmployerClaimRequest(BaseModel):
@@ -277,16 +270,8 @@ class CreateEmployerResponseRequest(BaseModel):
     @field_validator("evidence_urls")
     @classmethod
     def validate_evidence_urls(cls, urls: list[str]) -> list[str]:
-        """Ensure each evidence URL reference is non-empty and bounded."""
-        validated: list[str] = []
-        for url in urls:
-            trimmed = url.strip()
-            if not trimmed:
-                raise ValueError("Evidence URLs must be non-empty strings")
-            if len(trimmed) > 2048:
-                raise ValueError("Evidence URLs must be 2048 characters or fewer")
-            validated.append(trimmed)
-        return validated
+        """Ensure each evidence URL is a safe http or https URL."""
+        return [validate_http_https_url(url) for url in urls]
 
 
 class EmployerResponseListResponse(BaseModel):

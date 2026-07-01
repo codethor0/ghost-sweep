@@ -145,6 +145,26 @@ async def test_create_employer_response_wrong_company_returns_403(
 
 
 @pytest.mark.asyncio
+async def test_create_employer_response_rejects_javascript_evidence_url(
+    client: AsyncClient,
+    sample_job_posting: JobPosting,
+    auth_headers: dict[str, str],
+    employer_auth_headers: dict[str, str],
+) -> None:
+    """Evidence URLs must use http or https schemes."""
+    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    response = await client.post(
+        f"/api/v1/reports/{report_id}/responses",
+        json={
+            "response_text": RESPONSE_TEXT,
+            "evidence_urls": ["javascript:alert(1)"],
+        },
+        headers=employer_auth_headers,
+    )
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
 async def test_create_employer_response_disputes_pending_report(
     client: AsyncClient,
     sample_job_posting: JobPosting,

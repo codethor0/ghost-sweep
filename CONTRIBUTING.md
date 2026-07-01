@@ -45,6 +45,7 @@ Public MVP validation:
 
 ```bash
 python3.11 scripts/validate_public_mvp.py
+python3.11 scripts/sync_public_mvp.py
 python3 -m http.server 8080 --directory public-mvp
 ```
 
@@ -52,7 +53,7 @@ Extension API integration remains deferred. Evidence file upload and public back
 
 ## Local verification
 
-Local verification is the source of truth while GitHub Actions is billing-blocked. Run the gates relevant to your change before requesting review.
+GitHub Actions CI is active and passing on `main`. Local verification is still required before every push and pull request.
 
 Backend:
 
@@ -84,6 +85,7 @@ Public MVP (when touching `public-mvp/`):
 
 ```bash
 python3.11 scripts/validate_public_mvp.py
+python3.11 scripts/sync_public_mvp.py
 python3 -m http.server 8080 --directory public-mvp
 ```
 

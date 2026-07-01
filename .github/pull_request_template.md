@@ -20,7 +20,7 @@
 
 ## Verification run
 
-<!-- Paste commands and results. Local verification is source of truth while CI billing is blocked. -->
+<!-- Paste commands and results. Run local gates before requesting review; CI on main should also pass. -->
 
 ```bash
 # Example backend

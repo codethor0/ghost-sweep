@@ -124,9 +124,10 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 
 | Batch | Scope | Schema/API |
 | ----- | ----- | ---------- |
-| **10A** | Roadmap + issue tracker sync (this doc) | No |
-| **10B** | Moderation SOP doc + Sheet column conventions | No |
-| **10C** | Sheet import design doc (field mapping) | No |
+| **10A** | Roadmap + issue tracker sync | No |
+| **10B** | Public audit remediation (docs, MVP copy, bundle hygiene, URL validation) | Request validation only |
+| **10C** | Moderation SOP doc + Sheet column conventions | No |
+| **10D** | Sheet import design doc (field mapping) | No |
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
 | **12A** | Sheet import script (after 10C approval) | May require schema approval |
@@ -135,7 +136,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 
 - [public-launch-checklist.md](public-launch-checklist.md)
 - [implementation-status.md](implementation-status.md)
-- [free-public-launch-plan.md](free-public-launch-plan.md)
+- [archive/free-public-launch-plan.md](archive/free-public-launch-plan.md) (historical)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)

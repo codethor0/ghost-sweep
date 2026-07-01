@@ -108,7 +108,7 @@ Batch 7C upgraded `next@16.2.9`, `eslint-config-next@16.2.9`, and `eslint@9.39.1
 | npm audit --audit-level=high | **FAIL** — 5 vulnerabilities (unchanged; deferred to Batch 7C) |
 | Issue #4 | **Remains open** (frontend npm + dev/tooling pip advisories) |
 
-Batch 7B upgraded `fastapi==0.138.2` in `backend/pyproject.toml`. No backend app source, API, auth, schema, Docker, or CI changes. Full backend gates and live E2E pass on Next.js 14 frontend.
+Batch 7B upgraded `fastapi==0.138.2` in `backend/pyproject.toml`. No backend app source, API, auth, schema, Docker, or CI changes. Full backend gates and live E2E pass on Next.js 16 frontend.
 
 ## Batch 6I summary
 
@@ -260,4 +260,4 @@ cd backend && pip-audit
 python3.11 scripts/live_e2e_validation.py --skip-public-mvp
 ```
 
-CI runs pip-audit and npm audit with `continue-on-error: true` so advisories remain visible without blocking the gate until remediated or formally accepted. GitHub Actions is currently billing-blocked before job steps execute; local validation is source of truth.
+CI runs pip-audit and npm audit with `continue-on-error: true` so advisories remain visible without blocking the gate until remediated or formally accepted. GitHub Actions CI passes on `main`; local validation remains required before every push.

@@ -128,10 +128,15 @@ Use draft PRs early. Keep scope small. Match existing code style (type hints, no
 
 ## GitHub tracking issues
 
-| Issue | Purpose |
-| ----- | ------- |
-| [#1](https://github.com/codethor0/ghost-sweep/issues/1) | First contributor lane: job URL validation helpers |
-| [#2](https://github.com/codethor0/ghost-sweep/issues/2) | Public launch: Form URL and static Pages |
-| [#3](https://github.com/codethor0/ghost-sweep/issues/3) | CI billing infrastructure blocker |
-| [#4](https://github.com/codethor0/ghost-sweep/issues/4) | Deferred dependency advisories |
-| [#5](https://github.com/codethor0/ghost-sweep/issues/5) | URL validation API integration design |
+Six issues are open as of Batch 10B (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2 (Form/Pages), #3 (CI billing).
+
+| Issue | State | Purpose |
+| ----- | ----- | ------- |
+| [#1](https://github.com/codethor0/ghost-sweep/issues/1) | Open | Extend offline job URL validation tests and docs |
+| [#4](https://github.com/codethor0/ghost-sweep/issues/4) | Open | Deferred npm and pip dependency advisories |
+| [#5](https://github.com/codethor0/ghost-sweep/issues/5) | Open | URL validation API integration design |
+| [#6](https://github.com/codethor0/ghost-sweep/issues/6) | Open | Google Sheet to backend import pipeline (design) |
+| [#7](https://github.com/codethor0/ghost-sweep/issues/7) | Open | Form/Sheet moderation workflow and future UI |
+| [#8](https://github.com/codethor0/ghost-sweep/issues/8) | Open | Extension API wiring plan |
+| [#2](https://github.com/codethor0/ghost-sweep/issues/2) | Closed | Public launch: Form URL and static Pages |
+| [#3](https://github.com/codethor0/ghost-sweep/issues/3) | Closed | CI billing infrastructure blocker |

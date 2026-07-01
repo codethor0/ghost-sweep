@@ -1,6 +1,25 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 6H. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 10A. For API details see [api.md](api.md).
+
+## Current state (live)
+
+| Item | Status |
+| ---- | ------ |
+| Public repository | https://github.com/codethor0/ghost-sweep |
+| GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
+| Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
+| CI on `main` | Passing |
+| Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
+| Hosted backend, scoring DB, import, moderation UI, evidence upload, extension API | Deferred |
+
+Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
+
+See [post-launch-roadmap.md](post-launch-roadmap.md) and [audit-remediation-plan.md](audit-remediation-plan.md).
+
+Historical batch notes below are retained for traceability. Lines describing pre-launch blockers reflect the state at each batch, not the current live status.
+
+---
 
 ## Authentication
 
@@ -141,7 +160,7 @@ Refresh tokens are opaque strings stored in Redis by SHA-256 hash. The refresh e
 - Live public scoring database not hosted yet
 - Validation: `python3.11 scripts/validate_public_mvp.py`
 
-See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-intake-spec.md](google-form-intake-spec.md).
+See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-roadmap.md](post-launch-roadmap.md).
 
 ## Public repo and Pages (Batch 9B)
 
@@ -164,6 +183,18 @@ See [free-public-launch-plan.md](free-public-launch-plan.md) and [google-form-in
 - Added [post-launch-roadmap.md](post-launch-roadmap.md): Sheet import planning, moderation workflow, extension API wiring plan, contributor lanes
 - Issue tracker sync: close completed launch issues; open planning issues #6--#8
 - No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+
+## Audit remediation (Batch 10B)
+
+- Public-facing doc drift corrected (Next.js 16.2.9, live launch status, CI active)
+- Historical launch plan archived to [archive/free-public-launch-plan.md](archive/free-public-launch-plan.md)
+- Public MVP copy softened; footer links added; batch jargon removed from static pages
+- Added `scripts/sync_public_mvp.py` for root mirror safety
+- Audit bundle script hardened (AppleDouble fail-fast, current launch state in reports)
+- Evidence and verification URL fields reject non-http/https schemes (request validation only)
+- Added [audit-remediation-plan.md](audit-remediation-plan.md) and [repository-security.md](repository-security.md)
+- GitHub repository description and homepage metadata updated
+- No database schema, Docker, CI workflow, or extension behavior changes
 
 ## Deferred
 

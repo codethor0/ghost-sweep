@@ -33,7 +33,7 @@ Data stores:
 
 Backend: Python 3.11, FastAPI, SQLAlchemy 2.0 async, Alembic, Pydantic v2, PostgreSQL 15, Redis 7
 
-Frontend: Next.js 14, React, TypeScript strict mode, Tailwind CSS
+Frontend: Next.js 16.2.9, React, TypeScript strict mode, Tailwind CSS
 
 Extension: Chrome and Firefox Manifest V3
 
@@ -65,6 +65,13 @@ Frontend: http://localhost:3000
 
 The free public launch path uses a standalone static site. Source files live in `public-mvp/`; root `index.html`, `styles.css`, and `.nojekyll` mirror that folder for GitHub Pages (branch deploy supports `/` or `/docs` only).
 
+After editing `public-mvp/`, sync the root mirror:
+
+```bash
+python3.11 scripts/sync_public_mvp.py
+python3.11 scripts/validate_public_mvp.py
+```
+
 | Layer | Hosting | Status |
 | ----- | ------- | ------ |
 | Public landing + report CTA | GitHub Pages (root mirror of `public-mvp/`) | Live at https://codethor0.github.io/ghost-sweep/ |
@@ -86,22 +93,22 @@ Validate before deploy:
 python3.11 scripts/validate_public_mvp.py
 ```
 
-See [docs/free-public-launch-plan.md](docs/free-public-launch-plan.md), [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), [docs/public-launch-checklist.md](docs/public-launch-checklist.md), and [docs/post-launch-roadmap.md](docs/post-launch-roadmap.md).
+See [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), [docs/public-launch-checklist.md](docs/public-launch-checklist.md), and [docs/post-launch-roadmap.md](docs/post-launch-roadmap.md).
 
-The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emails must not be published. Edit `public-mvp/` and re-copy to root when updating the live Pages site.
+The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emails must not be published.
 
 ## Current project status
 
-Latest pushed baseline: `b4d397b` (Batch 9B public MVP on GitHub Pages).
+Latest pushed baseline: `1fd1b9b` (Batch 10A post-launch roadmap).
 
-Batches 6A through 7F and public launch batches (8A, 9B, 9C) are on `main`. The public static MVP is live; the full application remains local Docker only.
+Public launch batches (8A, 9B, 9C) and Batch 10A are on `main`. The public static MVP is live; the full application remains local Docker only.
 
 **Repository:** public. **GitHub Pages:** enabled from `main` / root (mirrors `public-mvp/`). Live site: https://codethor0.github.io/ghost-sweep/
 
 **CI:**
 
 - GitHub Actions CI passes on latest `main` (backend, frontend, extension smoke, public-mvp validator).
-- Local verification remains the source of truth for pre-push checks.
+- Local verification remains required before every push and pull request.
 
 **Implemented backend (through Batch 6B):**
 
@@ -146,16 +153,16 @@ Batches 6A through 7F and public launch batches (8A, 9B, 9C) are on `main`. The 
 
 - Browser extension: MV3 popup reads active tab URL and opens frontend with `?posting_url=`; no backend API calls
 
-**Deferred:**
+**Deferred (not publicly hosted):**
 
-- Evidence file upload
-- Company and job posting write APIs (public)
+- Public backend hosting and live scoring database
+- Google Sheet to backend import automation
+- Public moderation UI and evidence file upload
 - Extension backend API integration
-- Wiring job URL validation into API or intake flows
+- Wiring job URL validation into public API or intake flows
 - Frontend moderation, employer, and admin UI
 - Frontend refresh-token handling
-- Release hardening
-- Dependency audit advisories (see [docs/dependency-audit.md](docs/dependency-audit.md))
+- Remaining dependency advisories (see [docs/dependency-audit.md](docs/dependency-audit.md); Issue #4)
 
 GitHub repository: https://github.com/codethor0/ghost-sweep (public)
 

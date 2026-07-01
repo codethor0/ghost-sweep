@@ -2,7 +2,9 @@
 
 Planning document for ghost-sweep public operations, project-owned identity, and future nonprofit transition. This is planning only; no operational services are created or configured by this document.
 
-Baseline commit reference: `b4018b7` (2026-07-01). Reconcile with [implementation-status.md](implementation-status.md) and [public-launch-checklist.md](public-launch-checklist.md) before go-live.
+**Current status:** Public repository and GitHub Pages MVP are live. Full application remains local Docker only. Reconcile operational steps with [implementation-status.md](implementation-status.md) before acting on time-sensitive items.
+
+Baseline commit reference: `1fd1b9b` (2026-07-01). Reconcile with [implementation-status.md](implementation-status.md) and [public-launch-checklist.md](public-launch-checklist.md) before go-live.
 
 ## Project identity
 
@@ -144,7 +146,7 @@ Planning only. No legal or tax implementation in this document.
 
 ### Project ownership
 
-- Code: GitHub repository (currently private under `codethor0/ghost-sweep`).
+- Code: GitHub repository (public at https://github.com/codethor0/ghost-sweep).
 - Operations: project Google account owns Form, Sheet, Drive.
 - Goal: assets transferable to a nonprofit, foundation, or community org without re-creating intake infrastructure.
 

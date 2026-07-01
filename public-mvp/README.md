@@ -2,7 +2,12 @@
 
 This folder is the **canonical source** for the ghost-sweep public MVP static site. It is a standalone site with no build step, no backend calls, and no secrets.
 
-GitHub Pages branch deploy supports **`/` (root) or `/docs` only** — not arbitrary folders. For publishing, root `index.html`, `styles.css`, and `.nojekyll` mirror this folder. Edit files here first, then copy to the repository root when updating the live Pages site.
+GitHub Pages branch deploy supports **`/` (root) or `/docs` only** — not arbitrary folders. For publishing, root `index.html`, `styles.css`, and `.nojekyll` mirror this folder. Edit files here first, then sync to the repository root.
+
+```bash
+python3.11 scripts/sync_public_mvp.py
+python3.11 scripts/validate_public_mvp.py
+```
 
 ## What this is
 
@@ -53,9 +58,7 @@ Live site: https://codethor0.github.io/ghost-sweep/
 When changing MVP content:
 
 ```bash
-cp public-mvp/index.html index.html
-cp public-mvp/styles.css styles.css
-cp public-mvp/.nojekyll .nojekyll
+python3.11 scripts/sync_public_mvp.py
 python3.11 scripts/validate_public_mvp.py
 ```
 
@@ -76,6 +79,6 @@ python3.11 scripts/validate_public_mvp.py
 
 ## Related documents
 
-- [docs/free-public-launch-plan.md](../docs/free-public-launch-plan.md)
+- [docs/post-launch-roadmap.md](../docs/post-launch-roadmap.md)
 - [docs/google-form-intake-spec.md](../docs/google-form-intake-spec.md)
 - [docs/public-launch-checklist.md](../docs/public-launch-checklist.md)

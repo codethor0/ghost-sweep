@@ -1,9 +1,12 @@
 """Offline job URL validation tests."""
 
+import pytest
+
 from app.services.job_url_validation import (
     JobSourceProvider,
     detect_job_source_provider,
     normalize_job_url,
+    validate_http_https_url,
     validate_job_url,
 )
 
@@ -153,3 +156,34 @@ def test_normalize_job_url_removes_trailing_slash() -> None:
     raw = "https://example.com/careers/engineer/"
     normalized = normalize_job_url(raw)
     assert normalized == "https://example.com/careers/engineer"
+
+
+def test_validate_http_https_url_accepts_https() -> None:
+    """HTTPS URLs with a host should validate."""
+    assert validate_http_https_url("https://example.com/proof.pdf") == (
+        "https://example.com/proof.pdf"
+    )
+
+
+def test_validate_http_https_url_accepts_http() -> None:
+    """HTTP URLs with a host should validate."""
+    assert validate_http_https_url("http://example.com/proof") == "http://example.com/proof"
+
+
+@pytest.mark.parametrize(
+    "raw_url",
+    [
+        "javascript:alert(1)",
+        "data:text/plain,hello",
+        "file:///etc/passwd",
+        "mailto:test@example.com",
+        "ftp://example.com/file",
+        "",
+        "   ",
+        "not-a-url",
+    ],
+)
+def test_validate_http_https_url_rejects_invalid_or_dangerous(raw_url: str) -> None:
+    """Dangerous schemes and malformed URLs should raise ValueError."""
+    with pytest.raises(ValueError):
+        validate_http_https_url(raw_url)

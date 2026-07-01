@@ -27,8 +27,16 @@ EXCLUDE_NAMES = {
     ".mypy_cache",
     ".ruff_cache",
     "__pycache__",
+    "ghost_sweep_backend.egg-info",
 }
 EXCLUDE_SUFFIXES = (".pyc", ".tmp", ".log", ".tar.gz", ".zip", ".tsbuildinfo")
+FORBIDDEN_BUNDLE_NAME_PARTS = (
+    "audit-bundle",
+    "transcript",
+    "prompt-artifact",
+    "tool-export",
+    "review-bundle",
+)
 FORBIDDEN_ATTRIBUTION = re.compile(
     r"Co-authored-by|cursoragent|Generated-by|prompt artifact|generation transcript",
     re.IGNORECASE,
@@ -66,6 +74,7 @@ def run_cmd(args: list[str], cwd: Path | None = None) -> tuple[int, str]:
 def should_exclude(path: Path) -> bool:
     """Return True if path should be excluded from source snapshot."""
     name = path.name
+    lowered = name.lower()
     if name in EXCLUDE_NAMES:
         return True
     if name.startswith(".env") and name != ".env.example":
@@ -73,6 +82,8 @@ def should_exclude(path: Path) -> bool:
     if name == ".DS_Store" or name.startswith("._"):
         return True
     if name.endswith(EXCLUDE_SUFFIXES):
+        return True
+    if any(part in lowered for part in FORBIDDEN_BUNDLE_NAME_PARTS):
         return True
     return False
 
@@ -101,6 +112,8 @@ def copy_source(repo_root: Path, dest_source: Path) -> list[Path]:
 def scan_bundle(root: Path) -> list[str]:
     """Scan bundle for unsafe files."""
     issues: list[str] = []
+    if not root.exists():
+        return issues
     for path in root.rglob("*"):
         if not path.is_file():
             continue
@@ -114,10 +127,15 @@ def scan_bundle(root: Path) -> list[str]:
             "node_modules" in path.parts
             or ".next" in path.parts
             or "__pycache__" in path.parts
+            or ".pytest_cache" in path.parts
+            or ".mypy_cache" in path.parts
         ):
             issues.append(f"forbidden dir artifact: {rel}")
         if name.endswith(".pyc"):
             issues.append(f"pyc file: {rel}")
+        lowered = name.lower()
+        if any(part in lowered for part in FORBIDDEN_BUNDLE_NAME_PARTS):
+            issues.append(f"forbidden bundle artifact name: {rel}")
         try:
             text = path.read_text(encoding="utf-8", errors="ignore")
         except OSError:
@@ -126,7 +144,9 @@ def scan_bundle(root: Path) -> list[str]:
             FORBIDDEN_ATTRIBUTION.search(text)
             and "forbidden attribution" not in text.lower()
         ):
-            if rel.name.endswith(".md") and "checklist" in str(rel):
+            if rel.name.endswith(".md") and (
+                "checklist" in str(rel) or "validate_public_mvp" in str(rel)
+            ):
                 continue
             issues.append(f"forbidden attribution marker: {rel}")
         for pattern in SECRET_PATTERNS:
@@ -210,14 +230,12 @@ def write_reports(
                 f"Generated: {now}",
                 f"Commit: {commit}",
                 "",
-                "ghost-sweep is a private Job Integrity Database with local Docker full stack",
-                "and a deferred static public MVP path (GitHub Pages + Google Form).",
+                "ghost-sweep is a public Job Integrity Database with a live static MVP on GitHub Pages,",
+                "Google Form intake, and a full local Docker stack (FastAPI, PostgreSQL, Redis, Next.js).",
                 "",
                 f"Live E2E overall: {'PASS' if e2e_json.get('passed') else 'FAIL'}",
                 "",
-                "Batch 6H focus: audit bundle hygiene, corrected E2E proof, .env.example alignment.",
-                "",
-                "Do not make the repository public until launch checklist is complete.",
+                "Hosted backend, moderation UI, evidence upload, and Sheet import remain deferred.",
             ]
         )
         + "\n",
@@ -262,10 +280,10 @@ def write_reports(
                 "# Architecture Summary",
                 "",
                 "- Backend: FastAPI, PostgreSQL 15, Redis 7",
-                "- Frontend: Next.js 14 server-mode (local Docker)",
+                "- Frontend: Next.js 16.2.9 server-mode (local Docker)",
                 "- Extension: MV3 scaffold only",
-                "- public-mvp: static HTML/CSS only",
-                "- Intake path: Google Form -> Google Sheet -> manual review (deferred)",
+                "- public-mvp: static HTML/CSS only; live on GitHub Pages",
+                "- Intake path: Google Form -> Google Sheet -> manual review",
                 "- No hosted public backend",
             ]
         )
@@ -309,12 +327,7 @@ def write_reports(
                 runs.strip(),
                 "```",
                 "",
-                "Observed pattern across recent failures:",
-                "- jobs complete in 1-4 seconds",
-                "- steps arrays are empty (no test steps executed)",
-                "- classification: billing/spending infrastructure blocker",
-                "",
-                "Do not treat red Actions as code failure without local reproduction.",
+                "CI on main is expected to pass. Re-run local gates if a run fails unexpectedly.",
             ]
         )
         + "\n",
@@ -342,16 +355,19 @@ def write_reports(
             [
                 "# Public Launch Readiness",
                 "",
-                "Recommendation: keep repository PRIVATE.",
+                "Public launch completed (Batches 8A--9C).",
                 "",
-                "Blockers:",
-                "- Google Form URL still placeholder",
-                "- GitHub Pages not enabled",
-                "- Launch checklist incomplete",
-                "- CI billing blocked before job steps",
-                "- Dependency advisories deferred",
+                "Live:",
+                "- Repository: public",
+                "- GitHub Pages: https://codethor0.github.io/ghost-sweep/",
+                "- Google Form: https://forms.gle/PsjaYrbrCjAgZXjW8",
                 "",
-                "Making the repo public will not fix Actions billing.",
+                "Deferred:",
+                "- Hosted backend and live scoring database",
+                "- Sheet import automation",
+                "- Public moderation UI and evidence upload",
+                "- Extension API wiring",
+                "- Remaining dependency advisories (Issue #4)",
             ]
         )
         + "\n",
@@ -400,7 +416,7 @@ def write_reports(
         encoding="utf-8",
     )
 
-    hygiene_issues = scan_bundle(bundle_root / "source")
+    hygiene_issues = scan_bundle(bundle_root)
     (bundle_root / "HYGIENE_SCAN_REPORT.md").write_text(
         "\n".join(
             [
@@ -409,8 +425,11 @@ def write_reports(
                 f"Manifest file count: {manifest_count}",
                 f"Actual source files copied: {manifest_count}",
                 "",
-                "Bundle source scan issues:",
+                "Full bundle scan issues:",
                 *(hygiene_issues or ["(none)"]),
+                "",
+                "Source-only scan:",
+                *(scan_bundle(bundle_root / "source") or ["(none)"]),
                 "",
                 "## Corrected report/vote evidence",
                 f"- POST /reports: status {report_create.get('status_code')} pass={report_create.get('passed')}",
@@ -505,6 +524,7 @@ def main() -> int:
         print("Bundle hygiene issues detected:", file=sys.stderr)
         for issue in bundle_issues:
             print(f"  - {issue}", file=sys.stderr)
+        return 1
 
     create_tarball(bundle_root, tarball)
     tar_issues = verify_tarball(tarball)

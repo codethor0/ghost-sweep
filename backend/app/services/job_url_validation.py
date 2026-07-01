@@ -220,6 +220,45 @@ def _validation_reason(
     return "URL is structurally valid but does not match known job posting patterns."
 
 
+def validate_http_https_url(raw_url: str) -> str:
+    """Validate a reference URL allows http or https only.
+
+    Used for verification document and evidence URL fields. Rejects dangerous
+    schemes such as javascript:, data:, file:, and mailto:.
+
+    Args:
+        raw_url: User-supplied URL text.
+
+    Returns:
+        Validated URL string (leading and trailing whitespace removed).
+
+    Raises:
+        ValueError: When the URL is empty, too long, malformed, or disallowed.
+    """
+    trimmed = raw_url.strip()
+    if not trimmed:
+        raise ValueError("URLs must be non-empty strings")
+    if len(trimmed) > 2048:
+        raise ValueError("URLs must be 2048 characters or fewer")
+
+    try:
+        parts = urlsplit(trimmed)
+    except ValueError as exc:
+        raise ValueError("URLs must be well-formed") from exc
+
+    scheme = parts.scheme.lower()
+    if not scheme:
+        raise ValueError("URLs must include a scheme")
+    if scheme in _DANGEROUS_SCHEMES:
+        raise ValueError(f"URL scheme '{scheme}' is not allowed")
+    if scheme not in _ALLOWED_SCHEMES:
+        raise ValueError("URLs must use http or https")
+    if not parts.hostname:
+        raise ValueError("URLs must include a host")
+
+    return trimmed
+
+
 def validate_job_url(raw_url: str) -> JobUrlValidationResult:
     """Validate and classify a raw job URL offline.
 

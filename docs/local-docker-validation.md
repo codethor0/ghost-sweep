@@ -217,10 +217,10 @@ The free public launch path uses `public-mvp/`, not the Next.js frontend.
 
 | Item | Detail |
 | ---- | ------ |
-| Location | `public-mvp/index.html`, `public-mvp/styles.css` |
-| Hosting | GitHub Pages (static only); configure Settings -> Pages -> /public-mvp |
+| Location | `public-mvp/index.html`, `public-mvp/styles.css` (canonical); root mirror for Pages |
+| Hosting | GitHub Pages from repository root (`/` on `main`); live at https://codethor0.github.io/ghost-sweep/ |
 | Backend calls | None |
-| Report intake | Google Form placeholder URL; manual Sheet review |
+| Report intake | Google Form `https://forms.gle/PsjaYrbrCjAgZXjW8`; manual Sheet review |
 | Full app | FastAPI/Postgres/Redis remains local Docker only |
 
 Local preview:

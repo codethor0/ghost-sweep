@@ -15,7 +15,7 @@ Summary of implemented scope through Batch 10A. For API details see [api.md](api
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
 
-See [post-launch-roadmap.md](post-launch-roadmap.md) and [audit-remediation-plan.md](audit-remediation-plan.md).
+See [post-launch-roadmap.md](post-launch-roadmap.md), [audit-remediation-plan.md](audit-remediation-plan.md), and [implementation-readiness-report.md](implementation-readiness-report.md).
 
 Historical batch notes below are retained for traceability. Lines describing pre-launch blockers reflect the state at each batch, not the current live status.
 
@@ -209,6 +209,13 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - Cross-linked moderation SOP, Form intake spec, post-launch roadmap
 - Issue #6: design complete; CLI import implementation deferred to Batch 12A
 - No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+
+## Implementation readiness (Batch 10E)
+
+- Added [implementation-readiness-report.md](implementation-readiness-report.md): issue tracker review (#1, #4--#8), Batch 12A prerequisites, Sheet column alignment checklist, live MVP verification
+- Updated post-launch-roadmap batch sequence (10E); fixed Track 1 column reference
+- **Verdict:** Design-ready for 12A; not approval-ready until maintainer checklist signed and live Sheet columns verified
+- No application code changes
 
 ## Deferred
 

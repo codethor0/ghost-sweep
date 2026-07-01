@@ -35,7 +35,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 
 **Current state:**
 
-- Sheet columns: Form responses plus manual `review_status`, `reviewer`, `notes`
+- Sheet columns: Form responses plus maintainer columns per [moderation-sop.md](moderation-sop.md)
 - Backend expects structured reports tied to `job_posting_id` (see [moderation-model.md](moderation-model.md))
 - No automated import script or API exists
 
@@ -130,9 +130,10 @@ Implementation (CLI import script) deferred to Batch 12A.
 | **10B** | Public audit remediation (docs, MVP copy, bundle hygiene, URL validation) | Request validation only |
 | **10C** | Moderation SOP + Sheet column conventions ([moderation-sop.md](moderation-sop.md)) | No |
 | **10D** | Sheet import design doc ([sheet-import-design.md](sheet-import-design.md)) | No |
+| **10E** | Implementation readiness checkpoint ([implementation-readiness-report.md](implementation-readiness-report.md)) | No |
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
-| **12A** | Sheet import script (after 10D approval) | May require schema approval |
+| **12A** | Sheet import script (after 10D approval + 10E checklist) | May require schema approval |
 
 ## Related documents
 
@@ -140,6 +141,7 @@ Implementation (CLI import script) deferred to Batch 12A.
 - [implementation-status.md](implementation-status.md)
 - [archive/free-public-launch-plan.md](archive/free-public-launch-plan.md) (historical)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
+- [implementation-readiness-report.md](implementation-readiness-report.md)
 - [sheet-import-design.md](sheet-import-design.md)
 - [moderation-sop.md](moderation-sop.md)
 - [moderation-model.md](moderation-model.md)

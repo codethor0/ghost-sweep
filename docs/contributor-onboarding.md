@@ -125,6 +125,7 @@ Use draft PRs early. Keep scope small. Match existing code style (type hints, no
 - [labels.md](labels.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [moderation-sop.md](moderation-sop.md)
+- [sheet-import-design.md](sheet-import-design.md)
 - [public-launch-checklist.md](public-launch-checklist.md)
 
 ## GitHub tracking issues
@@ -136,7 +137,7 @@ Six issues are open as of Batch 10B (#1, #4, #5, #6, #7, #8). Closed launch bloc
 | [#1](https://github.com/codethor0/ghost-sweep/issues/1) | Open | Extend offline job URL validation tests and docs |
 | [#4](https://github.com/codethor0/ghost-sweep/issues/4) | Open | Deferred npm and pip dependency advisories |
 | [#5](https://github.com/codethor0/ghost-sweep/issues/5) | Open | URL validation API integration design |
-| [#6](https://github.com/codethor0/ghost-sweep/issues/6) | Open | Google Sheet to backend import pipeline (design) |
+| [#6](https://github.com/codethor0/ghost-sweep/issues/6) | Open | Sheet import design complete (10D); CLI implementation deferred |
 | [#7](https://github.com/codethor0/ghost-sweep/issues/7) | Open | Form/Sheet moderation SOP complete; product UI deferred |
 | [#8](https://github.com/codethor0/ghost-sweep/issues/8) | Open | Extension API wiring plan |
 | [#2](https://github.com/codethor0/ghost-sweep/issues/2) | Closed | Public launch: Form URL and static Pages |

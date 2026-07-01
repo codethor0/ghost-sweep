@@ -102,7 +102,7 @@ Public Send link: `https://forms.gle/PsjaYrbrCjAgZXjW8`
 - `python3.11 scripts/validate_public_mvp.py` rejects placeholder URLs and requires the live Form URL
 - GitHub Pages serves the static MVP from repository root (mirrors `public-mvp/`)
 
-See [moderation-sop.md](moderation-sop.md) for Sheet review workflow after submission.
+See [moderation-sop.md](moderation-sop.md) for Sheet review workflow after submission. Approved rows are mapped to backend entities per [sheet-import-design.md](sheet-import-design.md) (design only; no import code yet).
 
 ## Data handling
 
@@ -116,6 +116,7 @@ See [moderation-sop.md](moderation-sop.md) for Sheet review workflow after submi
 ## Related documents
 
 - [moderation-sop.md](moderation-sop.md)
+- [sheet-import-design.md](sheet-import-design.md)
 - [public-launch-checklist.md](public-launch-checklist.md)
 - [validation-artifacts.md](validation-artifacts.md)
 - [SECURITY.md](../SECURITY.md)

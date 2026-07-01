@@ -22,7 +22,7 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 
 **Public MVP launch:** Complete (Batches G1A, 8A, 9B, 9C).
 
-**Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet-to-PostgreSQL import.
+**Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet-to-PostgreSQL import (design: [sheet-import-design.md](sheet-import-design.md); implementation Batch 12A+).
 
 ## Launch readiness checkpoint (Batch 9B — 2026-07-01)
 

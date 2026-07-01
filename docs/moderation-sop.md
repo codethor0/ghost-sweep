@@ -284,7 +284,7 @@ Future import pipeline (Issue #6) should:
 - Normalize job URL via offline helper before dedupe
 - Record Sheet row id and `reviewed_at` in import audit metadata
 
-Until import exists, `import_ready=yes` is a label only.
+Full design: [sheet-import-design.md](sheet-import-design.md). Implementation deferred to Batch 12A+.
 
 ## Audit trail expectations
 
@@ -322,6 +322,7 @@ This SOP governs manual Sheet review until those ship.
 - [google-form-intake-spec.md](google-form-intake-spec.md) — Form fields
 - [moderation-model.md](moderation-model.md) — product moderation principles
 - [post-launch-roadmap.md](post-launch-roadmap.md) — Tracks 1 and 2
+- [sheet-import-design.md](sheet-import-design.md)
 - [legal-risk.md](legal-risk.md) — legal and language risk
 - [project-operations-plan.md](project-operations-plan.md) — project account ownership
 - [audit-remediation-plan.md](audit-remediation-plan.md) — batch tracking

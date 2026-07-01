@@ -39,14 +39,16 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 - Backend expects structured reports tied to `job_posting_id` (see [moderation-model.md](moderation-model.md))
 - No automated import script or API exists
 
-**Planning deliverables (Issue #6):**
+**Planning deliverables (Issue #6 — Batch 10D complete):**
 
-1. Field mapping: Form/Sheet columns to future backend entities (company, posting, report narrative)
-2. Duplicate detection strategy (URL normalization via [job_url_validation.py](../backend/app/services/job_url_validation.py))
-3. Moderation gates: which `review_status` values may import
+1. Field mapping: [sheet-import-design.md](sheet-import-design.md)
+2. Duplicate detection strategy using normalized job URLs
+3. Import eligibility rules tied to `review_status` and `import_ready`
 4. Idempotency and audit requirements
-5. PII redaction rules before any public display
-6. Explicit non-goals for v1 (no scraping, no auto-verify)
+5. PII redaction rules before public use
+6. Explicit v1 non-goals (no scraping, no auto-verify)
+
+Implementation (CLI import script) deferred to Batch 12A.
 
 **Dependencies:** Manual moderation SOP (Track 2), URL validation rules (Issue #5)
 
@@ -116,7 +118,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 | #4 Dependency advisories | Narrow -- Batch 7E accepted deferred; maintainer may close |
 | #1 URL validation onboarding | Refocus -- 6D foundation done; extend tests/docs |
 | #5 URL validation API design | Keep open -- design gate before API wiring |
-| #6 Sheet import planning | New -- design only |
+| #6 Sheet import planning | Design complete (10D); implementation deferred to 12A |
 | #7 Moderation workflow | SOP complete (10C); product UI still deferred |
 | #8 Extension API wiring plan | New -- design only |
 
@@ -127,7 +129,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 | **10A** | Roadmap + issue tracker sync | No |
 | **10B** | Public audit remediation (docs, MVP copy, bundle hygiene, URL validation) | Request validation only |
 | **10C** | Moderation SOP + Sheet column conventions ([moderation-sop.md](moderation-sop.md)) | No |
-| **10D** | Sheet import design doc (field mapping) | No |
+| **10D** | Sheet import design doc ([sheet-import-design.md](sheet-import-design.md)) | No |
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
 | **12A** | Sheet import script (after 10D approval) | May require schema approval |
@@ -138,6 +140,7 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 - [implementation-status.md](implementation-status.md)
 - [archive/free-public-launch-plan.md](archive/free-public-launch-plan.md) (historical)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
+- [sheet-import-design.md](sheet-import-design.md)
 - [moderation-sop.md](moderation-sop.md)
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)

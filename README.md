@@ -93,7 +93,7 @@ Validate before deploy:
 python3.11 scripts/validate_public_mvp.py
 ```
 
-See [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), [docs/public-launch-checklist.md](docs/public-launch-checklist.md), and [docs/post-launch-roadmap.md](docs/post-launch-roadmap.md).
+See [docs/google-form-intake-spec.md](docs/google-form-intake-spec.md), [docs/public-launch-checklist.md](docs/public-launch-checklist.md), [docs/post-launch-roadmap.md](docs/post-launch-roadmap.md), and [docs/sheet-import-design.md](docs/sheet-import-design.md).
 
 The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emails must not be published.
 

@@ -203,6 +203,13 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - Issue #7: operational SOP complete; product moderation UI still deferred
 - No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
 
+## Sheet import design (Batch 10D)
+
+- Added [sheet-import-design.md](sheet-import-design.md): Sheet-to-backend field mapping, eligibility rules, dedupe, URL validation, company/posting/report strategies, dry-run design, idempotency, audit logging, non-goals
+- Cross-linked moderation SOP, Form intake spec, post-launch roadmap
+- Issue #6: design complete; CLI import implementation deferred to Batch 12A
+- No backend API/auth/schema, Docker, CI, frontend app, or extension behavior changes
+
 ## Deferred
 
 - Evidence file upload

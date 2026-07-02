@@ -32,6 +32,8 @@ Before scaling contributor access or enabling direct pushes from multiple mainta
 
 These changes require repository admin settings or `gh api` / UI configuration. Batch 10B does not modify branch protection.
 
+Post–Batch-12 queue: repository security settings (branch protection, rulesets) remain a maintainer follow-up — see [post-launch-roadmap.md](post-launch-roadmap.md).
+
 ## Related documents
 
 - [SECURITY.md](../SECURITY.md)

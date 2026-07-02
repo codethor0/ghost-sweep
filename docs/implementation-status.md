@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 12B. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 12S. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -11,7 +11,10 @@ Summary of implemented scope through Batch 12B. For API details see [api.md](api
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
 | CI on `main` | Passing |
 | Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
-| Hosted backend, scoring DB, import apply, moderation UI, evidence upload, extension API | Deferred (`--apply` blocked on section 18 gates) |
+| Batch 12 MVP readiness (Section 18 offline gate) | **Closed** — ACCEPTED-MVP (Batch 12S) |
+| Live Sheet export proof | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| Hosted backend, scoring DB, moderation UI, evidence upload, extension API | Deferred |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
 
@@ -363,6 +366,16 @@ This decision **does not** represent live Google Sheet export proof. Google Shee
 | `--apply` implementation | Database writes | **Blocked** |
 
 - **Verdict:** Section 18 amended for MVP readiness on offline verification only. Live Gates 11 and 12 remain BLOCKED-LIVE. Apply mode remains blocked.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
+## Post–Batch-12 planning realignment (Batch 13B)
+
+Docs-only checkpoint (2026-07-02). Aligns planning docs with Batch 12S/12T truth at commit `38a5589`.
+
+- Batch 12 closed for MVP readiness under amended Section 18 offline gate language.
+- Offline Gates 11/12: **ACCEPTED-MVP**. Live Gates 11/12: **BLOCKED-LIVE**.
+- `--apply` and production import automation remain **blocked**.
+- Next recommended execution batch: **13C** — public backend hosting spike (docs-only).
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred

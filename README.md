@@ -99,7 +99,7 @@ The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emai
 
 ## Current project status
 
-Current `main` reflects public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), and apply-mode design (Batch 12B). The public static MVP and Google Form intake are live; the full application remains local Docker only.
+Current `main` at `38a5589` reflects public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), apply-mode design (Batch 12B), offline verification (Batch 12F-P), and Section 18 MVP amendment (Batch 12S). The public static MVP and Google Form intake are live; the full application remains local Docker only. Batch 12 is **closed for MVP readiness** under amended Section 18 offline gate language.
 
 **Live public surfaces:**
 
@@ -112,7 +112,10 @@ Current `main` reflects public launch (Batches 8A--10E), Sheet import dry-run (B
 
 - **Batch 12A (shipped):** dry-run CLI — `scripts/sheet_import_dry_run.py`, `scripts/verify_sheet_columns.py`; no database writes
 - **Batch 12B (shipped):** apply-mode design — [sheet-import-apply-design.md](docs/sheet-import-apply-design.md)
-- **`--apply` implementation:** not implemented; blocked until section 18 approval gates in that doc are explicitly signed and a real Sheet CSV export is verified
+- **Batch 12F-P / 12S (shipped):** offline post-upload artifact verification **ACCEPTED-MVP**; Section 18 amended for MVP importer readiness
+- **Live Sheet export proof:** **BLOCKED-LIVE** — not required for MVP readiness under amended offline gate; required before production import automation
+- **`--apply` implementation:** not implemented; blocked — requires separate maintainer approval and live export proof before production automation
+- **Production import automation:** not enabled
 
 **CI:**
 
@@ -165,8 +168,8 @@ Current `main` reflects public launch (Batches 8A--10E), Sheet import dry-run (B
 **Deferred (not publicly hosted):**
 
 - Public backend hosting and live scoring database
-- Sheet import `--apply` mode (design complete; implementation blocked on approval gates)
-- Google Sheet to backend import automation (dry-run only today)
+- Sheet import `--apply` mode (design complete; implementation blocked; live export proof required before production automation)
+- Google Sheet to backend import automation (dry-run only; offline gate ACCEPTED-MVP; production import deferred)
 - Public moderation UI and evidence file upload
 - Extension backend API integration
 - Wiring job URL validation into public API or intake flows

@@ -1,6 +1,24 @@
 # Post-Launch Product Roadmap
 
-Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). No backend schema or API changes are implied by this roadmap until separate design approval.
+Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). Current baseline: `38a5589` (Batch 12S/12T). No backend schema or API changes are implied by this roadmap until separate design approval.
+
+## Batch 12 closure (MVP readiness)
+
+Batch 12 is **closed for MVP readiness** under amended Section 18 offline gate language (Batch 12S, pushed Batch 12T).
+
+| Milestone | Status |
+| --------- | ------ |
+| 12A dry-run CLI | Shipped |
+| 12B apply-mode design | Shipped |
+| 12F-P offline verification | PASS — ACCEPTED-MVP |
+| 12Q offline documentation | Complete |
+| 12S Section 18 MVP amendment | Complete |
+| 12T push checkpoint | Complete |
+| Live Sheet export proof | **BLOCKED-LIVE** — deferred; not an MVP blocker under amended gate |
+| `--apply` implementation | **Blocked** — separate maintainer decision required |
+| Production import automation | **Not enabled** |
+
+See [implementation-status.md](implementation-status.md) Batch 12S and [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18.
 
 ## Launch status (complete)
 
@@ -29,17 +47,20 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 - No schema or API changes without maintainer design approval and tests.
 - Prefer offline, testable helpers before network integration (see Issue #5).
 
-## Track 1: Google Sheet import planning
+## Track 1: Google Sheet import
 
-**Goal:** Define how approved Form/Sheet rows become backend records without implementing import yet.
+**Goal:** Move approved Form/Sheet rows into backend records when maintainer-approved apply mode and hosting exist.
 
 **Current state:**
 
 - Sheet columns: Form responses plus maintainer columns per [moderation-sop.md](moderation-sop.md)
-- Backend expects structured reports tied to `job_posting_id` (see [moderation-model.md](moderation-model.md))
-- No automated import script or API exists
+- Batch 12A dry-run CLI shipped — no database writes
+- Batch 12B apply-mode design shipped — implementation blocked
+- Batch 12F-P offline artifact verification **ACCEPTED-MVP** (Batch 12S)
+- Live Google Sheet export proof **BLOCKED-LIVE** — operational blocker; deferred
+- `--apply` not implemented; production import automation not enabled
 
-**Planning deliverables (Issue #6 — Batch 10D complete):**
+**Completed planning (Issue #6 — Batch 10D):**
 
 1. Field mapping: [sheet-import-design.md](sheet-import-design.md)
 2. Duplicate detection strategy using normalized job URLs
@@ -48,11 +69,11 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 5. PII redaction rules before public use
 6. Explicit v1 non-goals (no scraping, no auto-verify)
 
-Implementation: Batch 12A dry-run CLI shipped; `--apply` design complete (Batch 12B gate); implementation blocked on maintainer approval.
+Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md). **Do not implement `--apply`** until explicitly approved; live export proof required before production automation.
 
-See [sheet-import-apply-design.md](sheet-import-apply-design.md) for apply-mode design.
+**Note:** [sheet-import-design.md](sheet-import-design.md) phase table uses **13A = Hosted import** (production DB). That is a future import-automation phase, not the same as Batch 13A/13B/13C roadmap numbering in this document.
 
-**Dependencies:** Manual moderation SOP (Track 2), URL validation rules (Issue #5)
+**Dependencies:** Manual moderation SOP (Track 2), URL validation rules (Issue #5), hosted backend (Batch 13C)
 
 ## Track 2: Moderation workflow
 
@@ -120,25 +141,47 @@ See [sheet-import-apply-design.md](sheet-import-apply-design.md) for apply-mode 
 | #4 Dependency advisories | Narrow -- Batch 7E accepted deferred; maintainer may close |
 | #1 URL validation onboarding | Refocus -- 6D foundation done; extend tests/docs |
 | #5 URL validation API design | Keep open -- design gate before API wiring |
-| #6 Sheet import planning | 12A dry-run and 12B design shipped; `--apply` impl pending |
+| #6 Sheet import | 12A–12S complete for MVP offline gate; `--apply` and live proof **deferred** |
 | #7 Moderation workflow | SOP complete (10C); product UI still deferred |
 | #8 Extension API wiring plan | New -- design only |
 
 ## Recommended batch sequence
 
+### Completed (through Batch 12)
+
 | Batch | Scope | Schema/API |
 | ----- | ----- | ---------- |
 | **10A** | Roadmap + issue tracker sync | No |
-| **10B** | Public audit remediation (docs, MVP copy, bundle hygiene, URL validation) | Request validation only |
-| **10C** | Moderation SOP + Sheet column conventions ([moderation-sop.md](moderation-sop.md)) | No |
-| **10D** | Sheet import design doc ([sheet-import-design.md](sheet-import-design.md)) | No |
-| **10E** | Implementation readiness checkpoint ([implementation-readiness-report.md](implementation-readiness-report.md)) | No |
-| **11A** | Public backend hosting spike (infra only) | No schema change |
-| **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
-| **12A** | Sheet import dry-run CLI ([sheet_import_dry_run.py](../scripts/sheet_import_dry_run.py)) | No |
-| **12B** | Sheet import apply mode design gate ([sheet-import-apply-design.md](sheet-import-apply-design.md)) | No schema in v1 |
-| **12B impl** | Sheet import `--apply` (local/admin-only) | No schema if audit-log idempotency holds |
-| **12C** | Audit remediation and implementation gate cleanup | No |
+| **10B** | Public audit remediation | Request validation only |
+| **10C** | Moderation SOP ([moderation-sop.md](moderation-sop.md)) | No |
+| **10D** | Sheet import design ([sheet-import-design.md](sheet-import-design.md)) | No |
+| **10E** | Implementation readiness checkpoint | No |
+| **12A** | Sheet import dry-run CLI | No |
+| **12B** | Sheet import apply-mode design gate | No |
+| **12C** | Audit remediation and gate cleanup | No |
+| **12F-P / 12Q** | Offline artifact verification + documentation | No |
+| **12S / 12T** | Section 18 MVP amendment + push | No |
+
+### Post–Batch-12 queue (current)
+
+| Priority | Batch | Scope | Schema/API |
+| -------- | ----- | ----- | ---------- |
+| 1 | **13B** | Planning doc realignment (this checkpoint) | No |
+| 2 | **13C** | Public backend hosting spike (docs-only; roadmap 11A) | No |
+| 3 | **13D or doc** | Moderation UI scoping (Issue #7) | No |
+| 4 | **13E or doc** | Extension API wiring design (Issue #8) | No |
+| 5 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
+| — | **Maintainer** | Close/reframe Issue #4; repository security settings | No |
+| — | **Deferred** | Live Sheet export proof; `--apply` implementation; hosted production import | Separate decisions |
+
+Live Sheet proof and `--apply` are **deferred gates**, not the next MVP blocker. MVP readiness proceeds under amended Section 18 offline gate language only.
+
+### Historical reference (pre–Batch-12 plan)
+
+| Batch | Scope | Schema/API |
+| ----- | ----- | ---------- |
+| **11A** | Public backend hosting spike — **renumbered to Batch 13C** in post-12 queue | No schema change |
+| **12B impl** | Sheet import `--apply` | **Deferred** — blocked |
 
 ## Related documents
 

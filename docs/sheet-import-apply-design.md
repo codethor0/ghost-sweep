@@ -515,6 +515,8 @@ Batch 12S maintainer decision (2026-07-02): **Section 18 amended for MVP readine
 
 Do not implement `--apply` until explicitly approved in a later maintainer decision. Live export proof remains required before production Sheet import automation.
 
+**Roadmap note:** Batch 12 is closed for MVP readiness (12S/12T). Post–Batch-12 execution queue is in [post-launch-roadmap.md](post-launch-roadmap.md). Import doc phase **13A = Hosted import** is a future production-import phase, not the same as roadmap Batch 13A/13B/13C numbering.
+
 | # | Gate | Status |
 | - | ---- | ------ |
 | 1 | Apply eligibility matches dry-run (no bypass) | Pending |

@@ -1,6 +1,25 @@
 # Implementation Readiness Report
 
-Post-roadmap checkpoint after Batches 10A--10D. **Read-only review; no application code changes.** Generated at commit `3b76e34`.
+Current baseline: commit `38a5589` (Batch 12S/12T). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 13B planning realignment (2026-07-02)
+
+Docs-only checkpoint. Aligns planning docs with Batch 12 closed for MVP readiness under amended Section 18.
+
+| Area | Status |
+| ---- | ------ |
+| Live public MVP | Healthy |
+| Batch 12 (MVP readiness) | **Closed** — Section 18 offline gate ACCEPTED-MVP (12S) |
+| Offline Gate 11 / 12 | **ACCEPTED-MVP** |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` implementation | **Not implemented** — blocked |
+| Production import automation | **Not enabled** |
+| Full app hosting | Local Docker only |
+| **Recommended next execution batch** | **13C** — public backend hosting spike (docs-only) |
+
+Live Sheet proof and `--apply` remain explicitly out of scope until separate maintainer decisions.
+
+See [post-launch-roadmap.md](post-launch-roadmap.md) post–Batch-12 queue and [implementation-status.md](implementation-status.md) Batch 13B.
 
 ## Batch 12S Section 18 MVP amendment (2026-07-02)
 
@@ -70,9 +89,9 @@ This report is a historical 10E checkpoint. Current state on `main`:
 
 See [implementation-status.md](implementation-status.md) for current batch history.
 
-Purpose: confirm issue tracker state, doc alignment, live MVP health, and prerequisites before Batch 12A (Sheet import CLI) or Batch 11A (hosting spike).
+## Executive summary (historical — Batch 10E at `3b76e34`)
 
-## Executive summary
+**Superseded.** For current state see Batch 13B and Batch 12S sections above.
 
 | Area | Status |
 | ---- | ------ |
@@ -253,18 +272,9 @@ From [sheet-import-design.md](sheet-import-design.md) maintainer approval checkl
 
 **Verdict:** Batch 12A dry-run CLI is available. `--apply` mode (Batch 12B) requires maintainer checklist sign-off and live Sheet column verification via `scripts/verify_sheet_columns.py`.
 
-## Recommended batch sequence (reset)
+## Recommended batch sequence (reset — historical)
 
-| Priority | Batch | Scope |
-| -------- | ----- | ----- |
-| 1 | **10E** | This checkpoint (complete) |
-| 2 | **Maintainer** | Close/update #4; sign sheet-import-design checklist; verify Sheet columns |
-| 3 | **11A** | Public backend hosting spike (infra only) — optional before import |
-| 4 | **10F or doc** | Issue #8 extension wiring design |
-| 5 | **11B** | URL validation API (after Issue #5 design) |
-| 6 | **12A** | Sheet import CLI (dry-run default) |
-
-Batch 12A should not skip ahead of maintainer approval even though design doc exists.
+**Superseded by [post-launch-roadmap.md](post-launch-roadmap.md) post–Batch-12 queue.** Next execution batch: **13C** (hosted backend readiness spike, docs-only).
 
 ## Doc vs live MVP drift check
 

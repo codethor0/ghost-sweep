@@ -2,6 +2,14 @@
 
 This document records known dependency advisories after Batch 7E triage (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
 
+## Batch 13B re-verification (2026-07-02)
+
+| Item | Result |
+| ---- | ------ |
+| Scope | Docs-only planning realignment; no manifest changes |
+| Classification | Unchanged from Batch 12C / Batch 7E |
+| Issue #4 | Remains open for maintainer close/reframe decision |
+
 ## Batch 12C re-verification (2026-07-01)
 
 | Item | Result |

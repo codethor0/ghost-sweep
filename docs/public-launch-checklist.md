@@ -22,7 +22,7 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 
 **Public MVP launch:** Complete (Batches G1A, 8A, 9B, 9C).
 
-**Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet import `--apply` mode (12A dry-run and 12B design shipped; apply blocked on section 18 gates).
+**Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload. Sheet import dry-run and offline MVP gate complete (12A, 12F-P, 12S); `--apply` and production import **blocked**; live Sheet proof **BLOCKED-LIVE**.
 
 ## Sheet import verification status (Batch 12S — Section 18 MVP amendment — 2026-07-02)
 
@@ -46,28 +46,7 @@ Do not implement `--apply` until explicitly approved in a later maintainer decis
 
 See [implementation-status.md](implementation-status.md) Batch 12G, Batch 12F-P, and Batch 12S, and [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18.
 
-## Sheet import verification status (Batch 12F-P / docs Batch 12Q — 2026-07-02)
-
-Docs-only checkpoint. **OFFLINE-PASS only.** Not final Section 18 live sign-off.
-
-| Gate | Status | Blocker? |
-| ---- | ------ | -------- |
-| Sheet import dry-run CLI (12A) | Shipped | No |
-| Sheet import apply design (12B) | Shipped | No |
-| Offline artifact Gate 11 (`verify_sheet_columns.py` on offline export) | READY (Batch 12F-P) | No |
-| Offline artifact Gate 12 (offline dry-run, would_import=1) | READY (Batch 12F-P) | No |
-| Live Gate 11: live Sheet columns (`verify_sheet_columns.py`) | BLOCKED-LIVE | Yes — live export required |
-| Live Gate 12: live dry-run on latest export | BLOCKED-LIVE | Yes — live export required |
-| Final Section 18 live sign-off | Not ready | Yes |
-| `--apply` implementation | Blocked | Yes |
-
-**OFFLINE-PASS (Batch 12F-P):** Generated offline post-upload CSV verified (20 headers; dry-run processed=2, would_import=1, skipped=1; row 3 imports with valid consent and SOP; stale row 2 skips on `review_status`).
-
-**LIVE STATUS:** Google live Sheet automation remains blocked. No live post-upload CSV from the live Sheet exists. Offline and fallback artifacts outside the repo confirm importer shape but do not replace live Sheet verification.
-
-Do not implement `--apply` until live gates are signed off or maintainer explicitly amends the release gate.
-
-See [implementation-status.md](implementation-status.md) Batch 12G and Batch 12F-P, and [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18.
+Historical offline verification checkpoint (Batch 12Q): see [implementation-status.md](implementation-status.md) Sheet import offline artifact verification section.
 
 ## Launch readiness checkpoint (Batch 9B — 2026-07-01)
 

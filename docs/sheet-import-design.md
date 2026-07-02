@@ -415,7 +415,7 @@ Before Batch 12A implementation:
 - [ ] PostingSource mapping v1 approved
 - [ ] Schema change needs identified (if any)
 
-Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18).
+Batch 12A dry-run CLI shipped. `--apply` implementation is **blocked**; see [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18 and [post-launch-roadmap.md](post-launch-roadmap.md) Batch 12 closure.
 
 As of Batch 12S Section 18 MVP amendment (2026-07-02):
 

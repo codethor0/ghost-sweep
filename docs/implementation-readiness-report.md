@@ -2,9 +2,9 @@
 
 Post-roadmap checkpoint after Batches 10A--10D. **Read-only review; no application code changes.** Generated at commit `3b76e34`.
 
-## Batch 12G status update (2026-07-02)
+## Batch 12F-P / 12Q status update (2026-07-02)
 
-Docs-only blocker/status update after Batch 12F-K. **Not final Section 18 sign-off.**
+Docs-only checkpoint after Batch 12F-P offline artifact verification. **OFFLINE-PASS only.** **Not final Section 18 sign-off.**
 
 | Area | Status |
 | ---- | ------ |
@@ -12,17 +12,22 @@ Docs-only blocker/status update after Batch 12F-K. **Not final Section 18 sign-o
 | Batch 12A dry-run CLI | **Shipped** |
 | Batch 12B apply-mode design | **Shipped** |
 | `--apply` implementation | **Not implemented** — blocked on [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18 |
-| Live Google Sheet export verify | **Blocked** — no live post-upload CSV exists |
-| Gate 11 | **BLOCKED-LIVE / FALLBACK-PASS** |
-| Gate 12 | **BLOCKED-LIVE / FALLBACK-PASS** |
-| Final Section 18 sign-off | **Not ready** |
+| Offline post-upload artifact verify (Batch 12F-P) | **PASS** — processed=2, would_import=1, skipped=1 |
+| Offline artifact Gate 11 | **READY** |
+| Offline artifact Gate 12 | **READY** |
+| Live Google Sheet export verify | **Blocked** — no live post-upload CSV from the live Sheet |
+| Live Gate 11 | **BLOCKED-LIVE** |
+| Live Gate 12 | **BLOCKED-LIVE** |
+| Final Section 18 live sign-off | **Not ready** |
 | Issue #6 | Open — tracks apply implementation |
 
-Google live Sheet automation failed across all attempted paths (grid editing, bound Apps Script, standalone Apps Script paste/run, clasp wrong account, Sheets API unavailable). A local fallback sanitized artifact outside the repo passed `verify_sheet_columns.py` and `sheet_import_dry_run.py` (processed=1, would_import=1, skipped=0). The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification.
+Batch 12F-P verified a generated offline post-upload CSV (20 headers, row 3 imports, stale row 2 skips on `review_status`). This confirms the importer accepts the expected post-upload structure and moderation values. It is not live Google Sheet proof.
+
+Google live Sheet automation remains blocked (grid editing, bound Apps Script, standalone Apps Script paste/run, clasp wrong account, Sheets API unavailable, Drive export not found). Prior Batch 12F-K fallback artifact also passed verification (processed=1, would_import=1, skipped=0).
 
 Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
 
-See [implementation-status.md](implementation-status.md) Batch 12G for full blocker details.
+See [implementation-status.md](implementation-status.md) Batch 12G and Batch 12F-P for full details.
 
 ## Batch 12C status update (2026-07-01)
 

@@ -300,6 +300,40 @@ Recommended manual path: repair SOP columns L:T on the linked Sheet (row 3 only 
 - **Verdict:** Importer accepts correct 20-column shape and valid consent path (fallback proof). Live Gates 11 and 12 remain blocked until a real live Sheet export passes. Apply mode remains blocked.
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
+## Sheet import offline artifact verification (Batch 12F-P / docs Batch 12Q)
+
+Docs-only checkpoint after Batch 12F-P. This is **OFFLINE-PASS only**, not live Google Sheet proof. **Not** final Section 18 sign-off.
+
+Batch 12F-P completed offline artifact verification for the Sheet import post-upload shape. The generated offline CSV matched all 20 expected headers and dry-run accepted one importable row. This confirms the importer accepts the expected post-upload structure and moderation values.
+
+However, this is not live Google Sheet proof. The live Sheet export remains blocked because Google Sheets / Apps Script export has not yet produced the required local CSV from the live Sheet.
+
+### OFFLINE-PASS (Batch 12F-P)
+
+- 20-column post-upload artifact verified (`verify_sheet_columns.py` PASS on sanitized export).
+- Dry-run result: processed=2, would_import=1, skipped=1.
+- Row 2 skip reason: `review_status` not `approved_for_import` (stale legacy row; expected).
+- Row 3: WOULD_IMPORT with valid consent path and approved SOP fields.
+- Notes redaction occurred in sanitized CSV (outside repo).
+- Offline artifact paths (outside repo): raw and sanitized exports under `/Users/thor/Downloads/ghost-sweep-sheet-exports/ghost-sweep-intake-post-upload-export.csv` (generated from Batch 12F-O offline bundle, not a live Sheet download).
+
+| Target | verify_sheet_columns.py | sheet_import_dry_run.py | processed | would_import | skipped |
+| ------ | ----------------------- | ----------------------- | --------- | ------------ | ------- |
+| Offline post-upload sanitized (outside repo) | PASS | PASS | 2 | 1 | 1 |
+
+Offline artifact Gate 11: **READY**. Offline artifact Gate 12: **READY**.
+
+### LIVE STATUS (unchanged)
+
+- Gate 11 remains **BLOCKED-LIVE** until `verify_sheet_columns.py` passes on a live Google Sheet export.
+- Gate 12 remains **BLOCKED-LIVE** until `sheet_import_dry_run.py` passes on a live Google Sheet export with at least one `would_import` row.
+- Final Section 18 live sign-off: **Not ready**.
+
+Do not implement `--apply` until live gates are signed off or maintainer explicitly amends the release gate.
+
+- **Verdict:** Importer path confirmed on offline post-upload artifact. Live Gates 11 and 12 remain blocked. Apply mode remains blocked.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes during verification
+
 ## Deferred
 
 - Sheet import `--apply` mode (Batch 12B design shipped; implementation blocked)

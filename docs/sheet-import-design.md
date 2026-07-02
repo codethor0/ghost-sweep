@@ -369,7 +369,7 @@ Google Sheet is **untrusted input** even though maintainers review it. Formula i
 | ----- | ----- | ----- |
 | **10D** | This doc | Design only |
 | **12A** | Import dry-run CLI | Dry-run only; CSV export; no DB writes |
-| **12B** | Import apply mode | Local Docker; `--apply`; audit logs |
+| **12B** | Import apply mode | Local Docker; `--apply`; audit logs; see [sheet-import-apply-design.md](sheet-import-apply-design.md) |
 | **12C** | Scheduled import | Maintainer-triggered or cron; still admin-only |
 | **13A** | Hosted import | Runs against production DB with approval |
 | **13B** | Moderation UI link | Show Sheet origin on imported reports |
@@ -395,6 +395,7 @@ Each phase requires maintainer approval. Schema changes (import tracking tables)
 
 ## Related documents
 
+- [sheet-import-apply-design.md](sheet-import-apply-design.md) — Batch 12B apply-mode design gate
 - [moderation-sop.md](moderation-sop.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [post-launch-roadmap.md](post-launch-roadmap.md) — Track 1
@@ -413,3 +414,5 @@ Before Batch 12A implementation:
 - [ ] Dry-run default approved
 - [ ] PostingSource mapping v1 approved
 - [ ] Schema change needs identified (if any)
+
+Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18).

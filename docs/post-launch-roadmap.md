@@ -48,7 +48,9 @@ GitHub Pages (static MVP) --> Google Form --> Google Sheet --> manual moderation
 5. PII redaction rules before public use
 6. Explicit v1 non-goals (no scraping, no auto-verify)
 
-Implementation: Batch 12A dry-run CLI shipped; `--apply` deferred to Batch 12B.
+Implementation: Batch 12A dry-run CLI shipped; `--apply` design complete (Batch 12B gate); implementation blocked on maintainer approval.
+
+See [sheet-import-apply-design.md](sheet-import-apply-design.md) for apply-mode design.
 
 **Dependencies:** Manual moderation SOP (Track 2), URL validation rules (Issue #5)
 
@@ -134,7 +136,8 @@ Implementation: Batch 12A dry-run CLI shipped; `--apply` deferred to Batch 12B.
 | **11A** | Public backend hosting spike (infra only) | No schema change |
 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
 | **12A** | Sheet import dry-run CLI ([sheet_import_dry_run.py](../scripts/sheet_import_dry_run.py)) | No |
-| **12B** | Sheet import apply mode (local/admin-only) | May require schema approval |
+| **12B** | Sheet import apply mode design gate ([sheet-import-apply-design.md](sheet-import-apply-design.md)) | No schema in v1 |
+| **12B impl** | Sheet import `--apply` (local/admin-only) | No schema if audit-log idempotency holds |
 
 ## Related documents
 
@@ -144,6 +147,7 @@ Implementation: Batch 12A dry-run CLI shipped; `--apply` deferred to Batch 12B.
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [implementation-readiness-report.md](implementation-readiness-report.md)
 - [sheet-import-design.md](sheet-import-design.md)
+- [sheet-import-apply-design.md](sheet-import-apply-design.md)
 - [moderation-sop.md](moderation-sop.md)
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)

@@ -223,7 +223,15 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - Added [scripts/sheet_import_dry_run.py](../scripts/sheet_import_dry_run.py): local/admin-only dry-run CLI (no database writes)
 - Added [scripts/verify_sheet_columns.py](../scripts/verify_sheet_columns.py): CSV header verification for SOP columns
 - Unit tests in `backend/tests/test_sheet_import.py`
+- Sanitized fixture: [backend/tests/fixtures/sheet_import_sample.csv](../backend/tests/fixtures/sheet_import_sample.csv)
 - `--apply` mode deferred to Batch 12B; no schema or API changes
+
+## Sheet import apply mode design gate (Batch 12B)
+
+- Added [sheet-import-apply-design.md](sheet-import-apply-design.md): `--apply` eligibility, transaction boundaries, idempotency via audit logs, entity create/match rules, audit events, dry-run parity, rollback, duplicate handling, test plan, approval gates
+- Cross-linked parent [sheet-import-design.md](sheet-import-design.md) and post-launch roadmap
+- **Verdict:** Design-ready for 12B implementation review; blocked until maintainer approval gates signed
+- No application code, schema, API, Docker, CI, frontend, extension, or public MVP changes
 
 ## Deferred
 

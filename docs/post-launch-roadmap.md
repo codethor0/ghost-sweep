@@ -166,9 +166,9 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 
 | Priority | Batch | Scope | Schema/API |
 | -------- | ----- | ----- | ---------- |
-| 1 | **13B** | Planning doc realignment (this checkpoint) | No |
-| 2 | **13C** | Public backend hosting spike (docs-only; roadmap 11A) | No |
-| 3 | **13D or doc** | Moderation UI scoping (Issue #7) | No |
+| 1 | **13B** | Planning doc realignment | No |
+| 2 | **13C** | Public backend hosting spike ([hosting-readiness-spike.md](hosting-readiness-spike.md)) | No |
+| 3 | **13D** | Render deployment plan (docs-only, no deploy) **or** moderation UI scoping | No |
 | 4 | **13E or doc** | Extension API wiring design (Issue #8) | No |
 | 5 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
 | — | **Maintainer** | Close/reframe Issue #4; repository security settings | No |
@@ -195,3 +195,4 @@ Live Sheet proof and `--apply` are **deferred gates**, not the next MVP blocker.
 - [moderation-sop.md](moderation-sop.md)
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)
+- [hosting-readiness-spike.md](hosting-readiness-spike.md)

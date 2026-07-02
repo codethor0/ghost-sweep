@@ -378,6 +378,16 @@ Docs-only checkpoint (2026-07-02). Aligns planning docs with Batch 12S/12T truth
 - Next recommended execution batch: **13C** — public backend hosting spike (docs-only).
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
+## Public backend hosting readiness spike (Batch 13C)
+
+Docs-only checkpoint (2026-07-02). No deploy performed.
+
+- Added [hosting-readiness-spike.md](hosting-readiness-spike.md): runtime inventory, env/secrets checklist, Render/Fly/Railway comparison, Render recommended for MVP backend hosting.
+- Full backend remains local Docker only; public MVP unchanged (Pages + Form + Sheet).
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **13D** — Render deployment plan (docs-only) or moderation UI scoping.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
 ## Deferred
 
 - Sheet import `--apply` mode (Batch 12B design shipped; implementation blocked)

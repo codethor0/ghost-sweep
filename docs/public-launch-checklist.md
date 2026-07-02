@@ -179,7 +179,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 
 ## Post-launch (deferred)
 
-- [ ] Public backend hosting (Render, Fly, Railway, etc.)
+- [ ] Public backend hosting (Render recommended — see [hosting-readiness-spike.md](hosting-readiness-spike.md); no deploy in Batch 13C)
 - [ ] Live scoring database on public site
 - [ ] Extension backend API integration (deferred; offline URL validation foundation exists from Batch 6D but is not API-wired)
 - [ ] Evidence file upload
@@ -189,6 +189,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 ## Related documents
 
 - [post-launch-roadmap.md](post-launch-roadmap.md)
+- [hosting-readiness-spike.md](hosting-readiness-spike.md)
 - [free-public-launch-plan.md](free-public-launch-plan.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [validation-artifacts.md](validation-artifacts.md)

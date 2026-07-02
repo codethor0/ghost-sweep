@@ -1,6 +1,21 @@
 # Implementation Readiness Report
 
-Current baseline: commit `38a5589` (Batch 12S/12T). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `0201b86` (Batch 13B). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 13C hosting readiness spike (2026-07-02)
+
+Docs-only. **No deploy performed.**
+
+| Area | Status |
+| ---- | ------ |
+| Hosting spike doc | [hosting-readiness-spike.md](hosting-readiness-spike.md) |
+| Recommended MVP platform | **Render** (conditional: Fly.io for control, Railway for fast staging) |
+| Full app hosting | Local Docker only |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **13D** — Render deployment plan (docs-only) or moderation UI scoping |
+
+See [hosting-readiness-spike.md](hosting-readiness-spike.md).
 
 ## Batch 13B planning realignment (2026-07-02)
 

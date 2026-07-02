@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 10A. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 12B. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -11,7 +11,7 @@ Summary of implemented scope through Batch 10A. For API details see [api.md](api
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
 | CI on `main` | Passing |
 | Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
-| Hosted backend, scoring DB, import, moderation UI, evidence upload, extension API | Deferred |
+| Hosted backend, scoring DB, import apply, moderation UI, evidence upload, extension API | Deferred (`--apply` blocked on section 18 gates) |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
 
@@ -233,8 +233,18 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - **Verdict:** Design-ready for 12B implementation review; blocked until maintainer approval gates signed
 - No application code, schema, API, Docker, CI, frontend, extension, or public MVP changes
 
+## Audit remediation and gate cleanup (Batch 12C)
+
+- Synced README current project status (removed stale baseline commit reference)
+- Updated implementation-readiness-report, public-launch-checklist, post-launch-roadmap, repository-security, dependency-audit for 12A/12B shipped state
+- Re-verified Sheet dry-run CLI, public MVP validator, and full local validation gates
+- Issue #6 comment posted: 12A/12B complete; `--apply` pending section 18 approval
+- **Verdict:** Docs and tracker aligned; `--apply` implementation remains blocked
+- No application code, schema, API, Docker, CI, frontend, extension, or public MVP behavior changes
+
 ## Deferred
 
+- Sheet import `--apply` mode (Batch 12B design shipped; implementation blocked)
 - Evidence file upload
 - Public company and job posting write APIs
 - Extension backend API integration (deferred)
@@ -243,6 +253,6 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - Frontend refresh-token persistence
 - Release hardening
 - Public backend hosting
-- Google Sheet to PostgreSQL import automation
+- Google Sheet to PostgreSQL import `--apply` automation (dry-run CLI shipped)
 
 See README current project status and [dependency-audit.md](dependency-audit.md).

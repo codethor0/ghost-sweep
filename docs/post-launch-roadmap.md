@@ -120,7 +120,7 @@ See [sheet-import-apply-design.md](sheet-import-apply-design.md) for apply-mode 
 | #4 Dependency advisories | Narrow -- Batch 7E accepted deferred; maintainer may close |
 | #1 URL validation onboarding | Refocus -- 6D foundation done; extend tests/docs |
 | #5 URL validation API design | Keep open -- design gate before API wiring |
-| #6 Sheet import planning | Design complete (10D); implementation deferred to 12A |
+| #6 Sheet import planning | 12A dry-run and 12B design shipped; `--apply` impl pending |
 | #7 Moderation workflow | SOP complete (10C); product UI still deferred |
 | #8 Extension API wiring plan | New -- design only |
 
@@ -138,6 +138,7 @@ See [sheet-import-apply-design.md](sheet-import-apply-design.md) for apply-mode 
 | **12A** | Sheet import dry-run CLI ([sheet_import_dry_run.py](../scripts/sheet_import_dry_run.py)) | No |
 | **12B** | Sheet import apply mode design gate ([sheet-import-apply-design.md](sheet-import-apply-design.md)) | No schema in v1 |
 | **12B impl** | Sheet import `--apply` (local/admin-only) | No schema if audit-log idempotency holds |
+| **12C** | Audit remediation and implementation gate cleanup | No |
 
 ## Related documents
 

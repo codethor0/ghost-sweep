@@ -2,6 +2,19 @@
 
 This document records known dependency advisories after Batch 7E triage (2026-06-30). Do not hide new failures; re-run audits after dependency changes.
 
+## Batch 12C re-verification (2026-07-01)
+
+| Item | Result |
+| ---- | ------ |
+| npm audit --audit-level=high | **PASS** |
+| npm audit (full) | **2 moderate** — PostCSS GHSA-qx2v-qp2m-jg93 (accepted deferred) |
+| pip-audit (full host scan) | **7 findings** — host pip/wheel/loguru noise |
+| pip-audit (project-pinned) | **PASS** |
+| Runtime blockers | **None** |
+| Launch impact | Public MVP unaffected; no dependency changes in 12C |
+
+Classification unchanged from Batch 7E. Issue #4 remains open for maintainer decision.
+
 ## Batch 7E summary (triage — docs only)
 
 | Item | Result |

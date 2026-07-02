@@ -415,4 +415,4 @@ Before Batch 12A implementation:
 - [ ] PostingSource mapping v1 approved
 - [ ] Schema change needs identified (if any)
 
-Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18).
+Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18). As of Batch 12C, all section 18 gates remain pending maintainer sign-off.

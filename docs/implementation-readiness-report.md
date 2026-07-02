@@ -2,6 +2,21 @@
 
 Post-roadmap checkpoint after Batches 10A--10D. **Read-only review; no application code changes.** Generated at commit `3b76e34`.
 
+## Batch 12C status update (2026-07-01)
+
+This report is a historical 10E checkpoint. Current state on `main`:
+
+| Area | Status |
+| ---- | ------ |
+| Live public MVP | Healthy |
+| Batch 12A dry-run CLI | **Shipped** |
+| Batch 12B apply-mode design | **Shipped** |
+| `--apply` implementation | **Not implemented** — blocked on [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18 |
+| Live Google Sheet CSV export verify | **Maintainer required** before apply mode |
+| Issue #6 | Open — tracks apply implementation |
+
+See [implementation-status.md](implementation-status.md) for current batch history.
+
 Purpose: confirm issue tracker state, doc alignment, live MVP health, and prerequisites before Batch 12A (Sheet import CLI) or Batch 11A (hosting spike).
 
 ## Executive summary
@@ -11,8 +26,10 @@ Purpose: confirm issue tracker state, doc alignment, live MVP health, and prereq
 | Live public MVP | Healthy |
 | Documentation chain (Form -> SOP -> import design) | Aligned in repo |
 | Live Google Sheet columns | **Maintainer verify required** (not accessible from repo) |
-| Batch 12A import CLI | **Not ready** — maintainer design approval checklist incomplete |
-| Recommended next batch | **11A** (hosting spike) or **Issue #5** design before 12A |
+| Batch 12A import CLI | **Shipped** (dry-run only) |
+| Batch 12B apply design | **Shipped** (docs only) |
+| `--apply` implementation | **Blocked** — section 18 gates pending |
+| Recommended next batch | **12B impl** after gate approval, or Issue #1 / #4 hygiene |
 
 Planning docs are complete through import design. Implementation should wait for maintainer sign-off on [sheet-import-design.md](sheet-import-design.md) approval checklist and optional Sheet column audit.
 

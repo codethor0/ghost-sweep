@@ -99,11 +99,20 @@ The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emai
 
 ## Current project status
 
-Latest pushed baseline: `1fd1b9b` (Batch 10A post-launch roadmap).
+Current `main` reflects public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), and apply-mode design (Batch 12B). The public static MVP and Google Form intake are live; the full application remains local Docker only.
 
-Public launch batches (8A, 9B, 9C) and Batch 10A are on `main`. The public static MVP is live; the full application remains local Docker only.
+**Live public surfaces:**
 
-**Repository:** public. **GitHub Pages:** enabled from `main` / root (mirrors `public-mvp/`). Live site: https://codethor0.github.io/ghost-sweep/
+- **Repository:** public — https://github.com/codethor0/ghost-sweep
+- **GitHub Pages MVP:** https://codethor0.github.io/ghost-sweep/ (root mirror of `public-mvp/`)
+- **Google Form intake:** https://forms.gle/PsjaYrbrCjAgZXjW8
+- **Google Sheet moderation:** manual review per [moderation-sop.md](docs/moderation-sop.md)
+
+**Sheet import pipeline:**
+
+- **Batch 12A (shipped):** dry-run CLI — `scripts/sheet_import_dry_run.py`, `scripts/verify_sheet_columns.py`; no database writes
+- **Batch 12B (shipped):** apply-mode design — [sheet-import-apply-design.md](docs/sheet-import-apply-design.md)
+- **`--apply` implementation:** not implemented; blocked until section 18 approval gates in that doc are explicitly signed and a real Sheet CSV export is verified
 
 **CI:**
 
@@ -156,7 +165,8 @@ Public launch batches (8A, 9B, 9C) and Batch 10A are on `main`. The public stati
 **Deferred (not publicly hosted):**
 
 - Public backend hosting and live scoring database
-- Google Sheet to backend import automation
+- Sheet import `--apply` mode (design complete; implementation blocked on approval gates)
+- Google Sheet to backend import automation (dry-run only today)
 - Public moderation UI and evidence file upload
 - Extension backend API integration
 - Wiring job URL validation into public API or intake flows

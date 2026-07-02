@@ -1,6 +1,6 @@
 # Repository Security
 
-Read-only snapshot of GitHub branch protection and ruleset status. Updated during Batch 10B audit remediation.
+Read-only snapshot of GitHub branch protection and ruleset status. Re-verified during Batch 12C (2026-07-01).
 
 ## Branch protection (`main`)
 
@@ -10,7 +10,7 @@ Captured via GitHub API:
 gh api /repos/codethor0/ghost-sweep/branches/main/protection
 ```
 
-**Status at Batch 10B:** Branch not protected (HTTP 404 — no classic branch protection rules configured).
+**Status at Batch 12C (2026-07-01):** Branch not protected (HTTP 404 — no classic branch protection rules configured). Unchanged since Batch 10B.
 
 ## Repository rulesets
 
@@ -18,7 +18,7 @@ gh api /repos/codethor0/ghost-sweep/branches/main/protection
 gh api /repos/codethor0/ghost-sweep/rulesets
 ```
 
-**Status at Batch 10B:** No rulesets configured (empty array).
+**Status at Batch 12C (2026-07-01):** No rulesets configured (empty array). Unchanged since Batch 10B.
 
 ## Recommendations (maintainer approval required)
 

@@ -1,6 +1,20 @@
 # Implementation Readiness Report
 
-Current baseline: commit `0201b86` (Batch 13B). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `2b4d7c7` (Batch 13C). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 13D Render deployment plan (2026-07-02)
+
+Docs-only. **No deploy performed.** No Render resources created.
+
+| Area | Status |
+| ---- | ------ |
+| Render deployment plan | [render-deployment-plan.md](render-deployment-plan.md) |
+| Render staging/production resources | **Not created** |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **13E** — moderation UI scoping or repository security settings plan |
+
+Deploy implementation (14A) requires separate maintainer approval.
 
 ## Batch 13C hosting readiness spike (2026-07-02)
 

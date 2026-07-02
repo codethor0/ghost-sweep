@@ -168,9 +168,11 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 | -------- | ----- | ----- | ---------- |
 | 1 | **13B** | Planning doc realignment | No |
 | 2 | **13C** | Public backend hosting spike ([hosting-readiness-spike.md](hosting-readiness-spike.md)) | No |
-| 3 | **13D** | Render deployment plan (docs-only, no deploy) **or** moderation UI scoping | No |
-| 4 | **13E or doc** | Extension API wiring design (Issue #8) | No |
+| 3 | **13D** | Render deployment plan ([render-deployment-plan.md](render-deployment-plan.md)) | No |
+| 4 | **13E** | Moderation UI scoping **or** repository security settings plan | No |
+| 5 | **14A** | Render staging implementation (requires maintainer approval; not authorized by 13D) | Deploy config |
 | 5 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
+| 6 | **13E or doc** | Extension API wiring design (Issue #8) | No |
 | — | **Maintainer** | Close/reframe Issue #4; repository security settings | No |
 | — | **Deferred** | Live Sheet export proof; `--apply` implementation; hosted production import | Separate decisions |
 
@@ -196,3 +198,4 @@ Live Sheet proof and `--apply` are **deferred gates**, not the next MVP blocker.
 - [moderation-model.md](moderation-model.md)
 - [contributor-onboarding.md](contributor-onboarding.md)
 - [hosting-readiness-spike.md](hosting-readiness-spike.md)
+- [render-deployment-plan.md](render-deployment-plan.md)

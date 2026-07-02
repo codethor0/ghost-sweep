@@ -388,6 +388,16 @@ Docs-only checkpoint (2026-07-02). No deploy performed.
 - Next recommended batch: **13D** — Render deployment plan (docs-only) or moderation UI scoping.
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
+## Render deployment plan (Batch 13D)
+
+Docs-only checkpoint (2026-07-02). No deploy performed.
+
+- Added [render-deployment-plan.md](render-deployment-plan.md): Render service layout, env matrix, secrets, migration strategy, security gates, staging/production checklists, rollback plan.
+- Render recommended path from Batch 13C; **no Render resources created**.
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **13E** (moderation UI scoping or repository security settings plan) or **14A** staging implementation after explicit maintainer approval.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
 ## Deferred
 
 - Sheet import `--apply` mode (Batch 12B design shipped; implementation blocked)

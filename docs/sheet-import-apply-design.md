@@ -504,7 +504,16 @@ Batch 12G update (2026-07-02): Google live Sheet automation failed across all at
 
 Batch 12F-P / docs Batch 12Q update (2026-07-02): Offline post-upload artifact verification **PASS** (processed=2, would_import=1, skipped=1 on generated offline CSV). Offline artifact Gates 11 and 12 are **READY**. This is **OFFLINE-PASS only**, not live Google Sheet proof. Live Gates 11 and 12 remain **BLOCKED-LIVE** until verification passes on a CSV exported from the live Sheet.
 
-Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
+Batch 12S maintainer decision (2026-07-02): **Section 18 amended for MVP readiness.** Offline importer gate **ACCEPTED-MVP** based on Batch 12F-P evidence. Live Google Sheet export proof **deferred**. Live Gates 11 and 12 remain **BLOCKED-LIVE**. This does **not** claim live Sheet proof passed, production import is enabled, or `--apply` is ready.
+
+**SECTION 18 AMENDED FOR MVP:**
+
+- Offline importer gate accepted (Batch 12F-P).
+- Live Google Sheet export proof deferred.
+- Live proof remains required before production automation or `--apply` mode.
+- MVP readiness may proceed under amended offline gate language only.
+
+Do not implement `--apply` until explicitly approved in a later maintainer decision. Live export proof remains required before production Sheet import automation.
 
 | # | Gate | Status |
 | - | ---- | ------ |
@@ -518,8 +527,10 @@ Do not implement `--apply` until a real live Sheet export passes all Section 18 
 | 8 | Partial batch commit (row isolation) approved | Pending |
 | 9 | Local-only `ENVIRONMENT` guard approved | Pending |
 | 10 | No schema migration in 12B confirmed | Pending |
-| 11 | Live Sheet columns verified via `verify_sheet_columns.py` | BLOCKED-LIVE / FALLBACK-PASS |
-| 12 | Dry-run reviewed on latest export before first apply | BLOCKED-LIVE / FALLBACK-PASS |
+| 11 | Offline Sheet columns verified (Batch 12F-P artifact) | ACCEPTED-MVP |
+| 11-live | Live Sheet columns verified via `verify_sheet_columns.py` | BLOCKED-LIVE |
+| 12 | Offline dry-run reviewed (Batch 12F-P artifact) | ACCEPTED-MVP |
+| 12-live | Live dry-run reviewed on latest live export before first apply | BLOCKED-LIVE |
 
 Schema change (`sheet_import_runs` tables) requires a **separate** approval and batch if idempotency via audit logs proves insufficient.
 

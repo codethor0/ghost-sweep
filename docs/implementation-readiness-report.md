@@ -2,6 +2,32 @@
 
 Post-roadmap checkpoint after Batches 10A--10D. **Read-only review; no application code changes.** Generated at commit `3b76e34`.
 
+## Batch 12S Section 18 MVP amendment (2026-07-02)
+
+Docs-only maintainer decision. **Does not claim live Google Sheet proof passed.**
+
+| Area | Status |
+| ---- | ------ |
+| Live public MVP | Healthy |
+| Batch 12A dry-run CLI | **Shipped** |
+| Batch 12B apply-mode design | **Shipped** |
+| `--apply` implementation | **Not implemented** — blocked; requires separate maintainer approval |
+| Offline post-upload artifact verify (Batch 12F-P) | **PASS** — processed=2, would_import=1, skipped=1 |
+| Offline Gate 11 (MVP) | **ACCEPTED-MVP** (maintainer decision Batch 12S) |
+| Offline Gate 12 (MVP) | **ACCEPTED-MVP** (maintainer decision Batch 12S) |
+| Live Google Sheet export verify | **Blocked** — operational blocker; proof deferred |
+| Live Gate 11 | **BLOCKED-LIVE** |
+| Live Gate 12 | **BLOCKED-LIVE** |
+| Section 18 MVP readiness (offline gate) | **Amended and accepted** |
+| Section 18 live sign-off | **Not ready** — live export proof still required for production automation |
+| Issue #6 | Open — tracks apply implementation |
+
+**SECTION 18 AMENDED FOR MVP:** Offline importer gate accepted. Live Google Sheet export proof deferred. Live proof remains required before production automation or `--apply` mode. MVP readiness may proceed under amended offline gate language only.
+
+Do not implement `--apply` until explicitly approved in a later maintainer decision. Live export proof remains required before production Sheet import automation.
+
+See [implementation-status.md](implementation-status.md) Batch 12G, Batch 12F-P, and Batch 12S.
+
 ## Batch 12F-P / 12Q status update (2026-07-02)
 
 Docs-only checkpoint after Batch 12F-P offline artifact verification. **OFFLINE-PASS only.** **Not final Section 18 sign-off.**

@@ -329,10 +329,41 @@ Offline artifact Gate 11: **READY**. Offline artifact Gate 12: **READY**.
 - Gate 12 remains **BLOCKED-LIVE** until `sheet_import_dry_run.py` passes on a live Google Sheet export with at least one `would_import` row.
 - Final Section 18 live sign-off: **Not ready**.
 
-Do not implement `--apply` until live gates are signed off or maintainer explicitly amends the release gate.
+Do not implement `--apply` until explicitly approved in a later maintainer decision. See Batch 12S for Section 18 MVP amendment.
 
 - **Verdict:** Importer path confirmed on offline post-upload artifact. Live Gates 11 and 12 remain blocked. Apply mode remains blocked.
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes during verification
+
+## Section 18 gate amendment for MVP (Batch 12S)
+
+Docs-only maintainer decision (2026-07-02). **Does not claim live Google Sheet proof passed.**
+
+### Maintainer decision
+
+For **MVP readiness only**, the maintainer accepts Batch 12F-P offline artifact verification as sufficient evidence that the importer accepts the expected 20-column post-upload Sheet shape and moderation values.
+
+This decision **does not** represent live Google Sheet export proof. Google Sheets UI / Apps Script export remains an operational blocker.
+
+### SECTION 18 AMENDED FOR MVP
+
+- **Offline importer gate accepted** (Batch 12F-P: 20 headers, dry-run processed=2, would_import=1, skipped=1).
+- **Live Google Sheet export proof deferred** — tracked separately as BLOCKED-LIVE.
+- **Live proof remains required** before production Sheet import automation or `--apply` mode.
+- **MVP readiness may proceed** under this amended Section 18 language for importer shape and dry-run behavior only.
+- **`--apply` remains blocked** until a separate maintainer decision explicitly approves implementation (live export proof still required before production automation).
+
+### Gate status after amendment
+
+| Gate | Scope | Status |
+| ---- | ----- | ------ |
+| Offline Gate 11 (`verify_sheet_columns.py` on offline artifact) | MVP importer shape | **ACCEPTED-MVP** |
+| Offline Gate 12 (`sheet_import_dry_run.py` on offline artifact) | MVP dry-run | **ACCEPTED-MVP** |
+| Live Gate 11 (live Sheet export) | Production / live proof | **BLOCKED-LIVE** |
+| Live Gate 12 (live Sheet dry-run) | Production / live proof | **BLOCKED-LIVE** |
+| `--apply` implementation | Database writes | **Blocked** |
+
+- **Verdict:** Section 18 amended for MVP readiness on offline verification only. Live Gates 11 and 12 remain BLOCKED-LIVE. Apply mode remains blocked.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred
 

@@ -417,18 +417,21 @@ Before Batch 12A implementation:
 
 Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18).
 
-As of Batch 12F-P / docs Batch 12Q (2026-07-02):
+As of Batch 12S Section 18 MVP amendment (2026-07-02):
 
-**OFFLINE-PASS:**
+**SECTION 18 AMENDED FOR MVP:**
 
-- 20-column post-upload offline artifact verified (see [implementation-status.md](implementation-status.md) Batch 12F-P).
-- Dry-run on offline sanitized export: processed=2, would_import=1, skipped=1 (row 3 imports; stale row 2 skips on `review_status`).
-- Offline artifact Gate 11: READY. Offline artifact Gate 12: READY.
+- Maintainer accepts Batch 12F-P offline artifact verification as sufficient for MVP importer readiness (see [implementation-status.md](implementation-status.md) Batch 12S).
+- 20-column post-upload offline artifact verified; dry-run processed=2, would_import=1, skipped=1.
+- Offline Gate 11: ACCEPTED-MVP. Offline Gate 12: ACCEPTED-MVP.
+- Live Google Sheet export proof deferred. Google Sheets / Apps Script export remains an operational blocker.
+- MVP readiness may proceed under amended offline gate language only.
 
-**LIVE STATUS:**
+**LIVE STATUS (unchanged tracking):**
 
 - Live Gate 11: BLOCKED-LIVE until `verify_sheet_columns.py` passes on a live Google Sheet export.
 - Live Gate 12: BLOCKED-LIVE until `sheet_import_dry_run.py` passes on a live Google Sheet export with at least one `would_import` row.
-- Final Section 18 live sign-off: Not ready.
-- No live Sheet export has passed verification. Prior fallback and offline artifacts outside the repo passed verification scripts but do not replace live Sheet proof (see [implementation-status.md](implementation-status.md) Batch 12G and Batch 12F-P).
-- Do not implement `--apply` until live gates are signed off or maintainer explicitly amends the release gate.
+- Section 18 live sign-off: Not ready. Live proof remains required before production automation or `--apply` mode.
+- Do not implement `--apply` until explicitly approved in a later maintainer decision.
+
+Prior context: [implementation-status.md](implementation-status.md) Batch 12G and Batch 12F-P.

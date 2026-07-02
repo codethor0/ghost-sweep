@@ -24,6 +24,28 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 
 **Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet import `--apply` mode (12A dry-run and 12B design shipped; apply blocked on section 18 gates).
 
+## Sheet import verification status (Batch 12S — Section 18 MVP amendment — 2026-07-02)
+
+Docs-only maintainer decision. **Does not claim live Google Sheet proof passed.**
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Sheet import dry-run CLI (12A) | Shipped | No |
+| Sheet import apply design (12B) | Shipped | No |
+| Offline Gate 11 (MVP, Batch 12F-P) | ACCEPTED-MVP | No |
+| Offline Gate 12 (MVP, Batch 12F-P) | ACCEPTED-MVP | No |
+| Live Gate 11: live Sheet columns | BLOCKED-LIVE | Yes — live export deferred |
+| Live Gate 12: live dry-run on live export | BLOCKED-LIVE | Yes — live export deferred |
+| Section 18 MVP readiness (offline) | Amended and accepted | No |
+| Section 18 live sign-off | Not ready | Yes — required before production automation |
+| `--apply` implementation | Blocked | Yes |
+
+**SECTION 18 AMENDED FOR MVP:** Maintainer accepts Batch 12F-P offline verification (20 headers; processed=2, would_import=1, skipped=1) as sufficient for MVP importer readiness. Live Google Sheet export remains a known operational blocker. Live proof remains required before production automation or `--apply` mode.
+
+Do not implement `--apply` until explicitly approved in a later maintainer decision.
+
+See [implementation-status.md](implementation-status.md) Batch 12G, Batch 12F-P, and Batch 12S, and [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18.
+
 ## Sheet import verification status (Batch 12F-P / docs Batch 12Q — 2026-07-02)
 
 Docs-only checkpoint. **OFFLINE-PASS only.** Not final Section 18 live sign-off.

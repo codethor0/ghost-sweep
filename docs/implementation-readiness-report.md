@@ -2,6 +2,28 @@
 
 Post-roadmap checkpoint after Batches 10A--10D. **Read-only review; no application code changes.** Generated at commit `3b76e34`.
 
+## Batch 12G status update (2026-07-02)
+
+Docs-only blocker/status update after Batch 12F-K. **Not final Section 18 sign-off.**
+
+| Area | Status |
+| ---- | ------ |
+| Live public MVP | Healthy |
+| Batch 12A dry-run CLI | **Shipped** |
+| Batch 12B apply-mode design | **Shipped** |
+| `--apply` implementation | **Not implemented** — blocked on [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18 |
+| Live Google Sheet export verify | **Blocked** — no live post-upload CSV exists |
+| Gate 11 | **BLOCKED-LIVE / FALLBACK-PASS** |
+| Gate 12 | **BLOCKED-LIVE / FALLBACK-PASS** |
+| Final Section 18 sign-off | **Not ready** |
+| Issue #6 | Open — tracks apply implementation |
+
+Google live Sheet automation failed across all attempted paths (grid editing, bound Apps Script, standalone Apps Script paste/run, clasp wrong account, Sheets API unavailable). A local fallback sanitized artifact outside the repo passed `verify_sheet_columns.py` and `sheet_import_dry_run.py` (processed=1, would_import=1, skipped=0). The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification.
+
+Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
+
+See [implementation-status.md](implementation-status.md) Batch 12G for full blocker details.
+
 ## Batch 12C status update (2026-07-01)
 
 This report is a historical 10E checkpoint. Current state on `main`:

@@ -242,6 +242,64 @@ See [google-form-intake-spec.md](google-form-intake-spec.md) and [post-launch-ro
 - **Verdict:** Docs and tracker aligned; `--apply` implementation remains blocked
 - No application code, schema, API, Docker, CI, frontend, extension, or public MVP behavior changes
 
+## Sheet import live verification blocker (Batch 12G)
+
+Docs-only status update after Batch 12F-K. This is **not** final Section 18 sign-off.
+
+### Google automation failure (Batch 12F)
+
+All attempted live Google paths failed:
+
+- Sheet grid editing
+- Bound Apps Script (Page Not Found from linked Sheet)
+- Standalone Apps Script paste/run (Monaco editor automation)
+- clasp (authenticated to wrong Google account)
+- Sheets API (unavailable)
+
+No live post-upload CSV exists. No live Sheet export passed verification.
+
+### Local fallback artifact (Batch 12F-K)
+
+Fallback artifacts exist **outside the repo** and are **not** live Sheet exports:
+
+- Raw: `/Users/thor/Downloads/ghost-sweep-sheet-exports/ghost-sweep-intake-local-fallback-export.csv`
+- Sanitized: `/Users/thor/Downloads/ghost-sweep-sheet-exports/ghost-sweep-intake-local-fallback-sanitized.csv`
+
+Artifact type: local sanitized fallback based on Batch 12F-H test row shape and SOP values.
+
+The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification.
+
+### Verification summary (2026-07-02)
+
+| Target | verify_sheet_columns.py | sheet_import_dry_run.py | processed | would_import | skipped |
+| ------ | ----------------------- | ----------------------- | --------- | ------------ | ------- |
+| Fixture (`backend/tests/fixtures/sheet_import_sample.csv`) | PASS | PASS | 2 | 1 | 1 |
+| Fallback sanitized (outside repo) | PASS | PASS | 1 | 1 | 0 |
+
+Fixture skip reason: row 3 `import_ready` must be yes (expected fixture behavior).
+
+### Section 18 gate status
+
+| Gate | Status |
+| ---- | ------ |
+| Gate 11 (live Sheet columns via `verify_sheet_columns.py`) | BLOCKED-LIVE / FALLBACK-PASS |
+| Gate 12 (live dry-run via `sheet_import_dry_run.py`) | BLOCKED-LIVE / FALLBACK-PASS |
+| Final Section 18 sign-off | Not ready |
+
+Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
+
+### Required blocker before true Section 18 sign-off
+
+A real live Sheet export with exact A:T headers and at least one valid import-ready row must pass:
+
+1. `python3.11 scripts/verify_sheet_columns.py <export.csv>`
+2. `python3.11 scripts/sheet_import_dry_run.py <export.csv>`
+
+Recommended manual path: repair SOP columns L:T on the linked Sheet (row 3 only for moderation values; do not modify row 2), export CSV, verify with the commands above. Standalone Apps Script source prepared outside repo at `/Users/thor/Downloads/ghost-sweep-sheet-exports/ghost-sweep-sheet-repair-standalone.gs` (requires manual paste/run as `ghostsweep.community@gmail.com`).
+
+- **Verdict:** Importer accepts correct 20-column shape and valid consent path (fallback proof). Live Gates 11 and 12 remain blocked until a real live Sheet export passes. Apply mode remains blocked.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
 ## Deferred
 
 - Sheet import `--apply` mode (Batch 12B design shipped; implementation blocked)

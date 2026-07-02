@@ -24,6 +24,25 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 
 **Remaining product work:** Hosted backend, scoring database, extension integration, moderation UI, evidence upload, Sheet import `--apply` mode (12A dry-run and 12B design shipped; apply blocked on section 18 gates).
 
+## Sheet import live verification blocker (Batch 12G — 2026-07-02)
+
+Docs-only status update. Not final Section 18 sign-off.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Sheet import dry-run CLI (12A) | Shipped | No |
+| Sheet import apply design (12B) | Shipped | No |
+| Gate 11: live Sheet columns (`verify_sheet_columns.py`) | BLOCKED-LIVE / FALLBACK-PASS | Yes — live export required |
+| Gate 12: live dry-run on latest export | BLOCKED-LIVE / FALLBACK-PASS | Yes — live export required |
+| Final Section 18 sign-off | Not ready | Yes |
+| `--apply` implementation | Blocked | Yes |
+
+Google live Sheet automation failed (grid editing, bound Apps Script, standalone Apps Script paste/run, clasp wrong account, Sheets API unavailable). No live post-upload CSV exists. A local fallback sanitized artifact outside the repo passed verification (processed=1, would_import=1, skipped=0). The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification.
+
+Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
+
+See [implementation-status.md](implementation-status.md) Batch 12G and [sheet-import-apply-design.md](sheet-import-apply-design.md) section 18.
+
 ## Launch readiness checkpoint (Batch 9B — 2026-07-01)
 
 Commit baseline: `95fd21e` (pre-9B-fix). Local validation is source of truth.

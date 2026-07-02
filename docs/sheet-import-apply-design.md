@@ -498,7 +498,9 @@ Coverage gate: maintain >= 80% backend coverage after implementation.
 
 ## 18. Explicit approval gates before code
 
-Implementation of Batch 12B is **blocked** until maintainer signs each item:
+Implementation of Batch 12B is **blocked** until maintainer signs each item.
+
+Batch 12G update (2026-07-02): Google live Sheet automation failed across all attempted paths. A local fallback sanitized artifact outside the repo passed verification scripts, but **final Section 18 sign-off is not ready**. The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification. Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision.
 
 | # | Gate | Status |
 | - | ---- | ------ |
@@ -512,8 +514,8 @@ Implementation of Batch 12B is **blocked** until maintainer signs each item:
 | 8 | Partial batch commit (row isolation) approved | Pending |
 | 9 | Local-only `ENVIRONMENT` guard approved | Pending |
 | 10 | No schema migration in 12B confirmed | Pending |
-| 11 | Live Sheet columns verified via `verify_sheet_columns.py` | Pending |
-| 12 | Dry-run reviewed on latest export before first apply | Pending |
+| 11 | Live Sheet columns verified via `verify_sheet_columns.py` | BLOCKED-LIVE / FALLBACK-PASS |
+| 12 | Dry-run reviewed on latest export before first apply | BLOCKED-LIVE / FALLBACK-PASS |
 
 Schema change (`sheet_import_runs` tables) requires a **separate** approval and batch if idempotency via audit logs proves insufficient.
 

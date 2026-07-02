@@ -415,4 +415,13 @@ Before Batch 12A implementation:
 - [ ] PostingSource mapping v1 approved
 - [ ] Schema change needs identified (if any)
 
-Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18). As of Batch 12C, all section 18 gates remain pending maintainer sign-off.
+Batch 12A dry-run CLI shipped. Before Batch 12B `--apply` implementation, see [sheet-import-apply-design.md](sheet-import-apply-design.md) approval checklist (section 18).
+
+As of Batch 12G (2026-07-02):
+
+- Gate 11: BLOCKED-LIVE / FALLBACK-PASS
+- Gate 12: BLOCKED-LIVE / FALLBACK-PASS
+- Final Section 18 sign-off: Not ready
+- No live Sheet export has passed verification; a local fallback artifact outside the repo passed both verification scripts (see [implementation-status.md](implementation-status.md) Batch 12G)
+- The fallback artifact proves the importer accepts the intended 20-column shape and valid consent path, but it does not replace live Sheet verification
+- Do not implement `--apply` until a real live Sheet export passes all Section 18 live gates or Section 18 is explicitly amended by maintainer decision

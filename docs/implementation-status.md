@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 14C. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 14D. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -9,8 +9,8 @@ Summary of implemented scope through Batch 14C. For API details see [api.md](api
 | Public repository | https://github.com/codethor0/ghost-sweep |
 | GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
-| CI on `main` | Passing (`a74603c`; run `28670393922`) |
-| GitHub Pages deploy | Green on `a74603c` |
+| CI on `main` | Passing (`ae6897f`; run `28672126699`) |
+| GitHub Pages deploy | Green on `ae6897f` |
 | PR #9 (URL validation tests) | Merged |
 | Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
 | Batch 12 MVP readiness (Section 18 offline gate) | **Closed** — ACCEPTED-MVP (Batch 12S) |
@@ -18,6 +18,7 @@ Summary of implemented scope through Batch 14C. For API details see [api.md](api
 | `--apply` / production import | **Blocked** |
 | Moderation UI | Scoped (13E); wireframe spec (14C); not implemented |
 | Moderation API contract | Reviewed (14B); not implemented |
+| Moderation schema decision | Recorded (14D); not implemented |
 | Hosted backend, scoring DB, evidence upload, extension API | Deferred |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
@@ -446,6 +447,17 @@ Docs-only checkpoint (2026-07-03). No UI implemented. No deploy performed.
 - Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
 - Next recommended batch: **14D** — moderation schema decision record (docs-only).
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
+## Moderation schema decision record (Batch 14D)
+
+Docs-only checkpoint (2026-07-03). No schema implemented. No migration created. No deploy performed.
+
+- Added [moderation-schema-decision-record.md](moderation-schema-decision-record.md): options analysis, recommended IntakeSubmission + ModerationReview direction, proposed entities/enums, state mapping, import readiness rules, migration/API/UI/privacy/testing considerations, open questions.
+- Builds on Batch 13E scope, 14B API contract review, and 14C wireframe spec.
+- Main CI and Pages were green on `ae6897f` before this batch.
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **14E** — moderation API implementation plan (docs-only).
+- No application code, schema, migration, API, UI, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred
 

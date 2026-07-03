@@ -1,6 +1,6 @@
 # Post-Launch Product Roadmap
 
-Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). Current baseline: `38a5589` (Batch 12S/12T). No backend schema or API changes are implied by this roadmap until separate design approval.
+Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). Current baseline: `837175d` (PR #9 merged; Batch 13E/13I). No backend schema or API changes are implied by this roadmap until separate design approval.
 
 ## Batch 12 closure (MVP readiness)
 
@@ -28,7 +28,9 @@ See [implementation-status.md](implementation-status.md) Batch 12S and [sheet-im
 | GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
 | Google Sheet moderation queue | Project account; manual review |
-| CI on `main` | Passing |
+| CI on `main` | Passing (run `28668960634` on `837175d`) |
+| GitHub Pages deploy | Green after Batch 13I rerun |
+| PR #9 (URL validation tests) | Merged |
 | Full app hosting | Local Docker only (intentional) |
 
 Architecture today:
@@ -91,11 +93,12 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 2. Response SLAs and escalation documented in SOP
 3. Redaction and email privacy rules documented in SOP
 
-**Product milestones (Issue #7, still deferred):**
+**Product milestones (Issue #7):**
 
-1. Moderation queue UI in frontend (admin)
-2. Bridge Sheet-approved rows to backend (Track 1)
-3. Evidence upload when policy allows (deferred)
+1. Moderation UI scope document — **complete** (Batch 13E, [moderation-ui-scope.md](moderation-ui-scope.md))
+2. Moderation queue UI in frontend (admin) — **deferred**; implementation not started
+3. Bridge Sheet-approved rows to backend (Track 1)
+4. Evidence upload when policy allows (deferred)
 
 ## Track 3: Extension API wiring plan
 
@@ -142,7 +145,7 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 | #1 URL validation onboarding | Refocus -- 6D foundation done; extend tests/docs |
 | #5 URL validation API design | Keep open -- design gate before API wiring |
 | #6 Sheet import | 12A–12S complete for MVP offline gate; `--apply` and live proof **deferred** |
-| #7 Moderation workflow | SOP complete (10C); product UI still deferred |
+| #7 Moderation workflow | SOP complete (10C); UI scoped (13E); implementation deferred |
 | #8 Extension API wiring plan | New -- design only |
 
 ## Recommended batch sequence
@@ -166,13 +169,16 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 
 | Priority | Batch | Scope | Schema/API |
 | -------- | ----- | ----- | ---------- |
-| 1 | **13B** | Planning doc realignment | No |
-| 2 | **13C** | Public backend hosting spike ([hosting-readiness-spike.md](hosting-readiness-spike.md)) | No |
-| 3 | **13D** | Render deployment plan ([render-deployment-plan.md](render-deployment-plan.md)) | No |
-| 4 | **13E** | Moderation UI scoping **or** repository security settings plan | No |
-| 5 | **14A** | Render staging implementation (requires maintainer approval; not authorized by 13D) | Deploy config |
-| 5 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
-| 6 | **13E or doc** | Extension API wiring design (Issue #8) | No |
+| 1 | **13B** | Planning doc realignment | No — complete |
+| 2 | **13C** | Public backend hosting spike ([hosting-readiness-spike.md](hosting-readiness-spike.md)) | No — complete |
+| 3 | **13D** | Render deployment plan ([render-deployment-plan.md](render-deployment-plan.md)) | No — complete |
+| 4 | **13E** | Moderation UI scoping ([moderation-ui-scope.md](moderation-ui-scope.md)) | No — complete |
+| 5 | **13F–13I** | GitHub health, PR #9 merge, Pages rerun | No — complete |
+| 6 | **14B** | Moderation API contract review (docs-only) | No |
+| 7 | **14C** | Moderation UI wireframe / interaction spec (docs-only) | No |
+| 8 | **14A** | Render staging implementation (requires maintainer approval; not authorized by 13D) | Deploy config |
+| 9 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
+| — | **doc** | Extension API wiring design (Issue #8) | No |
 | — | **Maintainer** | Close/reframe Issue #4; repository security settings | No |
 | — | **Deferred** | Live Sheet export proof; `--apply` implementation; hosted production import | Separate decisions |
 
@@ -199,3 +205,4 @@ Live Sheet proof and `--apply` are **deferred gates**, not the next MVP blocker.
 - [contributor-onboarding.md](contributor-onboarding.md)
 - [hosting-readiness-spike.md](hosting-readiness-spike.md)
 - [render-deployment-plan.md](render-deployment-plan.md)
+- [moderation-ui-scope.md](moderation-ui-scope.md)

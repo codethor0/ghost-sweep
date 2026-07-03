@@ -2,6 +2,22 @@
 
 Static public MVP launch status and remaining deferred work. Historical checkpoints below document pre-launch batches.
 
+## Moderation UI scoping (Batch 13E — 2026-07-03)
+
+Docs-only. **No UI implemented.** No deploy performed.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Moderation UI scope document | [moderation-ui-scope.md](moderation-ui-scope.md) complete | No |
+| Moderation UI implementation | Not started | No — deferred by design |
+| Main CI on `837175d` | Green (run `28668960634`) | No |
+| PR #9 merged | Yes | No |
+| Pages deploy | Green after Batch 13I rerun | No |
+| Live Gate 11 / 12 | BLOCKED-LIVE | Yes — unchanged |
+| `--apply` / production import | Blocked | Yes — unchanged |
+
+**Batch 13E:** Moderation UI scoped for future implementation. Sheet + Form intake unchanged. Live Sheet gates not reopened.
+
 ## Launch readiness checkpoint (Batch 9C — 2026-07-01)
 
 Commit baseline: `b4d397b`. Public static MVP is live.
@@ -15,7 +31,7 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 | Live public scoring database | Not hosted | Deferred |
 | Public backend hosting | Not deployed | Deferred |
 | Extension backend API integration | Not wired | Deferred |
-| Frontend moderation / employer / admin UI | Not built | Deferred |
+| Frontend moderation / employer / admin UI | Scoped (Batch 13E); not built | Deferred — see [moderation-ui-scope.md](moderation-ui-scope.md) |
 | Evidence file upload | Deferred | Deferred |
 | Greg Write invite (`gmcguirk-contractor`) | Pending acceptance | Operational |
 | Issue #4 dependency tracking | Open | Maintainer decision |
@@ -191,6 +207,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 - [post-launch-roadmap.md](post-launch-roadmap.md)
 - [hosting-readiness-spike.md](hosting-readiness-spike.md)
 - [render-deployment-plan.md](render-deployment-plan.md)
+- [moderation-ui-scope.md](moderation-ui-scope.md)
 - [free-public-launch-plan.md](free-public-launch-plan.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [validation-artifacts.md](validation-artifacts.md)

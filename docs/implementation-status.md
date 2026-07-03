@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 12S. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 13E. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -9,12 +9,15 @@ Summary of implemented scope through Batch 12S. For API details see [api.md](api
 | Public repository | https://github.com/codethor0/ghost-sweep |
 | GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
-| CI on `main` | Passing |
+| CI on `main` | Passing (`837175d`; run `28668960634`) |
+| GitHub Pages deploy | Green after Batch 13I rerun |
+| PR #9 (URL validation tests) | Merged |
 | Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
 | Batch 12 MVP readiness (Section 18 offline gate) | **Closed** — ACCEPTED-MVP (Batch 12S) |
 | Live Sheet export proof | **BLOCKED-LIVE** |
 | `--apply` / production import | **Blocked** |
-| Hosted backend, scoring DB, moderation UI, evidence upload, extension API | Deferred |
+| Moderation UI | Scoped (Batch 13E); not implemented |
+| Hosted backend, scoring DB, evidence upload, extension API | Deferred |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
 
@@ -396,6 +399,24 @@ Docs-only checkpoint (2026-07-02). No deploy performed.
 - Render recommended path from Batch 13C; **no Render resources created**.
 - Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
 - Next recommended batch: **13E** (moderation UI scoping or repository security settings plan) or **14A** staging implementation after explicit maintainer approval.
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
+## PR #9 merge and GitHub hygiene (Batch 13H / 13I)
+
+- PR #9 squash-merged at `837175d`: regression tests for job URL normalization edge cases (tests-only; contributor bgreg).
+- Main CI run `28668960634`: success on `837175d`.
+- Pages run `28668960057`: failed on first deploy (transient GitHub Pages error); **green after rerun** (Batch 13I).
+- Public MVP validator: PASS; live site HTTP 200.
+- No application code changes by maintainer in 13H/13I.
+
+## Moderation UI scoping (Batch 13E)
+
+Docs-only checkpoint (2026-07-03). No UI implemented. No deploy performed.
+
+- Added [moderation-ui-scope.md](moderation-ui-scope.md): product requirements, workflow, state model, UI screens, API assumptions, safety/privacy rules, decision rules, open questions, implementation boundaries.
+- Documents gap between Sheet SOP fields and existing backend moderation APIs (`verify`/`dismiss` on `Report` only).
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **14B** — moderation API contract review (docs-only).
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred

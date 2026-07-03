@@ -1,6 +1,23 @@
 # Implementation Readiness Report
 
-Current baseline: commit `2b4d7c7` (Batch 13C). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `837175d` (Batch 13E). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 13E moderation UI scoping (2026-07-03)
+
+Docs-only. **No UI implemented.** No backend behavior changed. No deploy performed.
+
+| Area | Status |
+| ---- | ------ |
+| Moderation UI scope doc | [moderation-ui-scope.md](moderation-ui-scope.md) |
+| Moderation UI implementation | **Not started** |
+| PR #9 (URL validation tests) | **Merged** at `837175d` |
+| Main CI | **Green** (run `28668960634`) |
+| Pages deploy | **Green** after Batch 13I rerun |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **14B** — moderation API contract review (docs-only) |
+
+See [moderation-ui-scope.md](moderation-ui-scope.md) and [post-launch-roadmap.md](post-launch-roadmap.md).
 
 ## Batch 13D Render deployment plan (2026-07-02)
 

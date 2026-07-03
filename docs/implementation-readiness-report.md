@@ -1,6 +1,22 @@
 # Implementation Readiness Report
 
-Current baseline: commit `ae6897f` (Batch 14C; 14D pending push). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `b8e2ee2` (Batch 14D; 14E pending push). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 14E moderation API implementation plan (2026-07-03)
+
+Docs-only. **No API implemented.** No backend source changed. No schema implemented. No migration created. No UI implemented. No deploy performed.
+
+| Area | Status |
+| ---- | ------ |
+| Moderation API implementation plan | [moderation-api-implementation-plan.md](moderation-api-implementation-plan.md) |
+| Moderation API implementation | **Not started** |
+| Main CI | **Green** on `b8e2ee2` (run `28673047004`) |
+| Pages deploy | **Green** on `b8e2ee2` |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **14F** — moderation frontend implementation plan (docs-only) |
+
+See [moderation-api-implementation-plan.md](moderation-api-implementation-plan.md).
 
 ## Batch 14D moderation schema decision record (2026-07-03)
 

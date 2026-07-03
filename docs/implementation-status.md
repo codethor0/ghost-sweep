@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 14D. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 14E. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -19,6 +19,7 @@ Summary of implemented scope through Batch 14D. For API details see [api.md](api
 | Moderation UI | Scoped (13E); wireframe spec (14C); not implemented |
 | Moderation API contract | Reviewed (14B); not implemented |
 | Moderation schema decision | Recorded (14D); not implemented |
+| Moderation API implementation plan | Planned (14E); not implemented |
 | Hosted backend, scoring DB, evidence upload, extension API | Deferred |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
@@ -457,6 +458,17 @@ Docs-only checkpoint (2026-07-03). No schema implemented. No migration created. 
 - Main CI and Pages were green on `ae6897f` before this batch.
 - Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
 - Next recommended batch: **14E** — moderation API implementation plan (docs-only).
+- No application code, schema, migration, API, UI, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
+## Moderation API implementation plan (Batch 14E)
+
+Docs-only checkpoint (2026-07-03). No API implemented. No deploy performed.
+
+- Added [moderation-api-implementation-plan.md](moderation-api-implementation-plan.md): phased rollout, proposed intake endpoints, DTOs, validation, state transitions, auth, audit, import readiness, error handling, testing, security boundaries.
+- Builds on Batch 13E scope, 14B contract review, 14C wireframe spec, and 14D schema decision record.
+- Main CI and Pages were green on `b8e2ee2` before this batch.
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **14F** — moderation frontend implementation plan (docs-only).
 - No application code, schema, migration, API, UI, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred

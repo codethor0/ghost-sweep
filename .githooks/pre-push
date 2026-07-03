@@ -1,14 +1,54 @@
 #!/bin/sh
+# Validate authorship only for commits introduced by this push (remote_sha..local_sha).
 EXPECTED='Isaac Thor <codethor@gmail.com> | Isaac Thor <codethor@gmail.com>'
+ZERO_SHA='0000000000000000000000000000000000000000'
 
-while IFS= read -r line; do
-  [ -z "$line" ] && continue
+forbidden_attribution_pattern='Cursor|cursoragent|Generated-by|ChatGPT|Claude|AI assistant'
+
+check_commit() {
+  sha=$1
+  line=$(git log -1 --pretty=format:'%an <%ae> | %cn <%ce>' "$sha")
   if [ "$line" != "$EXPECTED" ]; then
     echo "Push rejected: unauthorized authorship on commit:" >&2
+    echo "  $sha" >&2
     echo "  $line" >&2
     echo "Expected: $EXPECTED" >&2
     exit 1
   fi
-done <<EOF
-$(git log --pretty=format:"%an <%ae> | %cn <%ce>" -n 10)
-EOF
+
+  if git log -1 --format=%B "$sha" | grep -qiE "$forbidden_attribution_pattern"; then
+    echo "Push rejected: forbidden AI/tool attribution in commit $sha" >&2
+    exit 1
+  fi
+}
+
+check_commit_range() {
+  range=$1
+  [ -n "$range" ] || return 0
+
+  commits=$(git rev-list "$range" 2>/dev/null) || return 0
+  [ -n "$commits" ] || return 0
+
+  for sha in $commits; do
+    check_commit "$sha"
+  done
+}
+
+while read -r local_ref local_sha remote_ref remote_sha; do
+  [ -n "$local_ref" ] || continue
+
+  if [ "$local_sha" = "$ZERO_SHA" ]; then
+    continue
+  fi
+
+  if [ "$remote_sha" = "$ZERO_SHA" ]; then
+    commits=$(git rev-list "$local_sha" --not --remotes=origin 2>/dev/null)
+    for sha in $commits; do
+      check_commit "$sha"
+    done
+  elif [ "$local_sha" != "$remote_sha" ]; then
+    check_commit_range "$remote_sha..$local_sha"
+  fi
+done
+
+exit 0

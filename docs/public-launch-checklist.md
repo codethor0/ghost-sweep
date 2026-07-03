@@ -2,6 +2,21 @@
 
 Static public MVP launch status and remaining deferred work. Historical checkpoints below document pre-launch batches.
 
+## Moderation UI wireframe spec (Batch 14C — 2026-07-03)
+
+Docs-only. **No UI implemented.** No API implemented. No deploy performed.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Moderation UI wireframe spec | [moderation-ui-wireframe-spec.md](moderation-ui-wireframe-spec.md) complete | No |
+| Moderation UI implementation | Not started | No — deferred by design |
+| Main CI on `a74603c` | Green (run `28670393922`) | No |
+| Pages deploy | Green on `a74603c` | No |
+| Live Gate 11 / 12 | BLOCKED-LIVE | Yes — unchanged |
+| `--apply` / production import | Blocked | Yes — unchanged |
+
+**Batch 14C:** Moderation UI wireframe/spec defined. No implementation. Live Sheet gates not reopened.
+
 ## Moderation API contract review (Batch 14B — 2026-07-03)
 
 Docs-only. **No API implemented.** No UI implemented. No deploy performed.
@@ -46,7 +61,7 @@ Commit baseline: `b4d397b`. Public static MVP is live.
 | Live public scoring database | Not hosted | Deferred |
 | Public backend hosting | Not deployed | Deferred |
 | Extension backend API integration | Not wired | Deferred |
-| Frontend moderation / employer / admin UI | Scoped (Batch 13E); not built | Deferred — see [moderation-ui-scope.md](moderation-ui-scope.md) |
+| Frontend moderation / employer / admin UI | Wireframe spec (14C); not built | Deferred — see [moderation-ui-wireframe-spec.md](moderation-ui-wireframe-spec.md) |
 | Evidence file upload | Deferred | Deferred |
 | Greg Write invite (`gmcguirk-contractor`) | Pending acceptance | Operational |
 | Issue #4 dependency tracking | Open | Maintainer decision |
@@ -224,6 +239,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 - [render-deployment-plan.md](render-deployment-plan.md)
 - [moderation-ui-scope.md](moderation-ui-scope.md)
 - [moderation-api-contract-review.md](moderation-api-contract-review.md)
+- [moderation-ui-wireframe-spec.md](moderation-ui-wireframe-spec.md)
 - [free-public-launch-plan.md](free-public-launch-plan.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [validation-artifacts.md](validation-artifacts.md)

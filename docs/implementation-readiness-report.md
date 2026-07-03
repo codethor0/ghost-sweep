@@ -1,6 +1,22 @@
 # Implementation Readiness Report
 
-Current baseline: commit `7087897` (Batch 14B). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `a74603c` (Batch 14C). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 14C moderation UI wireframe spec (2026-07-03)
+
+Docs-only. **No UI implemented.** No API implemented. No backend behavior changed. No deploy performed.
+
+| Area | Status |
+| ---- | ------ |
+| Moderation UI wireframe spec | [moderation-ui-wireframe-spec.md](moderation-ui-wireframe-spec.md) |
+| Moderation UI implementation | **Not started** |
+| Main CI | **Green** on `a74603c` (run `28670393922`) |
+| Pages deploy | **Green** on `a74603c` |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **14D** — moderation schema decision record (docs-only) |
+
+See [moderation-ui-wireframe-spec.md](moderation-ui-wireframe-spec.md).
 
 ## Batch 14B moderation API contract review (2026-07-03)
 

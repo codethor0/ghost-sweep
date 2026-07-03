@@ -2,6 +2,21 @@
 
 Static public MVP launch status and remaining deferred work. Historical checkpoints below document pre-launch batches.
 
+## Moderation API contract review (Batch 14B — 2026-07-03)
+
+Docs-only. **No API implemented.** No UI implemented. No deploy performed.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Moderation API contract review | [moderation-api-contract-review.md](moderation-api-contract-review.md) complete | No |
+| Moderation API implementation | Not started | No — deferred by design |
+| Main CI on `7087897` | Green (run `28669761127`) | No |
+| Pages deploy | Green on `7087897` | No |
+| Live Gate 11 / 12 | BLOCKED-LIVE | Yes — unchanged |
+| `--apply` / production import | Blocked | Yes — unchanged |
+
+**Batch 14B:** Backend moderation contract mapped to Sheet SOP and UI scope. No API or behavior changes.
+
 ## Moderation UI scoping (Batch 13E — 2026-07-03)
 
 Docs-only. **No UI implemented.** No deploy performed.
@@ -208,6 +223,7 @@ Commit baseline: `b4018b7` (pre-8A). Local validation is source of truth.
 - [hosting-readiness-spike.md](hosting-readiness-spike.md)
 - [render-deployment-plan.md](render-deployment-plan.md)
 - [moderation-ui-scope.md](moderation-ui-scope.md)
+- [moderation-api-contract-review.md](moderation-api-contract-review.md)
 - [free-public-launch-plan.md](free-public-launch-plan.md)
 - [google-form-intake-spec.md](google-form-intake-spec.md)
 - [validation-artifacts.md](validation-artifacts.md)

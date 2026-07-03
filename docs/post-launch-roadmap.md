@@ -1,6 +1,6 @@
 # Post-Launch Product Roadmap
 
-Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). Current baseline: `837175d` (PR #9 merged; Batch 13E/13I). No backend schema or API changes are implied by this roadmap until separate design approval.
+Planning document after static MVP public launch (Batches 9A--9C complete at commit `f1e7ce1`). Current baseline: `7087897` (Batch 13E/13J/14B). No backend schema or API changes are implied by this roadmap until separate design approval.
 
 ## Batch 12 closure (MVP readiness)
 
@@ -28,8 +28,8 @@ See [implementation-status.md](implementation-status.md) Batch 12S and [sheet-im
 | GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
 | Google Sheet moderation queue | Project account; manual review |
-| CI on `main` | Passing (run `28668960634` on `837175d`) |
-| GitHub Pages deploy | Green after Batch 13I rerun |
+| CI on `main` | Passing (run `28669761127` on `7087897`) |
+| GitHub Pages deploy | Green on `7087897` |
 | PR #9 (URL validation tests) | Merged |
 | Full app hosting | Local Docker only (intentional) |
 
@@ -96,9 +96,10 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 **Product milestones (Issue #7):**
 
 1. Moderation UI scope document — **complete** (Batch 13E, [moderation-ui-scope.md](moderation-ui-scope.md))
-2. Moderation queue UI in frontend (admin) — **deferred**; implementation not started
-3. Bridge Sheet-approved rows to backend (Track 1)
-4. Evidence upload when policy allows (deferred)
+2. Moderation API contract review — **complete** (Batch 14B, [moderation-api-contract-review.md](moderation-api-contract-review.md))
+3. Moderation queue UI in frontend (admin) — **deferred**; implementation not started
+4. Bridge Sheet-approved rows to backend (Track 1)
+5. Evidence upload when policy allows (deferred)
 
 ## Track 3: Extension API wiring plan
 
@@ -174,10 +175,11 @@ Apply-mode design: [sheet-import-apply-design.md](sheet-import-apply-design.md).
 | 3 | **13D** | Render deployment plan ([render-deployment-plan.md](render-deployment-plan.md)) | No — complete |
 | 4 | **13E** | Moderation UI scoping ([moderation-ui-scope.md](moderation-ui-scope.md)) | No — complete |
 | 5 | **13F–13I** | GitHub health, PR #9 merge, Pages rerun | No — complete |
-| 6 | **14B** | Moderation API contract review (docs-only) | No |
+| 6 | **14B** | Moderation API contract review ([moderation-api-contract-review.md](moderation-api-contract-review.md)) | No — complete |
 | 7 | **14C** | Moderation UI wireframe / interaction spec (docs-only) | No |
-| 8 | **14A** | Render staging implementation (requires maintainer approval; not authorized by 13D) | Deploy config |
-| 9 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
+| 8 | **14D** | Moderation schema decision record (docs-only) | No |
+| 9 | **14A** | Render staging implementation (requires maintainer approval; not authorized by 13D) | Deploy config |
+| 10 | **11B** | URL validation API wiring (after Issue #5 approval) | API only if approved |
 | — | **doc** | Extension API wiring design (Issue #8) | No |
 | — | **Maintainer** | Close/reframe Issue #4; repository security settings | No |
 | — | **Deferred** | Live Sheet export proof; `--apply` implementation; hosted production import | Separate decisions |
@@ -206,3 +208,4 @@ Live Sheet proof and `--apply` are **deferred gates**, not the next MVP blocker.
 - [hosting-readiness-spike.md](hosting-readiness-spike.md)
 - [render-deployment-plan.md](render-deployment-plan.md)
 - [moderation-ui-scope.md](moderation-ui-scope.md)
+- [moderation-api-contract-review.md](moderation-api-contract-review.md)

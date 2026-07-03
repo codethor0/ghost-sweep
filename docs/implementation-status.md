@@ -1,6 +1,6 @@
 # Implementation Status
 
-Summary of implemented scope through Batch 13E. For API details see [api.md](api.md).
+Summary of implemented scope through Batch 14B. For API details see [api.md](api.md).
 
 ## Current state (live)
 
@@ -9,14 +9,15 @@ Summary of implemented scope through Batch 13E. For API details see [api.md](api
 | Public repository | https://github.com/codethor0/ghost-sweep |
 | GitHub Pages static MVP | https://codethor0.github.io/ghost-sweep/ |
 | Google Form intake | https://forms.gle/PsjaYrbrCjAgZXjW8 |
-| CI on `main` | Passing (`837175d`; run `28668960634`) |
-| GitHub Pages deploy | Green after Batch 13I rerun |
+| CI on `main` | Passing (`7087897`; run `28669761127`) |
+| GitHub Pages deploy | Green on `7087897` |
 | PR #9 (URL validation tests) | Merged |
 | Full app (FastAPI/Postgres/Redis/Next.js) | Local Docker only |
 | Batch 12 MVP readiness (Section 18 offline gate) | **Closed** — ACCEPTED-MVP (Batch 12S) |
 | Live Sheet export proof | **BLOCKED-LIVE** |
 | `--apply` / production import | **Blocked** |
 | Moderation UI | Scoped (Batch 13E); not implemented |
+| Moderation API contract | Reviewed (Batch 14B); not implemented |
 | Hosted backend, scoring DB, evidence upload, extension API | Deferred |
 
 Open GitHub issues: **6** (#1, #4, #5, #6, #7, #8). Closed launch blockers: #2, #3.
@@ -417,6 +418,23 @@ Docs-only checkpoint (2026-07-03). No UI implemented. No deploy performed.
 - Documents gap between Sheet SOP fields and existing backend moderation APIs (`verify`/`dismiss` on `Report` only).
 - Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
 - Next recommended batch: **14B** — moderation API contract review (docs-only).
+- No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
+
+## Pre-push hook policy fix (Batch 13J)
+
+- Updated [.githooks/pre-push](../.githooks/pre-push): authorship validation scoped to push range (`remote_sha..local_sha`) only.
+- Unblocks maintainer pushes when contributor squash merges already exist on `origin/main`.
+- Pushed with Batch 13E docs (`bf5f8d7`, `7087897`).
+- No application source changes.
+
+## Moderation API contract review (Batch 14B)
+
+Docs-only checkpoint (2026-07-03). No API implemented. No deploy performed.
+
+- Added [moderation-api-contract-review.md](moderation-api-contract-review.md): existing backend moderation contract, Sheet SOP contract, gap analysis, proposed future endpoints, state mapping, import readiness rules, security/testing requirements, open questions.
+- Confirmed three existing moderation endpoints; documented gaps for Sheet SOP fields, audit retrieval, duplicate search, PII/import flags.
+- Live Gates 11/12 remain **BLOCKED-LIVE**; `--apply` and production import remain **blocked**.
+- Next recommended batch: **14C** — moderation UI wireframe/spec (docs-only).
 - No application code, schema, API, Docker, CI, frontend, extension, Google Form/Sheet, or public MVP changes
 
 ## Deferred

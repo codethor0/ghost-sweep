@@ -1,6 +1,22 @@
 # Implementation Readiness Report
 
-Current baseline: commit `837175d` (Batch 13E). Historical 10E checkpoint content is retained below for traceability.
+Current baseline: commit `7087897` (Batch 14B). Historical 10E checkpoint content is retained below for traceability.
+
+## Batch 14B moderation API contract review (2026-07-03)
+
+Docs-only. **No API implemented.** No backend behavior changed. No UI implemented. No deploy performed.
+
+| Area | Status |
+| ---- | ------ |
+| Moderation API contract review | [moderation-api-contract-review.md](moderation-api-contract-review.md) |
+| Moderation API implementation | **Not started** |
+| Main CI | **Green** on `7087897` (run `28669761127`) |
+| Pages deploy | **Green** on `7087897` |
+| Live Gate 11 / 12 | **BLOCKED-LIVE** |
+| `--apply` / production import | **Blocked** |
+| **Recommended next execution batch** | **14C** — moderation UI wireframe/spec (docs-only) |
+
+See [moderation-api-contract-review.md](moderation-api-contract-review.md) and [moderation-ui-scope.md](moderation-ui-scope.md).
 
 ## Batch 13E moderation UI scoping (2026-07-03)
 

@@ -187,3 +187,99 @@ def test_validate_http_https_url_rejects_invalid_or_dangerous(raw_url: str) -> N
     """Dangerous schemes and malformed URLs should raise ValueError."""
     with pytest.raises(ValueError):
         validate_http_https_url(raw_url)
+
+
+@pytest.mark.parametrize(
+    "raw_url",
+    [
+        "https://example.com/jobs/x?UTM_SOURCE=twitter&id=1",
+        "https://example.com/jobs/x?Utm_Source=twitter&id=1",
+        "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org&id=1",
+        "https://example.com/jobs/x?UTM_SOURCE=https://www.lewismuseum.org&id=1",
+        "https://example.com/jobs/x?uTm_SoUrCe=https://www.lewismuseum.org&id=1",
+        "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org/exhibits&id=1",
+        "https://example.com/jobs/x?utm_source=HTTPS://WWW.LEWISMUSEUM.ORG&id=1",
+        (
+            "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org"
+            "&utm_medium=referral&id=1"
+        ),
+        (
+            "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org"
+            "&utm_medium=email&utm_campaign=spring-2026&id=1"
+        ),
+        (
+            "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org"
+            "&utm_medium=social&utm_campaign=jobs&utm_content=sidebar&utm_term=curator&id=1"
+        ),
+        (
+            "https://example.com/jobs/x?utm_source=https://www.lewismuseum.org"
+            "&utm_campaign=newsletter&fbclid=IwAR123abc&gclid=Cj0KCQ&id=1"
+        ),
+        (
+            "https://example.com/jobs/x?id=1&utm_source=https://www.lewismuseum.org"
+            "&utm_medium=referral&utm_content=hero-banner"
+        ),
+    ],
+)
+def test_normalize_job_url_strips_tracking_params_case_insensitively(raw_url: str) -> None:
+    """Tracking params should be stripped regardless of key casing."""
+    assert normalize_job_url(raw_url) == "https://example.com/jobs/x?id=1"
+
+
+def test_normalize_job_url_removes_userinfo() -> None:
+    """Credentials embedded in URLs should not survive normalization."""
+    normalized = normalize_job_url("https://user:pass@example.com/jobs/x")
+    assert normalized == "https://example.com/jobs/x"
+
+
+def test_normalize_job_url_strips_default_https_port() -> None:
+    """Default port 443 should be removed from https URLs."""
+    assert normalize_job_url("https://example.com:443/jobs/x") == "https://example.com/jobs/x"
+
+
+def test_normalize_job_url_strips_default_http_port() -> None:
+    """Default port 80 should be removed from http URLs."""
+    assert normalize_job_url("http://example.com:80/jobs/x") == "http://example.com/jobs/x"
+
+
+def test_normalize_job_url_preserves_non_default_port() -> None:
+    """Non-default ports should be preserved."""
+    assert normalize_job_url("https://example.com:8443/jobs/x") == (
+        "https://example.com:8443/jobs/x"
+    )
+
+
+def test_normalize_job_url_preserves_duplicate_query_keys() -> None:
+    """Repeated query keys should all be preserved."""
+    assert normalize_job_url("https://example.com/jobs/x?id=1&id=2") == (
+        "https://example.com/jobs/x?id=1&id=2"
+    )
+
+
+def test_normalize_job_url_preserves_punycode_host() -> None:
+    """Punycode hostnames should pass through unchanged."""
+    raw = "https://xn--mnchen-jobs-zhb.de/careers/x"
+    assert normalize_job_url(raw) == raw
+
+
+def test_normalize_job_url_drops_query_of_only_tracking_params() -> None:
+    """A query containing only tracking params should normalize to no query."""
+    raw = "https://example.com/jobs/x?utm_source=a&gclid=b"
+    assert normalize_job_url(raw) == "https://example.com/jobs/x"
+
+
+def test_normalize_job_url_reencodes_query_space_but_keeps_path_encoding() -> None:
+    """Percent-encoding in the path survives, but a query space is re-encoded as '+'."""
+    raw = "https://example.com/jobs/senior%20engineer?utm_source=x&title=Sr%20Eng"
+    assert normalize_job_url(raw) == "https://example.com/jobs/senior%20engineer?title=Sr+Eng"
+
+
+def test_normalize_job_url_preserves_port_zero() -> None:
+    """Port 0 is treated as a non-default port and preserved, not dropped."""
+    assert normalize_job_url("https://example.com:0/jobs") == "https://example.com:0/jobs"
+
+
+def test_normalize_job_url_preserves_consecutive_slashes_in_path() -> None:
+    """Consecutive slashes in the path are preserved, not collapsed."""
+    raw = "https://example.com//jobs///engineer"
+    assert normalize_job_url(raw) == raw

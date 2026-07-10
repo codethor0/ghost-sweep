@@ -31,33 +31,6 @@ _CAREER_PATH_MARKERS = (
     "/join-us",
 )
 
-_WORKDAY_HOST_SUFFIXES = (
-    "myworkdayjobs.com",
-    "workdayjobs.com",
-    "myworkdaysite.com",
-)
-
-_GREENHOUSE_HOST_SUFFIXES = (
-    "greenhouse.io",
-    "boards.greenhouse.io",
-    "job-boards.greenhouse.io",
-)
-
-_LEVER_HOST_SUFFIXES = (
-    "lever.co",
-    "jobs.lever.co",
-)
-
-_ASHBY_HOST_SUFFIXES = (
-    "ashbyhq.com",
-    "jobs.ashbyhq.com",
-)
-
-_SMARTRECRUITERS_HOST_SUFFIXES = (
-    "smartrecruiters.com",
-    "jobs.smartrecruiters.com",
-)
-
 
 class JobSourceProvider(str, Enum):
     """Known ATS or career-page providers detected from URL structure."""
@@ -67,8 +40,36 @@ class JobSourceProvider(str, Enum):
     LEVER = "lever"
     ASHBY = "ashby"
     SMARTRECRUITERS = "smartrecruiters"
+    ICIMS = "icims"
+    WORKABLE = "workable"
+    BAMBOOHR = "bamboohr"
+    TALEO = "taleo"
+    JOBVITE = "jobvite"
     COMPANY_CAREERS = "company_careers"
     UNKNOWN = "unknown"
+
+
+_PROVIDER_HOST_SUFFIXES: tuple[tuple[JobSourceProvider, tuple[str, ...]], ...] = (
+    (
+        JobSourceProvider.WORKDAY,
+        ("myworkdayjobs.com", "workdayjobs.com", "myworkdaysite.com"),
+    ),
+    (
+        JobSourceProvider.GREENHOUSE,
+        ("greenhouse.io", "boards.greenhouse.io", "job-boards.greenhouse.io"),
+    ),
+    (JobSourceProvider.LEVER, ("lever.co", "jobs.lever.co")),
+    (JobSourceProvider.ASHBY, ("ashbyhq.com", "jobs.ashbyhq.com")),
+    (
+        JobSourceProvider.SMARTRECRUITERS,
+        ("smartrecruiters.com", "jobs.smartrecruiters.com"),
+    ),
+    (JobSourceProvider.ICIMS, ("icims.com",)),
+    (JobSourceProvider.WORKABLE, ("workable.com",)),
+    (JobSourceProvider.BAMBOOHR, ("bamboohr.com",)),
+    (JobSourceProvider.TALEO, ("taleo.net",)),
+    (JobSourceProvider.JOBVITE, ("jobvite.com",)),
+)
 
 
 @dataclass(frozen=True)
@@ -179,23 +180,13 @@ def detect_job_source_provider(normalized_url: str) -> JobSourceProvider:
     host = (parts.hostname or "").lower()
     path = parts.path or ""
 
-    if _host_matches_suffix(host, _WORKDAY_HOST_SUFFIXES):
-        return JobSourceProvider.WORKDAY
-    if host == "workday.com" or host.endswith(".workday.com"):
+    if _host_matches_suffix(host, ("workday.com",)):
         if _workday_path_looks_like_job(path):
             return JobSourceProvider.WORKDAY
 
-    if _host_matches_suffix(host, _GREENHOUSE_HOST_SUFFIXES):
-        return JobSourceProvider.GREENHOUSE
-
-    if _host_matches_suffix(host, _LEVER_HOST_SUFFIXES):
-        return JobSourceProvider.LEVER
-
-    if _host_matches_suffix(host, _ASHBY_HOST_SUFFIXES):
-        return JobSourceProvider.ASHBY
-
-    if _host_matches_suffix(host, _SMARTRECRUITERS_HOST_SUFFIXES):
-        return JobSourceProvider.SMARTRECRUITERS
+    for provider, host_suffixes in _PROVIDER_HOST_SUFFIXES:
+        if _host_matches_suffix(host, host_suffixes):
+            return provider
 
     if _path_has_career_marker(path):
         return JobSourceProvider.COMPANY_CAREERS

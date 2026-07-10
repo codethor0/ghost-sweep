@@ -283,3 +283,68 @@ def test_normalize_job_url_preserves_consecutive_slashes_in_path() -> None:
     """Consecutive slashes in the path are preserved, not collapsed."""
     raw = "https://example.com//jobs///engineer"
     assert normalize_job_url(raw) == raw
+
+
+@pytest.mark.parametrize(
+    ("raw_url", "expected_provider", "expected_domain"),
+    [
+        (
+            "https://careers-acme.icims.com/jobs/12345/software-engineer/job",
+            JobSourceProvider.ICIMS,
+            "careers-acme.icims.com",
+        ),
+        (
+            "https://acme.taleo.net/careersection/2/jobdetail.ftl?job=12345",
+            JobSourceProvider.TALEO,
+            "acme.taleo.net",
+        ),
+        (
+            "https://jobs.jobvite.com/acme/job/oUZbYfwF",
+            JobSourceProvider.JOBVITE,
+            "jobs.jobvite.com",
+        ),
+        (
+            "https://apply.workable.com/acme/j/ABC123DEF4",
+            JobSourceProvider.WORKABLE,
+            "apply.workable.com",
+        ),
+        (
+            "https://acme.workable.com/jobs/123456",
+            JobSourceProvider.WORKABLE,
+            "acme.workable.com",
+        ),
+        (
+            "https://acme.bamboohr.com/careers/42",
+            JobSourceProvider.BAMBOOHR,
+            "acme.bamboohr.com",
+        ),
+    ],
+)
+def test_validate_job_url_detects_hosted_ats_tenant_urls(
+    raw_url: str,
+    expected_provider: JobSourceProvider,
+    expected_domain: str,
+) -> None:
+    """Hosted ATS tenant URLs should classify with domain and URL preserved."""
+    result = validate_job_url(raw_url)
+    assert result.provider == expected_provider
+    assert result.is_likely_job_url is True
+    assert result.source_domain == expected_domain
+    assert result.normalized_url == raw_url
+
+
+@pytest.mark.parametrize(
+    "raw_url",
+    [
+        "https://evilicims.com/postings/1",
+        "https://nottaleo.net/postings/1",
+        "https://fakejobvite.com/postings/1",
+        "https://notworkable.com/postings/1",
+        "https://mybamboohr.com/postings/1",
+    ],
+)
+def test_detect_job_source_provider_rejects_lookalike_ats_hosts(raw_url: str) -> None:
+    """Hosts that merely end with an ATS name must not match that provider."""
+    normalized = normalize_job_url(raw_url)
+    assert normalized is not None
+    assert detect_job_source_provider(normalized) == JobSourceProvider.UNKNOWN

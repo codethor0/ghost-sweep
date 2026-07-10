@@ -2,6 +2,31 @@
 
 ghost-sweep is an open-source, community-driven Job Integrity Database that helps job seekers evaluate hiring transparency using evidence-based reports, transparent integrity scores, and employer response workflows.
 
+ghost-sweep is a volunteer open-source project that helps job seekers report and review **suspected ghost job postings** using evidence-based intake, human moderation, and transparent integrity workflows.
+
+**Public project site:** https://codethor0.github.io/ghost-sweep/
+**Report a suspected ghost job:** https://forms.gle/PsjaYrbrCjAgZXjW8
+
+This project does not currently offer paid contributor roles. Resources are limited and maintained by volunteers.
+
+## What qualifies as a suspected ghost job
+
+A suspected ghost job is a posting that appears open to applicants but may not reflect genuine hiring intent. Common signals include long-open requisitions, no response after application, repeated reposting, or conflicting information from the employer. Reports are **allegations** until moderated under the current workflow.
+
+See [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md).
+
+## How to contribute
+
+Developers, designers, technical writers, and privacy-minded contributors can help with documentation, tests, URL validation, accessibility, and scoped bug fixes.
+
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), and [docs/contributor-onboarding.md](docs/contributor-onboarding.md)
+2. Search [open issues](https://github.com/codethor0/ghost-sweep/issues) or [Discussions](https://github.com/codethor0/ghost-sweep/discussions)
+3. Comment on an issue before starting substantial work
+4. Open a draft pull request early
+5. Follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md)
+
+Community review lead: [@bgreg](https://github.com/bgreg). Project owner: [@codethor0](https://github.com/codethor0).
+
 ## Problem
 
 Job seekers often invest time in postings that remain open without hiring intent, receive no recruiter follow-up, or are reposted repeatedly without closure. Hiring transparency is uneven, and public information is fragmented across boards, employer sites, and anecdotal reports.
@@ -99,23 +124,37 @@ The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emai
 
 ## Current project status
 
-Current `main` at `38a5589` reflects public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), apply-mode design (Batch 12B), offline verification (Batch 12F-P), and Section 18 MVP amendment (Batch 12S). The public static MVP and Google Form intake are live; the full application remains local Docker only. Batch 12 is **closed for MVP readiness** under amended Section 18 offline gate language.
+Current `main` includes public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), apply-mode design (Batch 12B), offline verification (Batch 12F-P), Section 18 MVP amendment (Batch 12S), and moderation planning docs (Batches 13E--14E). The public static MVP and Google Form intake are live; the full application remains local Docker only.
 
 **Live public surfaces:**
 
 - **Repository:** public — https://github.com/codethor0/ghost-sweep
-- **GitHub Pages MVP:** https://codethor0.github.io/ghost-sweep/ (root mirror of `public-mvp/`)
+- **GitHub Pages MVP:** https://codethor0.github.io/ghost-sweep/
 - **Google Form intake:** https://forms.gle/PsjaYrbrCjAgZXjW8
 - **Google Sheet moderation:** manual review per [moderation-sop.md](docs/moderation-sop.md)
+
+**Privacy and moderation:**
+
+- Form and Sheet submission data remain private and are not published in the repository
+- Reports require moderation before being treated as credible
+- See [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md)
 
 **Sheet import pipeline:**
 
 - **Batch 12A (shipped):** dry-run CLI — `scripts/sheet_import_dry_run.py`, `scripts/verify_sheet_columns.py`; no database writes
 - **Batch 12B (shipped):** apply-mode design — [sheet-import-apply-design.md](docs/sheet-import-apply-design.md)
-- **Batch 12F-P / 12S (shipped):** offline post-upload artifact verification **ACCEPTED-MVP**; Section 18 amended for MVP importer readiness
-- **Live Sheet export proof:** **BLOCKED-LIVE** — not required for MVP readiness under amended offline gate; required before production import automation
-- **`--apply` implementation:** not implemented; blocked — requires separate maintainer approval and live export proof before production automation
+- **Batch 12F-P / 12S (shipped):** offline post-upload artifact verification **ACCEPTED-MVP**
+- **Live Sheet export proof:** **BLOCKED-LIVE**
+- **`--apply` implementation:** not implemented; blocked
 - **Production import automation:** not enabled
+
+**Current limitations:**
+
+- No publicly hosted backend or live scoring database
+- No public moderation UI (planning docs exist; implementation deferred)
+- No production Sheet import automation
+- Extension has no backend API integration yet
+- Volunteer project; no guaranteed staffing or paid roles
 
 **CI:**
 
@@ -143,12 +182,12 @@ Current `main` at `38a5589` reflects public launch (Batches 8A--10E), Sheet impo
 - Normalizes http/https URLs and detects likely ATS or career-page providers
 - Unit tests only; not wired to backend API routes; no network calls
 
-**Contributor readiness (Batch 6E complete):**
+**Contributor readiness:**
 
-- 22 GitHub labels live; Issue #1 labeled for first contributor lane
-- GitHub issue templates, PR template, CODEOWNERS, label taxonomy doc
-- CONTRIBUTING and onboarding doc polish; no application behavior changes
-- Private collaborator Write invite for Greg (`gmcguirk-contractor`) pending acceptance; not Admin/Maintain
+- GitHub issue templates, PR template, CODEOWNERS, and label taxonomy documented in [docs/labels.md](docs/labels.md)
+- Community governance: [GOVERNANCE.md](GOVERNANCE.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [SECURITY.md](SECURITY.md)
+- Maintainer review lead: [@bgreg](https://github.com/bgreg) (Admin)
+- Project owner: [@codethor0](https://github.com/codethor0)
 
 **Implemented frontend (Batch 6C):**
 
@@ -240,8 +279,12 @@ docker compose ps
 
 ## Contributing
 
-Read `CONTRIBUTING.md`, `AGENTS.md`, and `CODE_OF_CONDUCT.md` before opening a pull request.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), [AGENTS.md](AGENTS.md), and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request.
+
+- [Security policy](SECURITY.md)
+- [Reporting and moderation policy](docs/reporting-and-moderation-policy.md)
+- [Contributor onboarding](docs/contributor-onboarding.md)
 
 ## License
 
-MIT. See `LICENSE`.
+MIT. See [LICENSE](LICENSE).

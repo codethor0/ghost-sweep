@@ -1,11 +1,20 @@
-# Default maintainer review for all paths.
-* @codethor0
+# Ghost Sweep code ownership
+# General community contributions may be reviewed by either maintainer.
 
-# High-risk areas require explicit maintainer review.
+* @codethor0 @bgreg
+
+# Sensitive security, data, deployment, and production-import areas
+# require project-owner review.
+
 /backend/app/api/ @codethor0
+/backend/app/security/ @codethor0
 /backend/alembic/ @codethor0
-/.github/ @codethor0
+/.github/workflows/ @codethor0
 /docker-compose.yml @codethor0
 /Dockerfile @codethor0
+/SECURITY.md @codethor0
+/scripts/sheet_import_dry_run.py @codethor0
+/scripts/verify_sheet_columns.py @codethor0
+/docs/sheet-import-design.md @codethor0
+/docs/sheet-import-apply-design.md @codethor0
 /public-mvp/ @codethor0
-/docs/ @codethor0

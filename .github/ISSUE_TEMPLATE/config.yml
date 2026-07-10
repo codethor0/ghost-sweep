@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability report
+    url: https://github.com/codethor0/ghost-sweep/blob/main/SECURITY.md
+    about: Do not open public issues for security vulnerabilities. Follow SECURITY.md.
+  - name: Community questions and ideas
+    url: https://github.com/codethor0/ghost-sweep/discussions
+    about: Use GitHub Discussions for general questions that do not require a code change.
+  - name: Contributor onboarding
+    url: https://github.com/codethor0/ghost-sweep/blob/main/docs/contributor-onboarding.md
+    about: Read contributor onboarding before starting substantial work.

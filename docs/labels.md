@@ -24,6 +24,8 @@ Prefer the `type:*` labels for new issues when the taxonomy below is active.
 | ----- | ------- |
 | `good first issue` | Small, well-scoped task suitable for a first contribution |
 | `help wanted` | Maintainer welcomes external help; scope is documented |
+| `needs-triage` | New issue awaiting maintainer or reviewer triage |
+| `needs-review` | Pull request or design item awaiting review |
 
 ## Area
 
@@ -35,6 +37,31 @@ Prefer the `type:*` labels for new issues when the taxonomy below is active.
 | `area:public-mvp` | Static site under `public-mvp/` |
 | `area:extension` | Browser extension under `extension/` |
 | `area:tests` | Test-only or verification-focused work |
+| `area:moderation` | Moderation workflow, policy, or UI planning |
+| `area:job-validation` | Job URL validation helpers and tests |
+
+## Scope
+
+| Label | Purpose |
+| ----- | ------- |
+| `scope:docs-only` | Documentation-only change; no runtime behavior |
+| `scope:tests-only` | Test-only change; no production behavior |
+
+## Priority
+
+| Label | Purpose |
+| ----- | ------- |
+| `priority:low` | Nice to have; not blocking |
+| `priority:medium` | Normal priority |
+| `priority:high` | Urgent or blocking issue |
+
+## Safety
+
+| Label | Purpose |
+| ----- | ------- |
+| `security` | Security-sensitive report or change |
+| `privacy` | Privacy-sensitive report or change |
+| `accessibility` | Accessibility improvement or audit |
 
 ## Type
 

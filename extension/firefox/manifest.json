@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ghost-sweep",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Submit job integrity reports from the current posting page.",
   "permissions": ["activeTab"],
   "browser_specific_settings": {

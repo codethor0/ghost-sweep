@@ -4,6 +4,21 @@ All notable changes to Ghost Sweep are documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [0.1.1] - 2026-07-10
+
+Patch release validating and hardening local E2E workflows discovered during pre-launch QA.
+
+### Fixed
+
+- Live E2E demo posting discovery when `scripts/seed_demo_data.py` is invoked from `scripts/live_e2e_validation.py` (missing `PYTHONPATH`).
+- Frontend API client now shows readable field-level validation messages instead of raw JSON for 422 responses.
+
+### Added
+
+- `scripts/form_validation_e2e.py` for local API negative-path checks on auth and report forms.
+- `scripts/test_live_e2e_seed_discovery.py` regression check for demo posting discovery.
+- `docs/e2e-validation-summary-v0.1.1.md` concise QA summary for the validated local MVP scope.
+
 ## [0.1.0] - 2026-07-10
 
 Initial public open-source MVP release. Active development; not production-complete.
@@ -33,4 +48,5 @@ Initial public open-source MVP release. Active development; not production-compl
 - MIT License preserved
 - SECURITY.md documents private vulnerability reporting to codethor@gmail.com
 
+[0.1.1]: https://github.com/codethor0/ghost-sweep/releases/tag/v0.1.1
 [0.1.0]: https://github.com/codethor0/ghost-sweep/releases/tag/v0.1.0

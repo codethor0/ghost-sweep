@@ -23,7 +23,19 @@ async function parseErrorMessage(response: Response): Promise<string> {
       return body.detail;
     }
     if (Array.isArray(body.detail)) {
-      return body.detail.map((item) => JSON.stringify(item)).join("; ");
+      return body.detail
+        .map((item) => {
+          if (typeof item === "object" && item !== null && "msg" in item) {
+            const record = item as { loc?: unknown; msg: unknown };
+            const field =
+              Array.isArray(record.loc) && record.loc.length > 0
+                ? String(record.loc[record.loc.length - 1])
+                : "field";
+            return `${field}: ${String(record.msg)}`;
+          }
+          return JSON.stringify(item);
+        })
+        .join("; ");
     }
   } catch {
     // Fall through to status text.

@@ -126,14 +126,16 @@ def request_text(
 
 def discover_job_posting_id(repo_root: str) -> str | None:
     """Discover demo job posting ID via seed script stdout."""
+    backend_dir = f"{repo_root}/backend"
     env = {
         **os.environ,
+        "PYTHONPATH": backend_dir,
         "DATABASE_URL": "postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5432/ghost_sweep",
         "ENVIRONMENT": "development",
     }
     result = subprocess.run(
         ["python3.11", "scripts/seed_demo_data.py"],
-        cwd=f"{repo_root}/backend",
+        cwd=backend_dir,
         capture_output=True,
         text=True,
         env=env,

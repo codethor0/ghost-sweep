@@ -52,4 +52,35 @@ describe("apiRequest", () => {
       new ApiError("Invalid credentials", 401),
     );
   });
+
+  it("formats validation errors without raw JSON", async () => {
+    global.fetch = jest.fn().mockResolvedValue({
+      ok: false,
+      status: 422,
+      statusText: "Unprocessable Entity",
+      json: async () => ({
+        detail: [
+          {
+            type: "value_error",
+            loc: ["body", "email"],
+            msg: "value is not a valid email address",
+            input: "",
+          },
+          {
+            type: "string_too_short",
+            loc: ["body", "password"],
+            msg: "String should have at least 12 characters",
+            input: "short",
+          },
+        ],
+      }),
+    }) as jest.Mock;
+
+    await expect(apiRequest("/api/v1/auth/register", { method: "POST" })).rejects.toEqual(
+      new ApiError(
+        "email: value is not a valid email address; password: String should have at least 12 characters",
+        422,
+      ),
+    );
+  });
 });

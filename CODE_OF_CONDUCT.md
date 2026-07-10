@@ -18,8 +18,10 @@ Examples of unacceptable behavior:
 
 - The use of sexualized language or imagery and unwelcome sexual attention or advances
 - Trolling, insulting or derogatory comments, and personal or political attacks
-- Public or private harassment
-- Publishing others' private information without explicit permission
+- Public or private harassment, threats, or retaliation
+- Racism, sexism, and other discriminatory conduct
+- Doxxing or publishing others' private information without explicit permission
+- Targeted abuse of employers, recruiters, job seekers, maintainers, or contributors
 - Other conduct which could reasonably be considered inappropriate in a professional setting
 
 ## Enforcement responsibilities

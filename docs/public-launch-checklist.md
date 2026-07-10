@@ -2,6 +2,21 @@
 
 Static public MVP launch status and remaining deferred work. Historical checkpoints below document pre-launch batches.
 
+## Moderation API implementation plan (Batch 14E — 2026-07-03)
+
+Docs-only. **No API implemented.** No backend source changed. No schema implemented. No migration created. No UI implemented. No deploy performed.
+
+| Gate | Status | Blocker? |
+| ---- | ------ | -------- |
+| Moderation API implementation plan | [moderation-api-implementation-plan.md](moderation-api-implementation-plan.md) complete | No |
+| Moderation API implementation | Not started | No — deferred by design |
+| Main CI on `b8e2ee2` | Green (run `28673047004`) | No |
+| Pages deploy | Green on `b8e2ee2` | No |
+| Live Gate 11 / 12 | BLOCKED-LIVE | Yes — unchanged |
+| `--apply` / production import | Blocked | Yes — unchanged |
+
+**Batch 14E:** Moderation API implementation phases defined. No implementation. Live Sheet gates not reopened.
+
 ## Moderation schema decision record (Batch 14D — 2026-07-03)
 
 Docs-only. **No schema implemented.** No migration created. No API implemented. No UI implemented. No deploy performed.

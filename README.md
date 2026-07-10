@@ -1,6 +1,87 @@
-# ghost-sweep
+# Ghost Sweep
 
-ghost-sweep is an open-source, community-driven Job Integrity Database that helps job seekers evaluate hiring transparency using evidence-based reports, transparent integrity scores, and employer response workflows.
+<p align="center">
+  <img src="docs/assets/ghost-sweep-logo.svg" alt="Ghost Sweep logo" width="72" height="72" />
+</p>
+
+<p align="center">
+  <strong>Community-maintained open-source project for reporting and reviewing suspected ghost job postings.</strong>
+</p>
+
+<p align="center">
+  <a href="https://github.com/codethor0/ghost-sweep/actions/workflows/ci.yml"><img src="https://github.com/codethor0/ghost-sweep/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+  <a href="https://codethor0.github.io/ghost-sweep/"><img src="https://img.shields.io/website?url=https%3A%2F%2Fcodethor0.github.io%2Fghost-sweep%2F&label=GitHub%20Pages" alt="GitHub Pages status" /></a>
+  <img src="https://img.shields.io/github/license/codethor0/ghost-sweep" alt="MIT License" />
+  <img src="https://img.shields.io/badge/status-active%20development-blue" alt="Active development" />
+  <img src="https://img.shields.io/badge/contributions-welcome-green" alt="Contributions welcome" />
+</p>
+
+<p align="center">
+  <a href="https://codethor0.github.io/ghost-sweep/">Public site</a> |
+  <a href="https://forms.gle/PsjaYrbrCjAgZXjW8">Report a suspected ghost job</a> |
+  <a href="https://github.com/codethor0/ghost-sweep/issues/15">Community roadmap</a>
+</p>
+
+Ghost Sweep helps job seekers submit **good-faith reports** about **suspected ghost job postings**. Community reports are **unverified allegations** until moderation is complete. The project protects personal information and does not present allegations as established facts.
+
+**Status:** Active development public MVP. Not production-complete. Volunteer-maintained; no paid contributor roles.
+
+| Link | URL |
+| ---- | --- |
+| Public site | https://codethor0.github.io/ghost-sweep/ |
+| Report form | https://forms.gle/PsjaYrbrCjAgZXjW8 |
+| Repository | https://github.com/codethor0/ghost-sweep |
+
+## What Ghost Sweep does
+
+- Provides a public landing page and Google Form for suspected ghost job reports
+- Requires human moderation before reports are treated as credible
+- Maintains open-source code for future integrity scoring, moderation UI, and local Docker development
+- Documents privacy boundaries between public code and private submission data
+
+## What Ghost Sweep does not do
+
+- Does not publicly host the full backend API today
+- Does not automatically verify or publish allegations
+- Does not expose raw Form or Sheet submission data in the repository
+- Does not run production Sheet import or `--apply`
+- Does not promise paid roles or production readiness
+
+See [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md).
+
+## Current public MVP flow
+
+```mermaid
+flowchart LR
+    A[Job seeker] --> B[GitHub Pages public site]
+    B --> C[Google Form]
+    C --> D[Private Google Sheet]
+    D --> E[Manual moderation]
+    E --> F[Future reviewed workflow]
+```
+
+## Contribution workflow
+
+```mermaid
+flowchart LR
+    A[Contributor selects issue] --> B[Creates branch or fork]
+    B --> C[Opens draft pull request]
+    C --> D[CI checks]
+    D --> E[Maintainer review]
+    E --> F[Protected merge to main]
+```
+
+Maintainers: [@codethor0](https://github.com/codethor0) (owner), [@bgreg](https://github.com/bgreg) (community review lead).
+
+## How to contribute
+
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), and [docs/contributor-onboarding.md](docs/contributor-onboarding.md)
+2. Start with [Issue #15: Community contribution roadmap](https://github.com/codethor0/ghost-sweep/issues/15)
+3. Comment on an issue before substantial work
+4. Open a draft pull request early
+5. Follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md)
+
+Safe lanes: documentation, tests, job URL validation, accessibility, public MVP usability. Approval required for auth, schema, deploy, CI permissions, Sheet import, and `--apply`.
 
 ## Problem
 
@@ -12,7 +93,36 @@ ghost-sweep collects structured, evidence-backed reports about job postings and 
 
 The platform uses risk-signal language. It does not make unsupported legal accusations.
 
-## Architecture
+## Architecture boundary
+
+```mermaid
+flowchart TB
+    subgraph public [Public today]
+        P[GitHub Pages]
+        F[Google Form]
+    end
+    subgraph private [Private today]
+        S[Google Sheet moderation]
+    end
+    subgraph local [Local Docker only]
+        B[FastAPI backend]
+        DB[(PostgreSQL)]
+        R[(Redis)]
+    end
+    P --> F
+    F --> S
+    B --- DB
+    B --- R
+    S -.->|import blocked| B
+```
+
+| Layer | Hosting | Status |
+| ----- | ------- | ------ |
+| Public landing + report CTA | GitHub Pages | Live |
+| Report intake | Google Form | Live |
+| Moderation queue | Google Sheet | Private; manual |
+| Full app | Local Docker | Not publicly hosted |
+| Production import | Not enabled | `--apply` blocked; Live Gates 11/12 BLOCKED-LIVE |
 
 ```text
 ghost-sweep/
@@ -99,23 +209,37 @@ The Google Form URL is `https://forms.gle/PsjaYrbrCjAgZXjW8`. Raw applicant emai
 
 ## Current project status
 
-Current `main` at `38a5589` reflects public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), apply-mode design (Batch 12B), offline verification (Batch 12F-P), and Section 18 MVP amendment (Batch 12S). The public static MVP and Google Form intake are live; the full application remains local Docker only. Batch 12 is **closed for MVP readiness** under amended Section 18 offline gate language.
+Current `main` includes public launch (Batches 8A--10E), Sheet import dry-run (Batch 12A), apply-mode design (Batch 12B), offline verification (Batch 12F-P), Section 18 MVP amendment (Batch 12S), and moderation planning docs (Batches 13E--14E). The public static MVP and Google Form intake are live; the full application remains local Docker only.
 
 **Live public surfaces:**
 
 - **Repository:** public — https://github.com/codethor0/ghost-sweep
-- **GitHub Pages MVP:** https://codethor0.github.io/ghost-sweep/ (root mirror of `public-mvp/`)
+- **GitHub Pages MVP:** https://codethor0.github.io/ghost-sweep/
 - **Google Form intake:** https://forms.gle/PsjaYrbrCjAgZXjW8
 - **Google Sheet moderation:** manual review per [moderation-sop.md](docs/moderation-sop.md)
+
+**Privacy and moderation:**
+
+- Form and Sheet submission data remain private and are not published in the repository
+- Reports require moderation before being treated as credible
+- See [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md)
 
 **Sheet import pipeline:**
 
 - **Batch 12A (shipped):** dry-run CLI — `scripts/sheet_import_dry_run.py`, `scripts/verify_sheet_columns.py`; no database writes
 - **Batch 12B (shipped):** apply-mode design — [sheet-import-apply-design.md](docs/sheet-import-apply-design.md)
-- **Batch 12F-P / 12S (shipped):** offline post-upload artifact verification **ACCEPTED-MVP**; Section 18 amended for MVP importer readiness
-- **Live Sheet export proof:** **BLOCKED-LIVE** — not required for MVP readiness under amended offline gate; required before production import automation
-- **`--apply` implementation:** not implemented; blocked — requires separate maintainer approval and live export proof before production automation
+- **Batch 12F-P / 12S (shipped):** offline post-upload artifact verification **ACCEPTED-MVP**
+- **Live Sheet export proof:** **BLOCKED-LIVE**
+- **`--apply` implementation:** not implemented; blocked
 - **Production import automation:** not enabled
+
+**Current limitations:**
+
+- No publicly hosted backend or live scoring database
+- No public moderation UI (planning docs exist; implementation deferred)
+- No production Sheet import automation
+- Extension has no backend API integration yet
+- Volunteer project; no guaranteed staffing or paid roles
 
 **CI:**
 
@@ -143,12 +267,12 @@ Current `main` at `38a5589` reflects public launch (Batches 8A--10E), Sheet impo
 - Normalizes http/https URLs and detects likely ATS or career-page providers
 - Unit tests only; not wired to backend API routes; no network calls
 
-**Contributor readiness (Batch 6E complete):**
+**Contributor readiness:**
 
-- 22 GitHub labels live; Issue #1 labeled for first contributor lane
-- GitHub issue templates, PR template, CODEOWNERS, label taxonomy doc
-- CONTRIBUTING and onboarding doc polish; no application behavior changes
-- Private collaborator Write invite for Greg (`gmcguirk-contractor`) pending acceptance; not Admin/Maintain
+- GitHub issue templates, PR template, CODEOWNERS, and label taxonomy documented in [docs/labels.md](docs/labels.md)
+- Community governance: [GOVERNANCE.md](GOVERNANCE.md), [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md), [SECURITY.md](SECURITY.md)
+- Maintainer review lead: [@bgreg](https://github.com/bgreg) (Admin)
+- Project owner: [@codethor0](https://github.com/codethor0)
 
 **Implemented frontend (Batch 6C):**
 
@@ -240,8 +364,15 @@ docker compose ps
 
 ## Contributing
 
-Read `CONTRIBUTING.md`, `AGENTS.md`, and `CODE_OF_CONDUCT.md` before opening a pull request.
+Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), [AGENTS.md](AGENTS.md), and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request.
+
+- [Community roadmap (Issue #15)](https://github.com/codethor0/ghost-sweep/issues/15)
+- [Support and community help](SUPPORT.md)
+- [Security policy](SECURITY.md)
+- [Reporting and moderation policy](docs/reporting-and-moderation-policy.md)
+- [Contributor onboarding](docs/contributor-onboarding.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 
-MIT. See `LICENSE`.
+MIT. See [LICENSE](LICENSE).

@@ -43,7 +43,10 @@ cd frontend && npm run lint && npm run typecheck && npm test
 - [ ] Tests pass locally
 - [ ] Lint and type checks pass locally
 - [ ] Documentation updated when behavior or contributor workflow changed
-- [ ] **No backend API, auth, or schema changes** (or separately approved and called out below)
+- [ ] **No private report data, Form responses, or Sheet exports included**
+- [ ] **No database migration or schema changes** unless separately approved and called out below
+- [ ] **No `--apply` or production import implementation**
+- [ ] **No production data writes**
 - [ ] **No Docker or CI workflow changes** (or separately approved and called out below)
 - [ ] **No secrets or generated artifacts committed** (`.env`, `__pycache__`, `.pyc`, `node_modules`, `.next`, caches, validation logs with tokens)
 - [ ] **No tool attribution** in commits, code, comments, or documentation

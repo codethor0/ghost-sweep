@@ -6,7 +6,14 @@ The repository is **public**. The static MVP is live at https://codethor0.github
 
 ## Collaborator access
 
-Greg (`gmcguirk-contractor`) has a Write collaborator invite pending acceptance. Permission level is Write only, not Admin or Maintain. Do not request elevated permissions without maintainer approval.
+| Account | Role | Status |
+| ------- | ---- | ------ |
+| [@codethor0](https://github.com/codethor0) | Project owner | Active Admin |
+| [@bgreg](https://github.com/bgreg) | Maintainer and community review lead | Active Admin |
+
+Greg (`@bgreg`) is the primary reviewer for normal community contributions in approved lanes. Sensitive paths in `.github/CODEOWNERS` require project-owner review.
+
+A separate Write invite for `gmcguirk-contractor` may still be pending. That account is not Greg's primary GitHub identity. Do not conflate the two accounts.
 
 ## Repository layout
 

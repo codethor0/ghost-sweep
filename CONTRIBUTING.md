@@ -4,19 +4,36 @@ Thank you for helping improve hiring transparency.
 
 ## Before you start
 
-1. Read `README.md`, `AGENTS.md`, and `docs/architecture.md`
+1. Read `README.md`, `AGENTS.md`, [GOVERNANCE.md](GOVERNANCE.md), and `docs/architecture.md`
 2. First-time contributors should read [docs/contributor-onboarding.md](docs/contributor-onboarding.md)
-3. Start with [Issue #1](https://github.com/codethor0/ghost-sweep/issues/1) or another scoped contributor lane
-4. Search existing issues and pull requests
+3. Review [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md) before working on intake or moderation-related areas
+4. Search existing issues and pull requests; comment on or claim an issue before starting substantial work
 5. Open a **draft pull request** early for substantial or uncertain work
+6. Keep changes narrowly scoped and follow existing architecture and doctrine
+7. Do not include private report data, Form responses, Sheet exports, or secrets in issues or pull requests
+8. Wait for required CI and code-owner review before expecting merge
 
-Use the GitHub issue templates under `.github/ISSUE_TEMPLATE/` when opening contributor tasks, bugs, or documentation work. See [docs/labels.md](docs/labels.md) for the live label taxonomy (22 labels; legacy defaults preserved).
+Use the GitHub issue templates under `.github/ISSUE_TEMPLATE/` when opening contributor tasks, bugs, or documentation work. See [docs/labels.md](docs/labels.md) for the live label taxonomy.
 
 First pull requests should stay small: extend offline helpers and unit tests before touching API routes, schema, Docker, or CI.
 
-## Maintainer approval required before you start
+## Safe contributor lanes
 
-Stop and get maintainer approval before changing:
+These lanes are suitable for community contributions with normal maintainer review:
+
+- Documentation and contributor onboarding improvements
+- Tests and local validation improvements
+- Job URL validation helpers and fixtures (offline only)
+- Accessibility improvements to the public MVP
+- Public MVP usability improvements (no Form URL changes without approval)
+- Duplicate-detection research and offline test fixtures
+- Non-sensitive moderation UI planning documents (docs-only)
+- Bug reproduction with minimal, scoped fixes
+- Developer experience improvements that do not change sensitive paths
+
+## Approval-required lanes
+
+Stop and get **project-owner approval** before changing:
 
 - Backend API routes or response contracts
 - Authentication or authorization behavior
@@ -24,7 +41,13 @@ Stop and get maintainer approval before changing:
 - Docker or CI workflow configuration
 - Extension backend integration
 - Public launch assets (`public-mvp/` Form URL, GitHub Pages, repository visibility)
+- Privacy rules and public report publication behavior
+- Sheet import scripts, `--apply`, or production data writes
 - New dependencies (exact package, version, rationale, and alternatives)
+
+Community review lead [@bgreg](https://github.com/bgreg) may approve and merge ordinary contributions in safe lanes after required checks pass. Sensitive paths in `.github/CODEOWNERS` require project-owner review from [@codethor0](https://github.com/codethor0).
+
+Prefer **squash merging** for normal contributor pull requests.
 
 ## Development setup
 
@@ -147,4 +170,6 @@ Signed commits are preferred.
 
 ## Community
 
-All contributors must follow `CODE_OF_CONDUCT.md`.
+All contributors must follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
+Report security issues through [SECURITY.md](SECURITY.md). Read [GOVERNANCE.md](GOVERNANCE.md) for maintainer roles and approval boundaries.

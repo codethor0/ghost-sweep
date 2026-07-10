@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Ghost Sweep logo">
+  <title>Ghost Sweep</title>
+  <rect width="64" height="64" rx="12" fill="#0f172a"/>
+  <path d="M32 12c-8.8 0-16 6.5-16 14.5 0 4.2 1.8 8 4.8 10.6V44c0 1.1.9 2 2 2h2.5c.6 0 1-.4 1-1v-3.5h12.4V45c0 .6.4 1 1 1H42c1.1 0 2-.9 2-2V37.1c3-2.6 4.8-6.4 4.8-10.6C48.8 18.5 41.6 12 32 12z" fill="#e2e8f0"/>
+  <circle cx="26" cy="28" r="2.5" fill="#0f172a"/>
+  <circle cx="38" cy="28" r="2.5" fill="#0f172a"/>
+  <path d="M18 46c0 2.2 3.1 4 7 4M46 46c0 2.2-3.1 4-7 4" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M48 18l8-4M48 22l10 2M48 26l8 4" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -50,3 +50,6 @@ ghost-sweep
 
 # Docker
 postgres_data/
+
+# Local E2E QA runs (keep scripts and docs; do not commit generated artifacts)
+test-results/

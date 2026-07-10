@@ -1,31 +1,87 @@
-# ghost-sweep
+# Ghost Sweep
 
-ghost-sweep is an open-source, community-driven Job Integrity Database that helps job seekers evaluate hiring transparency using evidence-based reports, transparent integrity scores, and employer response workflows.
+<p align="center">
+  <img src="docs/assets/ghost-sweep-logo.svg" alt="Ghost Sweep logo" width="72" height="72" />
+</p>
 
-ghost-sweep is a volunteer open-source project that helps job seekers report and review **suspected ghost job postings** using evidence-based intake, human moderation, and transparent integrity workflows.
+<p align="center">
+  <strong>Community-maintained open-source project for reporting and reviewing suspected ghost job postings.</strong>
+</p>
 
-**Public project site:** https://codethor0.github.io/ghost-sweep/
-**Report a suspected ghost job:** https://forms.gle/PsjaYrbrCjAgZXjW8
+<p align="center">
+  <a href="https://github.com/codethor0/ghost-sweep/actions/workflows/ci.yml"><img src="https://github.com/codethor0/ghost-sweep/actions/workflows/ci.yml/badge.svg" alt="CI status" /></a>
+  <a href="https://codethor0.github.io/ghost-sweep/"><img src="https://img.shields.io/website?url=https%3A%2F%2Fcodethor0.github.io%2Fghost-sweep%2F&label=GitHub%20Pages" alt="GitHub Pages status" /></a>
+  <img src="https://img.shields.io/github/license/codethor0/ghost-sweep" alt="MIT License" />
+  <img src="https://img.shields.io/badge/status-active%20development-blue" alt="Active development" />
+  <img src="https://img.shields.io/badge/contributions-welcome-green" alt="Contributions welcome" />
+</p>
 
-This project does not currently offer paid contributor roles. Resources are limited and maintained by volunteers.
+<p align="center">
+  <a href="https://codethor0.github.io/ghost-sweep/">Public site</a> |
+  <a href="https://forms.gle/PsjaYrbrCjAgZXjW8">Report a suspected ghost job</a> |
+  <a href="https://github.com/codethor0/ghost-sweep/issues/15">Community roadmap</a>
+</p>
 
-## What qualifies as a suspected ghost job
+Ghost Sweep helps job seekers submit **good-faith reports** about **suspected ghost job postings**. Community reports are **unverified allegations** until moderation is complete. The project protects personal information and does not present allegations as established facts.
 
-A suspected ghost job is a posting that appears open to applicants but may not reflect genuine hiring intent. Common signals include long-open requisitions, no response after application, repeated reposting, or conflicting information from the employer. Reports are **allegations** until moderated under the current workflow.
+**Status:** Active development public MVP. Not production-complete. Volunteer-maintained; no paid contributor roles.
+
+| Link | URL |
+| ---- | --- |
+| Public site | https://codethor0.github.io/ghost-sweep/ |
+| Report form | https://forms.gle/PsjaYrbrCjAgZXjW8 |
+| Repository | https://github.com/codethor0/ghost-sweep |
+
+## What Ghost Sweep does
+
+- Provides a public landing page and Google Form for suspected ghost job reports
+- Requires human moderation before reports are treated as credible
+- Maintains open-source code for future integrity scoring, moderation UI, and local Docker development
+- Documents privacy boundaries between public code and private submission data
+
+## What Ghost Sweep does not do
+
+- Does not publicly host the full backend API today
+- Does not automatically verify or publish allegations
+- Does not expose raw Form or Sheet submission data in the repository
+- Does not run production Sheet import or `--apply`
+- Does not promise paid roles or production readiness
 
 See [docs/reporting-and-moderation-policy.md](docs/reporting-and-moderation-policy.md).
 
+## Current public MVP flow
+
+```mermaid
+flowchart LR
+    A[Job seeker] --> B[GitHub Pages public site]
+    B --> C[Google Form]
+    C --> D[Private Google Sheet]
+    D --> E[Manual moderation]
+    E --> F[Future reviewed workflow]
+```
+
+## Contribution workflow
+
+```mermaid
+flowchart LR
+    A[Contributor selects issue] --> B[Creates branch or fork]
+    B --> C[Opens draft pull request]
+    C --> D[CI checks]
+    D --> E[Maintainer review]
+    E --> F[Protected merge to main]
+```
+
+Maintainers: [@codethor0](https://github.com/codethor0) (owner), [@bgreg](https://github.com/bgreg) (community review lead).
+
 ## How to contribute
 
-Developers, designers, technical writers, and privacy-minded contributors can help with documentation, tests, URL validation, accessibility, and scoped bug fixes.
-
 1. Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), and [docs/contributor-onboarding.md](docs/contributor-onboarding.md)
-2. Search [open issues](https://github.com/codethor0/ghost-sweep/issues) or [Discussions](https://github.com/codethor0/ghost-sweep/discussions)
-3. Comment on an issue before starting substantial work
+2. Start with [Issue #15: Community contribution roadmap](https://github.com/codethor0/ghost-sweep/issues/15)
+3. Comment on an issue before substantial work
 4. Open a draft pull request early
 5. Follow [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) and [SECURITY.md](SECURITY.md)
 
-Community review lead: [@bgreg](https://github.com/bgreg). Project owner: [@codethor0](https://github.com/codethor0).
+Safe lanes: documentation, tests, job URL validation, accessibility, public MVP usability. Approval required for auth, schema, deploy, CI permissions, Sheet import, and `--apply`.
 
 ## Problem
 
@@ -37,7 +93,36 @@ ghost-sweep collects structured, evidence-backed reports about job postings and 
 
 The platform uses risk-signal language. It does not make unsupported legal accusations.
 
-## Architecture
+## Architecture boundary
+
+```mermaid
+flowchart TB
+    subgraph public [Public today]
+        P[GitHub Pages]
+        F[Google Form]
+    end
+    subgraph private [Private today]
+        S[Google Sheet moderation]
+    end
+    subgraph local [Local Docker only]
+        B[FastAPI backend]
+        DB[(PostgreSQL)]
+        R[(Redis)]
+    end
+    P --> F
+    F --> S
+    B --- DB
+    B --- R
+    S -.->|import blocked| B
+```
+
+| Layer | Hosting | Status |
+| ----- | ------- | ------ |
+| Public landing + report CTA | GitHub Pages | Live |
+| Report intake | Google Form | Live |
+| Moderation queue | Google Sheet | Private; manual |
+| Full app | Local Docker | Not publicly hosted |
+| Production import | Not enabled | `--apply` blocked; Live Gates 11/12 BLOCKED-LIVE |
 
 ```text
 ghost-sweep/
@@ -281,9 +366,12 @@ docker compose ps
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md), [GOVERNANCE.md](GOVERNANCE.md), [AGENTS.md](AGENTS.md), and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) before opening a pull request.
 
+- [Community roadmap (Issue #15)](https://github.com/codethor0/ghost-sweep/issues/15)
+- [Support and community help](SUPPORT.md)
 - [Security policy](SECURITY.md)
 - [Reporting and moderation policy](docs/reporting-and-moderation-policy.md)
 - [Contributor onboarding](docs/contributor-onboarding.md)
+- [Changelog](CHANGELOG.md)
 
 ## License
 

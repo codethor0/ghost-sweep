@@ -64,6 +64,19 @@ Maintainer status does not permit bypassing security, privacy, or review control
 4. Sensitive paths listed in `.github/CODEOWNERS` require project-owner review.
 5. Disputes on privacy, security, or reporting policy escalate to the project owner.
 
+## Open-source continuity
+
+- Ghost Sweep is maintained as an **open-source project** under the **MIT License**.
+- Releases published under MIT remain available under MIT.
+- Maintainers do not intend to replace the project with a misleading "source available" model while describing it as open source.
+- Any future license change requires public discussion, documented maintainer review, and a clear migration plan.
+- Private Google Form and Sheet submission data is **not** part of the open-source repository.
+- Open-source code does not grant public access to private submission data.
+- A nonprofit structure may be explored in the future, but none is legally established today.
+- Contributors are not promised employment, payment, equity, or nonprofit membership.
+- [@bgreg](https://github.com/bgreg) and [@codethor0](https://github.com/codethor0) manage ordinary contribution approval under this policy.
+- Security, privacy, production import, and schema changes require the elevated review process above.
+
 ## Related documents
 
 - [CONTRIBUTING.md](CONTRIBUTING.md)

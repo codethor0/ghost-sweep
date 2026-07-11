@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import shutil
 import subprocess
 import sys
 import tarfile
@@ -53,3 +54,25 @@ def test_tarball_excludes_appledouble_files() -> None:
 if __name__ == "__main__":
     test_tarball_excludes_appledouble_files()
     print("PASS")
+
+
+def test_scan_bundle_allows_contributor_onboarding_policy_text() -> None:
+    """Policy docs that mention forbidden markers in guidance must not fail hygiene scans."""
+    repo_root = Path(__file__).resolve().parents[1]
+    script = repo_root / "scripts" / "create_audit_bundle.py"
+    import importlib.util
+
+    spec = importlib.util.spec_from_file_location("cab", script)
+    module = importlib.util.module_from_spec(spec)
+    assert spec.loader is not None
+    spec.loader.exec_module(module)
+
+    with tempfile.TemporaryDirectory() as temp_dir:
+        bundle_root = Path(temp_dir) / "sample-bundle"
+        source_dir = bundle_root / "source"
+        source_dir.mkdir(parents=True)
+        onboarding = repo_root / "docs" / "contributor-onboarding.md"
+        shutil.copy2(onboarding, source_dir / "contributor-onboarding.md")
+        shutil.copy2(script, source_dir / "create_audit_bundle.py")
+        issues = module.scan_bundle(bundle_root)
+        assert issues == []

@@ -4,10 +4,11 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, status
+from fastapi import Depends, FastAPI, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
+from sqlalchemy.ext.asyncio import create_async_engine
 
 from app.api.v1.auth import router as auth_router
 from app.api.v1.companies import router as companies_router
@@ -15,11 +16,11 @@ from app.api.v1.employer_claims import router as employer_claims_router
 from app.api.v1.job_postings import router as job_postings_router
 from app.api.v1.moderation import router as moderation_router
 from app.api.v1.reports import router as reports_router
-from app.config import get_settings
-from app.database import SessionLocal
+from app.config import Settings, get_settings
+from app.dependencies import get_redis, get_settings_dependency
 from app.redis_client import (
+    RedisClient,
     check_redis_connection,
-    get_shared_redis_client,
     init_redis_client,
     shutdown_redis_client,
 )
@@ -65,21 +66,26 @@ async def health_check() -> HealthResponse:
 
 
 @app.get("/health/ready", response_model=ReadinessResponse)
-async def readiness_check() -> JSONResponse:
+async def readiness_check(
+    settings: Settings = Depends(get_settings_dependency),
+    redis: RedisClient = Depends(get_redis),
+) -> JSONResponse:
     """Return dependency readiness for PostgreSQL and Redis."""
     postgres_status = "unavailable"
     redis_status = "unavailable"
 
+    engine = create_async_engine(settings.database_url, pool_pre_ping=True)
     try:
-        async with SessionLocal() as session:
-            await session.execute(text("SELECT 1"))
+        async with engine.connect() as connection:
+            await connection.execute(text("SELECT 1"))
         postgres_status = "ok"
     except Exception:
         logger.exception("PostgreSQL readiness check failed")
+    finally:
+        await engine.dispose()
 
     try:
-        redis_client = get_shared_redis_client()
-        if await check_redis_connection(redis_client):
+        if await check_redis_connection(redis):
             redis_status = "ok"
     except Exception:
         logger.exception("Redis readiness check failed")

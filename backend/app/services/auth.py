@@ -2,7 +2,7 @@
 
 from uuid import UUID
 
-from sqlalchemy import or_, select
+from sqlalchemy import func, or_, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,7 +17,12 @@ from app.security.tokens import create_access_token
 from app.services.refresh_tokens import (
     issue_refresh_token,
     revoke_refresh_token,
-    validate_refresh_token,
+    rotate_refresh_token,
+)
+from app.services.user_identity import (
+    normalize_email,
+    normalize_login_identifier,
+    normalize_username,
 )
 
 
@@ -27,31 +32,23 @@ async def register_user(
     settings: Settings,
     payload: RegisterRequest,
 ) -> TokenResponse:
-    """Register a new user and return access and refresh tokens.
+    """Register a new user and return access and refresh tokens."""
+    email = normalize_email(str(payload.email))
+    username = normalize_username(payload.username)
 
-    Args:
-        session: Active database session.
-        redis: Active Redis client.
-        settings: Application settings.
-        payload: Registration request payload.
-
-    Returns:
-        TokenResponse: Bearer access and refresh token response.
-
-    Raises:
-        ConflictError: When the email or username already exists.
-    """
-    email_result = await session.execute(select(User).where(User.email == payload.email))
+    email_result = await session.execute(select(User.id).where(func.lower(User.email) == email))
     if email_result.scalar_one_or_none() is not None:
         raise ConflictError("Email already registered")
 
-    username_result = await session.execute(select(User).where(User.username == payload.username))
+    username_result = await session.execute(
+        select(User.id).where(func.lower(User.username) == username)
+    )
     if username_result.scalar_one_or_none() is not None:
         raise ConflictError("Username already taken")
 
     user = User(
-        email=payload.email,
-        username=payload.username,
+        email=email,
+        username=username,
         hashed_password=hash_password(payload.password),
     )
     session.add(user)
@@ -75,23 +72,11 @@ async def authenticate_user(
     settings: Settings,
     payload: LoginRequest,
 ) -> TokenResponse:
-    """Authenticate a user and return access and refresh tokens.
-
-    Args:
-        session: Active database session.
-        redis: Active Redis client.
-        settings: Application settings.
-        payload: Login request payload.
-
-    Returns:
-        TokenResponse: Bearer access and refresh token response.
-
-    Raises:
-        UnauthorizedError: When credentials are invalid.
-    """
+    """Authenticate a user and return access and refresh tokens."""
+    identifier = normalize_login_identifier(payload.identifier)
     result = await session.execute(
         select(User).where(
-            or_(User.email == payload.identifier, User.username == payload.identifier)
+            or_(func.lower(User.email) == identifier, func.lower(User.username) == identifier)
         )
     )
     user = result.scalar_one_or_none()
@@ -111,53 +96,28 @@ async def refresh_user_tokens(
     settings: Settings,
     refresh_token: str,
 ) -> TokenResponse:
-    """Exchange a valid refresh token for a new access token.
-
-    Args:
-        session: Active database session.
-        redis: Active Redis client.
-        settings: Application settings.
-        refresh_token: Opaque refresh token from the client.
-
-    Returns:
-        TokenResponse: New access token and the same refresh token.
-
-    Raises:
-        UnauthorizedError: When the refresh token is missing, expired, or revoked.
-    """
-    user_id = await validate_refresh_token(redis, refresh_token)
-    if user_id is None:
+    """Exchange a valid refresh token for rotated access and refresh tokens."""
+    rotation = await rotate_refresh_token(redis, refresh_token, settings)
+    if rotation is None:
         raise UnauthorizedError()
 
+    user_id, new_refresh_token = rotation
     user = await get_user_by_id(session, user_id)
     if user is None:
         raise UnauthorizedError()
 
     return TokenResponse(
         access_token=create_access_token(user.id, settings),
-        refresh_token=refresh_token,
+        refresh_token=new_refresh_token,
     )
 
 
 async def logout_user(redis: RedisClient, refresh_token: str) -> None:
-    """Revoke a refresh token without invalidating existing access tokens.
-
-    Args:
-        redis: Active Redis client.
-        refresh_token: Opaque refresh token from the client.
-    """
+    """Revoke a refresh token without invalidating existing access tokens."""
     await revoke_refresh_token(redis, refresh_token)
 
 
 async def get_user_by_id(session: AsyncSession, user_id: UUID) -> User | None:
-    """Load a user by primary key.
-
-    Args:
-        session: Active database session.
-        user_id: User UUID.
-
-    Returns:
-        User | None: Matching user when found.
-    """
+    """Load a user by primary key."""
     result = await session.execute(select(User).where(User.id == user_id))
     return result.scalar_one_or_none()

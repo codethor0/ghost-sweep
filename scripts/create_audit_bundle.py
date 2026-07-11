@@ -37,6 +37,13 @@ FORBIDDEN_BUNDLE_NAME_PARTS = (
     "tool-export",
     "review-bundle",
 )
+FORBIDDEN_BUNDLE_PATH_PARTS = (
+    "bundle-verification",
+    "bundle-verification2",
+    "ind-backend-venv",
+    "backend-venv",
+    "ghost-sweep-v0.1.2",
+)
 FORBIDDEN_ATTRIBUTION = re.compile(
     r"Co-authored-by|cursoragent|Generated-by|prompt artifact|generation transcript",
     re.IGNORECASE,
@@ -84,6 +91,8 @@ def should_exclude(path: Path) -> bool:
     if name.endswith(EXCLUDE_SUFFIXES):
         return True
     if any(part in lowered for part in FORBIDDEN_BUNDLE_NAME_PARTS):
+        return True
+    if any(part in path.parts for part in FORBIDDEN_BUNDLE_PATH_PARTS):
         return True
     return False
 
@@ -451,18 +460,34 @@ def write_reports(
 
 
 def create_tarball(bundle_root: Path, tarball: Path) -> None:
-    """Create gzip tarball from bundle root."""
+    """Create gzip tarball from bundle root without AppleDouble or xattr metadata."""
     if tarball.exists():
         tarball.unlink()
     previous_copyfile_disable = os.environ.get("COPYFILE_DISABLE")
     os.environ["COPYFILE_DISABLE"] = "1"
     try:
-        with tarfile.open(tarball, "w:gz") as archive:
-            for path in sorted(bundle_root.rglob("*")):
-                if path.is_file():
-                    rel = path.relative_to(bundle_root.parent)
+        tar_cmd = [
+            "tar",
+            "--no-xattrs",
+            "--exclude=.DS_Store",
+            "--exclude=._*",
+            "-czf",
+            str(tarball),
+            "-C",
+            str(bundle_root.parent),
+            bundle_root.name,
+        ]
+        result = subprocess.run(tar_cmd, capture_output=True, text=True, check=False)
+        if result.returncode != 0:
+            with tarfile.open(tarball, "w:gz") as archive:
+                for path in sorted(bundle_root.rglob("*")):
+                    if not path.is_file():
+                        continue
                     if path.name.startswith("._") or path.name == ".DS_Store":
                         continue
+                    if any(part in path.parts for part in FORBIDDEN_BUNDLE_PATH_PARTS):
+                        continue
+                    rel = path.relative_to(bundle_root.parent)
                     archive.add(path, arcname=str(rel))
     finally:
         if previous_copyfile_disable is None:

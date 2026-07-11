@@ -95,3 +95,25 @@ async def require_admin(current_user: User = Depends(get_current_user)) -> User:
     if not current_user.is_admin:
         raise ForbiddenError()
     return current_user
+
+
+async def get_optional_current_user(
+    credentials: HTTPAuthorizationCredentials | None = Depends(_bearer_scheme),
+    session: AsyncSession = Depends(get_db),
+    settings: Settings = Depends(get_settings_dependency),
+) -> User | None:
+    """Load the authenticated user when a valid bearer token is supplied.
+
+    Returns:
+        User | None: Authenticated user record, or None when unauthenticated.
+    """
+    if credentials is None:
+        return None
+
+    try:
+        subject = decode_access_token(credentials.credentials, settings)
+        user_id = UUID(subject)
+    except (UnauthorizedError, ValueError):
+        return None
+
+    return await get_user_by_id(session, user_id)

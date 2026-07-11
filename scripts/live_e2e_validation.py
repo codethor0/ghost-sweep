@@ -332,7 +332,23 @@ def run_validation(
         if report_id:
             status, body, _ = request_json(opener, "GET", f"{api}/reports/{report_id}")
             report.add(
-                "report get", status == 200, redact(json.dumps(body)[:300]), status
+                "report get public pending",
+                status == 404,
+                redact(json.dumps(body)[:300]),
+                status,
+            )
+
+            status, body, _ = request_json(
+                opener,
+                "GET",
+                f"{api}/reports/{report_id}",
+                headers=auth_headers,
+            )
+            report.add(
+                "report get reporter pending",
+                status == 200 and isinstance(body, dict) and body.get("status") == "pending",
+                redact(json.dumps(body)[:300]),
+                status,
             )
 
             status, body, _ = request_json(
@@ -343,7 +359,10 @@ def run_validation(
                 headers=auth_headers,
             )
             report.add(
-                "vote create", status == 201, redact(json.dumps(body)[:200]), status
+                "vote create pending report",
+                status == 422,
+                redact(json.dumps(body)[:200]),
+                status,
             )
 
     status, body, _ = request_json(opener, "GET", f"{api}/moderation/reports")

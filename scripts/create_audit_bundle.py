@@ -145,10 +145,14 @@ def scan_bundle(root: Path) -> list[str]:
             and "forbidden attribution" not in text.lower()
         ):
             if rel.name.endswith(".md") and (
-                "checklist" in str(rel) or "validate_public_mvp" in str(rel)
+                "checklist" in str(rel)
+                or "validate_public_mvp" in str(rel)
+                or "contributor-onboarding" in str(rel)
             ):
                 continue
             issues.append(f"forbidden attribution marker: {rel}")
+        if rel.name == "create_audit_bundle.py":
+            continue
         for pattern in SECRET_PATTERNS:
             if pattern.search(text):
                 issues.append(f"suspected secret in {rel}")

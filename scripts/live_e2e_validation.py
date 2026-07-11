@@ -130,7 +130,10 @@ def discover_job_posting_id(repo_root: str) -> str | None:
     env = {
         **os.environ,
         "PYTHONPATH": backend_dir,
-        "DATABASE_URL": "postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5432/ghost_sweep",
+        "DATABASE_URL": os.environ.get(
+            "DATABASE_URL",
+            "postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5432/ghost_sweep",
+        ),
         "ENVIRONMENT": "development",
     }
     result = subprocess.run(

@@ -40,7 +40,31 @@ async def _create_report(
         headers=auth_headers,
     )
     assert response.status_code == 201
-    report_id = str(response.json()["id"])
+    return str(response.json()["id"])
+
+
+async def _verify_report(
+    client: AsyncClient,
+    report_id: str,
+    admin_auth_headers: dict[str, str],
+) -> None:
+    """Verify a report through the moderation API."""
+    response = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/verify",
+        headers=admin_auth_headers,
+    )
+    assert response.status_code == 200
+
+
+async def _create_verified_report(
+    client: AsyncClient,
+    job_posting_id: str,
+    auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
+) -> str:
+    """Create and verify a report for public vote tests."""
+    report_id = await _create_report(client, job_posting_id, auth_headers)
+    await _verify_report(client, report_id, admin_auth_headers)
     return report_id
 
 
@@ -64,9 +88,15 @@ async def test_create_vote_success(
     client: AsyncClient,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
 ) -> None:
-    """Authenticated users should be able to vote on reports."""
-    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    """Authenticated users should be able to vote on verified reports."""
+    report_id = await _create_verified_report(
+        client,
+        str(sample_job_posting.id),
+        auth_headers,
+        admin_auth_headers,
+    )
     response = await client.post(
         f"/api/v1/reports/{report_id}/votes",
         json={"vote": VoteValue.UP.value},
@@ -83,9 +113,15 @@ async def test_create_duplicate_vote_returns_409(
     client: AsyncClient,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
 ) -> None:
     """Duplicate votes by the same user should return 409."""
-    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    report_id = await _create_verified_report(
+        client,
+        str(sample_job_posting.id),
+        auth_headers,
+        admin_auth_headers,
+    )
     first = await client.post(
         f"/api/v1/reports/{report_id}/votes",
         json={"vote": VoteValue.UP.value},
@@ -107,10 +143,16 @@ async def test_create_vote_handles_integrity_error_on_flush(
     db_session: AsyncSession,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
     client: AsyncClient,
 ) -> None:
     """Duplicate vote races should return conflict instead of 500."""
-    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    report_id = await _create_verified_report(
+        client,
+        str(sample_job_posting.id),
+        auth_headers,
+        admin_auth_headers,
+    )
     me_response = await client.get("/api/v1/auth/me", headers=auth_headers)
     voter = User(id=me_response.json()["id"])
 
@@ -136,9 +178,15 @@ async def test_create_vote_writes_audit_row(
     db_session: AsyncSession,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
 ) -> None:
     """Vote creation should write an audit log entry."""
-    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    report_id = await _create_verified_report(
+        client,
+        str(sample_job_posting.id),
+        auth_headers,
+        admin_auth_headers,
+    )
     response = await client.post(
         f"/api/v1/reports/{report_id}/votes",
         json={"vote": VoteValue.UP.value},
@@ -163,6 +211,7 @@ async def test_create_vote_triggers_score_snapshot(
     db_session: AsyncSession,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
 ) -> None:
     """Vote creation should persist score snapshots for posting and company."""
     before_result = await db_session.execute(
@@ -172,7 +221,12 @@ async def test_create_vote_triggers_score_snapshot(
     )
     before_count = int(before_result.scalar_one())
 
-    report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
+    report_id = await _create_verified_report(
+        client,
+        str(sample_job_posting.id),
+        auth_headers,
+        admin_auth_headers,
+    )
     vote_response = await client.post(
         f"/api/v1/reports/{report_id}/votes",
         json={"vote": VoteValue.UP.value},

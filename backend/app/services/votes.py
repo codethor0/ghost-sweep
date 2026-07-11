@@ -2,19 +2,34 @@
 
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.db_errors import raise_conflict_from_integrity_error
-from app.exceptions import ConflictError, NotFoundError
+from app.exceptions import ConflictError, NotFoundError, ValidationError
+from app.models.enums import VoteValue
 from app.models.job_posting import JobPosting
 from app.models.report import Report
 from app.models.user import User
 from app.models.vote import Vote
 from app.schemas import CreateVoteRequest
 from app.services.audit import log_vote_created
+from app.services.report_eligibility import is_publicly_visible
 from app.services.scoring_pipeline import recalculate_for_job_posting_and_company
+
+
+async def _sync_verification_votes(session: AsyncSession, report_id: UUID) -> None:
+    """Reconcile report.verification_votes from persisted vote records."""
+    upvote_result = await session.execute(
+        select(func.count())
+        .select_from(Vote)
+        .where(Vote.report_id == report_id, Vote.vote == VoteValue.UP)
+    )
+    upvotes = int(upvote_result.scalar_one())
+    report_result = await session.execute(select(Report).where(Report.id == report_id))
+    report = report_result.scalar_one()
+    report.verification_votes = upvotes
 
 
 async def create_vote(
@@ -24,7 +39,7 @@ async def create_vote(
     payload: CreateVoteRequest,
     voter: User,
 ) -> Vote:
-    """Create a vote and recalculate related scores.
+    """Create a vote, sync verification totals, and recalculate related scores.
 
     Args:
         session: Active database session.
@@ -37,12 +52,15 @@ async def create_vote(
 
     Raises:
         NotFoundError: When the report does not exist.
+        ValidationError: When the report is not publicly votable.
         ConflictError: When the user already voted on the report.
     """
     report_result = await session.execute(select(Report).where(Report.id == report_id))
     report = report_result.scalar_one_or_none()
     if report is None:
         raise NotFoundError("Report not found")
+    if not is_publicly_visible(report.status):
+        raise ValidationError("Votes are only accepted on publicly visible reports")
 
     existing_vote = await session.execute(
         select(Vote.id).where(Vote.report_id == report_id, Vote.user_id == voter.id)
@@ -57,6 +75,8 @@ async def create_vote(
     except IntegrityError as exc:
         await session.rollback()
         raise_conflict_from_integrity_error(exc)
+
+    await _sync_verification_votes(session, report_id)
 
     posting_result = await session.execute(
         select(JobPosting).where(JobPosting.id == report.job_posting_id)

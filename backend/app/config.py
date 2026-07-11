@@ -37,6 +37,7 @@ class Settings(BaseSettings):
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
 
     auth_rate_limit_per_minute: int = 20
+    report_submission_rate_limit_per_hour: int = 10
 
     @model_validator(mode="before")
     @classmethod

@@ -12,7 +12,7 @@ from app.models.report import Report
 from app.models.user import User
 from app.schemas import ReportListResponse, ReportResponse
 from app.services.audit import log_report_dismissed, log_report_verified
-from app.services.scoring_pipeline import recalculate_for_job_posting_and_company
+from app.services.reports import recalculate_scores_if_needed, sync_company_report_count
 
 _ADMIN_VERIFY_FROM = frozenset({ReportStatus.PENDING, ReportStatus.DISPUTED})
 _ADMIN_DISMISS_FROM = frozenset({ReportStatus.PENDING, ReportStatus.DISPUTED})
@@ -83,11 +83,12 @@ async def verify_report(
         job_posting_id=report.job_posting_id,
         previous_status=previous_status.value,
     )
-    await recalculate_for_job_posting_and_company(
+    await recalculate_scores_if_needed(
         session,
-        report.job_posting_id,
-        report.job_posting.company_id,
+        job_posting_id=report.job_posting_id,
+        company_id=report.job_posting.company_id,
     )
+    await sync_company_report_count(session, report.job_posting.company_id)
     await session.commit()
     await session.refresh(report)
     return report
@@ -116,11 +117,12 @@ async def dismiss_report(
         previous_status=previous_status.value,
         reason=reason,
     )
-    await recalculate_for_job_posting_and_company(
+    await recalculate_scores_if_needed(
         session,
-        report.job_posting_id,
-        report.job_posting.company_id,
+        job_posting_id=report.job_posting_id,
+        company_id=report.job_posting.company_id,
     )
+    await sync_company_report_count(session, report.job_posting.company_id)
     await session.commit()
     await session.refresh(report)
     return report

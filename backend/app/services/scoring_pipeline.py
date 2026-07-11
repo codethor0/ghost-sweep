@@ -4,15 +4,17 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.company import Company
+from app.models.employer_response import EmployerResponse
 from app.models.enums import ReportType, SnapshotEntityType
 from app.models.job_posting import JobPosting
 from app.models.report import Report
 from app.models.score_snapshot import ScoreSnapshot
+from app.services.report_eligibility import is_score_eligible, score_eligibility_filter
 from app.services.scoring import (
     CompanyIntegrityInputs,
     JobGhostRiskInputs,
@@ -24,50 +26,49 @@ from app.services.scoring import (
 
 
 def _posting_age_days(detected_at: datetime) -> int:
-    """Return whole days since a posting was first detected.
-
-    Args:
-        detected_at: Posting detection timestamp.
-
-    Returns:
-        int: Non-negative day count.
-    """
+    """Return whole days since a posting was first detected."""
     now = datetime.now(tz=UTC)
     if detected_at.tzinfo is None:
         detected_at = detected_at.replace(tzinfo=UTC)
     return max(0, (now - detected_at).days)
 
 
+def _eligible_reports(reports: list[Report]) -> list[Report]:
+    """Filter reports to score-eligible moderation states."""
+    return [report for report in reports if is_score_eligible(report.status)]
+
+
 async def _reports_for_posting(session: AsyncSession, job_posting_id: UUID) -> list[Report]:
-    """Load reports linked to a job posting.
-
-    Args:
-        session: Active database session.
-        job_posting_id: Job posting UUID.
-
-    Returns:
-        list[Report]: Reports for the posting.
-    """
-    result = await session.execute(select(Report).where(Report.job_posting_id == job_posting_id))
+    """Load score-eligible reports linked to a job posting."""
+    result = await session.execute(
+        select(Report).where(
+            Report.job_posting_id == job_posting_id,
+            score_eligibility_filter(),
+        )
+    )
     return list(result.scalars().all())
 
 
 async def _reports_for_company(session: AsyncSession, company_id: UUID) -> list[Report]:
-    """Load reports linked to postings owned by a company.
-
-    Args:
-        session: Active database session.
-        company_id: Company UUID.
-
-    Returns:
-        list[Report]: Reports across the company's postings.
-    """
+    """Load score-eligible reports linked to postings owned by a company."""
     result = await session.execute(
         select(Report)
         .join(JobPosting, Report.job_posting_id == JobPosting.id)
-        .where(JobPosting.company_id == company_id)
+        .where(JobPosting.company_id == company_id, score_eligibility_filter())
     )
     return list(result.scalars().all())
+
+
+async def _eligible_responded_report_count(session: AsyncSession, company_id: UUID) -> int:
+    """Count distinct eligible reports that received an employer response."""
+    result = await session.execute(
+        select(func.count(func.distinct(EmployerResponse.report_id)))
+        .select_from(EmployerResponse)
+        .join(Report, EmployerResponse.report_id == Report.id)
+        .join(JobPosting, Report.job_posting_id == JobPosting.id)
+        .where(JobPosting.company_id == company_id, score_eligibility_filter())
+    )
+    return int(result.scalar_one())
 
 
 def _build_job_inputs(
@@ -75,16 +76,7 @@ def _build_job_inputs(
     company: Company,
     reports: list[Report],
 ) -> JobGhostRiskInputs:
-    """Build job ghost risk inputs from ORM entities.
-
-    Args:
-        posting: Job posting entity.
-        company: Parent company entity.
-        reports: Reports linked to the posting.
-
-    Returns:
-        JobGhostRiskInputs: Normalized scoring inputs.
-    """
+    """Build job ghost risk inputs from ORM entities."""
     report_statuses = [report.status for report in reports]
     return JobGhostRiskInputs(
         posting_age_days=_posting_age_days(posting.detected_at),
@@ -102,23 +94,20 @@ def _build_job_inputs(
     )
 
 
-def _build_company_inputs(company: Company, reports: list[Report]) -> CompanyIntegrityInputs:
-    """Build company integrity inputs from ORM entities.
-
-    Args:
-        company: Company entity.
-        reports: Reports linked to company postings.
-
-    Returns:
-        CompanyIntegrityInputs: Normalized scoring inputs.
-    """
+def _build_company_inputs(
+    company: Company,
+    reports: list[Report],
+    responded_report_count: int,
+) -> CompanyIntegrityInputs:
+    """Build company integrity inputs from ORM entities."""
     report_statuses = [report.status for report in reports]
+    eligible_total = len(reports)
     return CompanyIntegrityInputs(
         total_postings=company.total_postings,
         total_hires=company.total_hires,
         verified_report_count=count_verified_reports(report_statuses),
-        total_reports=company.report_count,
-        employer_response_count=len(company.employer_responses),
+        total_reports=eligible_total,
+        employer_response_count=responded_report_count,
         verified_status=company.verified_status,
         average_days_to_fill=None,
         recruiter_follow_through_rate=0.0,
@@ -130,15 +119,7 @@ async def calculate_job_posting_risk_score(
     session: AsyncSession,
     job_posting_id: UUID,
 ) -> ScoreResult:
-    """Calculate a job posting risk score without persisting changes.
-
-    Args:
-        session: Active database session.
-        job_posting_id: Job posting UUID.
-
-    Returns:
-        ScoreResult: Calculated score and breakdown.
-    """
+    """Calculate a job posting risk score without persisting changes."""
     posting = await _load_job_posting(session, job_posting_id)
     reports = await _reports_for_posting(session, job_posting_id)
     inputs = _build_job_inputs(posting, posting.company, reports)
@@ -149,18 +130,11 @@ async def calculate_company_integrity_score_result(
     session: AsyncSession,
     company_id: UUID,
 ) -> ScoreResult:
-    """Calculate a company integrity score without persisting changes.
-
-    Args:
-        session: Active database session.
-        company_id: Company UUID.
-
-    Returns:
-        ScoreResult: Calculated score and breakdown.
-    """
+    """Calculate a company integrity score without persisting changes."""
     company = await _load_company(session, company_id)
     reports = await _reports_for_company(session, company_id)
-    inputs = _build_company_inputs(company, reports)
+    responded_count = await _eligible_responded_report_count(session, company_id)
+    inputs = _build_company_inputs(company, reports, responded_count)
     return calculate_company_integrity_score(inputs)
 
 
@@ -168,15 +142,7 @@ async def recalculate_job_posting_score(
     session: AsyncSession,
     job_posting_id: UUID,
 ) -> ScoreResult:
-    """Recalculate, persist, and snapshot a job posting risk score.
-
-    Args:
-        session: Active database session.
-        job_posting_id: Job posting UUID.
-
-    Returns:
-        ScoreResult: Updated score and breakdown.
-    """
+    """Recalculate, persist, and snapshot a job posting risk score."""
     result = await calculate_job_posting_risk_score(session, job_posting_id)
     posting = await _load_job_posting(session, job_posting_id)
     posting.ghost_risk_score = Decimal(str(result.score))
@@ -195,15 +161,7 @@ async def recalculate_company_score(
     session: AsyncSession,
     company_id: UUID,
 ) -> ScoreResult:
-    """Recalculate, persist, and snapshot a company integrity score.
-
-    Args:
-        session: Active database session.
-        company_id: Company UUID.
-
-    Returns:
-        ScoreResult: Updated score and breakdown.
-    """
+    """Recalculate, persist, and snapshot a company integrity score."""
     result = await calculate_company_integrity_score_result(session, company_id)
     company = await _load_company(session, company_id)
     company.integrity_score = Decimal(str(result.score))
@@ -223,27 +181,13 @@ async def recalculate_for_job_posting_and_company(
     job_posting_id: UUID,
     company_id: UUID,
 ) -> None:
-    """Recalculate scores for a posting and its parent company.
-
-    Args:
-        session: Active database session.
-        job_posting_id: Job posting UUID.
-        company_id: Company UUID.
-    """
+    """Recalculate scores for a posting and its parent company."""
     await recalculate_job_posting_score(session, job_posting_id)
     await recalculate_company_score(session, company_id)
 
 
 async def _load_job_posting(session: AsyncSession, job_posting_id: UUID) -> JobPosting:
-    """Load a job posting with its company relationship.
-
-    Args:
-        session: Active database session.
-        job_posting_id: Job posting UUID.
-
-    Returns:
-        JobPosting: Loaded posting with company attached.
-    """
+    """Load a job posting with its company relationship."""
     result = await session.execute(
         select(JobPosting)
         .options(selectinload(JobPosting.company))
@@ -253,18 +197,6 @@ async def _load_job_posting(session: AsyncSession, job_posting_id: UUID) -> JobP
 
 
 async def _load_company(session: AsyncSession, company_id: UUID) -> Company:
-    """Load a company with employer responses for scoring inputs.
-
-    Args:
-        session: Active database session.
-        company_id: Company UUID.
-
-    Returns:
-        Company: Loaded company with responses attached.
-    """
-    result = await session.execute(
-        select(Company)
-        .options(selectinload(Company.employer_responses))
-        .where(Company.id == company_id)
-    )
+    """Load a company for scoring inputs."""
+    result = await session.execute(select(Company).where(Company.id == company_id))
     return result.scalar_one()

@@ -7,6 +7,7 @@ from app.exceptions import RateLimitError
 from app.redis_client import RedisClient
 
 RATE_LIMIT_WINDOW_SECONDS = 60
+REPORT_RATE_LIMIT_WINDOW_SECONDS = 3600
 
 _RATE_LIMIT_SCRIPT = """
 local current = redis.call('INCR', KEYS[1])
@@ -28,6 +29,35 @@ def rate_limit_key(route: str, client_ip: str) -> str:
         str: Redis key in the form auth_rl:{route}:{ip}.
     """
     return f"auth_rl:{route}:{client_ip}"
+
+
+async def check_report_submission_rate_limit(
+    redis: RedisClient,
+    user_id: str,
+    client_ip: str,
+    settings: Settings,
+) -> None:
+    """Increment and enforce the report submission rate limit.
+
+    Args:
+        redis: Active Redis client.
+        user_id: Authenticated reporter UUID string.
+        client_ip: Client IP address.
+        settings: Application settings.
+
+    Raises:
+        RateLimitError: When the client exceeds the configured limit.
+    """
+    key = f"report_rl:{user_id}:{client_ip}"
+    raw_count = await redis.eval(  # type: ignore[no-untyped-call]
+        _RATE_LIMIT_SCRIPT,
+        1,
+        key,
+        str(REPORT_RATE_LIMIT_WINDOW_SECONDS),
+    )
+    count = int(cast(int, raw_count))
+    if count > settings.report_submission_rate_limit_per_hour:
+        raise RateLimitError()
 
 
 async def check_auth_rate_limit(

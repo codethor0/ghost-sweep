@@ -24,7 +24,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                 </Link>
                 <button
                   type="button"
-                  onClick={clearSession}
+                  onClick={() => {
+                    void clearSession();
+                  }}
                   className="hover:text-ink"
                 >
                   Sign out

@@ -1,9 +1,9 @@
 import { HomeHero } from "@/components/HomeHero";
 
 interface HomePageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     posting_url?: string | string[];
-  };
+  }>;
 }
 
 function resolvePostingUrl(value: string | string[] | undefined): string | undefined {
@@ -16,12 +16,14 @@ function resolvePostingUrl(value: string | string[] | undefined): string | undef
   return undefined;
 }
 
-export default function HomePage({ searchParams }: HomePageProps) {
+export default async function HomePage({ searchParams }: HomePageProps) {
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+
   return (
     <HomeHero
       title="Expose ghost jobs. Restore hiring transparency."
       subtitle="ghost-sweep helps job seekers evaluate companies and postings using evidence-based reports, transparent risk signals, and employer response workflows."
-      postingUrl={resolvePostingUrl(searchParams?.posting_url)}
+      postingUrl={resolvePostingUrl(resolvedSearchParams?.posting_url)}
     />
   );
 }

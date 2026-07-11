@@ -4,8 +4,9 @@ import { createContext, useCallback, useContext, useMemo, useState } from "react
 
 interface SessionContextValue {
   accessToken: string | null;
-  setAccessToken: (token: string | null) => void;
-  clearSession: () => void;
+  refreshToken: string | null;
+  setSessionTokens: (accessToken: string, refreshToken: string) => void;
+  clearSession: () => Promise<void>;
   isAuthenticated: boolean;
 }
 
@@ -13,23 +14,37 @@ const SessionContext = createContext<SessionContextValue | undefined>(undefined)
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
   const [accessToken, setAccessTokenState] = useState<string | null>(null);
+  const [refreshToken, setRefreshTokenState] = useState<string | null>(null);
 
-  const setAccessToken = useCallback((token: string | null) => {
-    setAccessTokenState(token);
+  const setSessionTokens = useCallback((nextAccessToken: string, nextRefreshToken: string) => {
+    setAccessTokenState(nextAccessToken);
+    setRefreshTokenState(nextRefreshToken);
   }, []);
 
-  const clearSession = useCallback(() => {
+  const clearSession = useCallback(async () => {
+    const tokenToRevoke = refreshToken;
     setAccessTokenState(null);
-  }, []);
+    setRefreshTokenState(null);
+    if (!tokenToRevoke) {
+      return;
+    }
+    try {
+      const { logoutUser } = await import("@/lib/api/endpoints");
+      await logoutUser(tokenToRevoke);
+    } catch {
+      // Local session state is already cleared even when revocation fails.
+    }
+  }, [refreshToken]);
 
   const value = useMemo(
     () => ({
       accessToken,
-      setAccessToken,
+      refreshToken,
+      setSessionTokens,
       clearSession,
       isAuthenticated: accessToken !== null,
     }),
-    [accessToken, setAccessToken, clearSession],
+    [accessToken, refreshToken, setSessionTokens, clearSession],
   );
 
   return <SessionContext.Provider value={value}>{children}</SessionContext.Provider>;

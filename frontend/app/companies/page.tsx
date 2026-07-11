@@ -4,11 +4,12 @@ import { ApiError } from "@/lib/api/client";
 import { DeferredNotice } from "@/components/DeferredNotice";
 
 interface CompaniesPageProps {
-  searchParams?: { page?: string };
+  searchParams?: Promise<{ page?: string }>;
 }
 
 export default async function CompaniesPage({ searchParams }: CompaniesPageProps) {
-  const page = Number(searchParams?.page ?? "1") || 1;
+  const resolvedSearchParams = searchParams ? await searchParams : undefined;
+  const page = Number(resolvedSearchParams?.page ?? "1") || 1;
   let error: string | null = null;
   let data = null;
 

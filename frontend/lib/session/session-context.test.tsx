@@ -1,27 +1,36 @@
 import { act, render, screen } from "@testing-library/react";
 import { SessionProvider, useSession } from "@/lib/session/session-context";
 
+jest.mock("@/lib/api/endpoints", () => ({
+  logoutUser: jest.fn().mockResolvedValue(undefined),
+}));
+
 function TokenReader() {
-  const { accessToken, setAccessToken } = useSession();
+  const { accessToken, refreshToken, setSessionTokens } = useSession();
   return (
     <div>
-      <span data-testid="token">{accessToken ?? "none"}</span>
-      <button type="button" onClick={() => setAccessToken("in-memory-token")}>
-        Set token
+      <span data-testid="access-token">{accessToken ?? "none"}</span>
+      <span data-testid="refresh-token">{refreshToken ?? "none"}</span>
+      <button
+        type="button"
+        onClick={() => setSessionTokens("in-memory-access", "in-memory-refresh")}
+      >
+        Set tokens
       </button>
     </div>
   );
 }
 
 describe("SessionProvider", () => {
-  it("stores access tokens in React state only", () => {
+  it("stores access and refresh tokens in React state only", () => {
     render(
       <SessionProvider>
         <TokenReader />
       </SessionProvider>,
     );
 
-    expect(screen.getByTestId("token")).toHaveTextContent("none");
+    expect(screen.getByTestId("access-token")).toHaveTextContent("none");
+    expect(screen.getByTestId("refresh-token")).toHaveTextContent("none");
     expect(window.localStorage.getItem("accessToken")).toBeNull();
     expect(window.sessionStorage.getItem("accessToken")).toBeNull();
   });
@@ -34,9 +43,10 @@ describe("SessionProvider", () => {
     );
 
     act(() => {
-      screen.getByRole("button", { name: "Set token" }).click();
+      screen.getByRole("button", { name: "Set tokens" }).click();
     });
-    expect(screen.getByTestId("token")).toHaveTextContent("in-memory-token");
+    expect(screen.getByTestId("access-token")).toHaveTextContent("in-memory-access");
+    expect(screen.getByTestId("refresh-token")).toHaveTextContent("in-memory-refresh");
     expect(window.localStorage.getItem("accessToken")).toBeNull();
     expect(window.sessionStorage.getItem("accessToken")).toBeNull();
   });

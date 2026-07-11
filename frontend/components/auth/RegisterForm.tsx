@@ -9,7 +9,7 @@ import { useSession } from "@/lib/session/session-context";
 
 export function RegisterForm() {
   const router = useRouter();
-  const { setAccessToken } = useSession();
+  const { setSessionTokens } = useSession();
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +23,7 @@ export function RegisterForm() {
 
     try {
       const tokens = await registerUser({ email, username, password });
-      setAccessToken(tokens.access_token);
+      setSessionTokens(tokens.access_token, tokens.refresh_token);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {

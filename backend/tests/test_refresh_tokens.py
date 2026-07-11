@@ -105,9 +105,15 @@ async def test_refresh_returns_new_access_token(client: AsyncClient) -> None:
     )
     assert refresh_response.status_code == 200
     refreshed = refresh_response.json()
-    assert refreshed["refresh_token"] == refresh_token
+    assert refreshed["refresh_token"] != refresh_token
     assert refreshed["access_token"]
     assert refreshed["access_token"] != original_access_token
+
+    reuse_response = await client.post(
+        "/api/v1/auth/refresh",
+        json={"refresh_token": refresh_token},
+    )
+    assert reuse_response.status_code == 401
 
 
 @pytest.mark.asyncio

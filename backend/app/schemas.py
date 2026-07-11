@@ -15,14 +15,31 @@ from app.models.enums import (
     VerifiedStatus,
     VoteValue,
 )
+from app.security.password_policy import validate_password_byte_length
 from app.services.job_url_validation import validate_http_https_url
+from app.services.user_identity import normalize_email, normalize_username
 
 
 class HealthResponse(BaseModel):
-    """Service health response."""
+    """Service liveness response."""
 
     status: str
     service: str
+
+
+class ReadinessCheckStatus(BaseModel):
+    """Individual dependency readiness status."""
+
+    postgres: str
+    redis: str
+
+
+class ReadinessResponse(BaseModel):
+    """Dependency readiness response."""
+
+    status: str
+    service: str
+    checks: ReadinessCheckStatus
 
 
 class ScoreBreakdown(BaseModel):
@@ -47,12 +64,38 @@ class RegisterRequest(BaseModel):
     username: str = Field(min_length=3, max_length=64, pattern=r"^[a-zA-Z0-9_\-]+$")
     password: str = Field(min_length=12, max_length=128)
 
+    @field_validator("email")
+    @classmethod
+    def normalize_registration_email(cls, value: str) -> str:
+        """Normalize email before validation and persistence."""
+        return normalize_email(str(value))
+
+    @field_validator("username")
+    @classmethod
+    def normalize_registration_username(cls, value: str) -> str:
+        """Normalize username before validation and persistence."""
+        return normalize_username(value)
+
+    @field_validator("password")
+    @classmethod
+    def validate_registration_password_bytes(cls, value: str) -> str:
+        """Reject passwords that exceed bcrypt's UTF-8 byte boundary."""
+        validate_password_byte_length(value)
+        return value
+
 
 class LoginRequest(BaseModel):
     """User login payload."""
 
     identifier: str = Field(min_length=3, max_length=320)
     password: str = Field(min_length=12, max_length=128)
+
+    @field_validator("password")
+    @classmethod
+    def validate_login_password_bytes(cls, value: str) -> str:
+        """Reject passwords that exceed bcrypt's UTF-8 byte boundary."""
+        validate_password_byte_length(value)
+        return value
 
 
 class TokenResponse(BaseModel):
@@ -140,8 +183,24 @@ class JobPostingResponse(BaseModel):
     model_config = {"from_attributes": True}
 
 
+class PublicReportResponse(BaseModel):
+    """Public report details without internal identity fields."""
+
+    id: UUID
+    job_posting_id: UUID
+    report_type: ReportType
+    description: str
+    status: ReportStatus
+    confidence_score: float
+    verification_votes: int
+    created_at: datetime
+    updated_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class ReportResponse(BaseModel):
-    """Submitted report details."""
+    """Submitted report details for authenticated internal access."""
 
     id: UUID
     job_posting_id: UUID
@@ -165,8 +224,17 @@ class CreateReportRequest(BaseModel):
     description: str = Field(min_length=20, max_length=5000)
 
 
+class PublicReportListResponse(BaseModel):
+    """Paginated public reports linked to a job posting."""
+
+    items: list[PublicReportResponse]
+    total: int
+    page: int
+    page_size: int
+
+
 class ReportListResponse(BaseModel):
-    """Paginated reports linked to a job posting."""
+    """Paginated reports for moderation or internal review."""
 
     items: list[ReportResponse]
     total: int
@@ -247,6 +315,19 @@ class EmployerClaimListResponse(BaseModel):
     page_size: int
 
 
+class PublicEmployerResponseResponse(BaseModel):
+    """Public employer response without internal user identity."""
+
+    id: UUID
+    report_id: UUID
+    company_id: UUID
+    response_text: str
+    evidence_urls: list[str]
+    created_at: datetime
+
+    model_config = {"from_attributes": True}
+
+
 class EmployerResponseResponse(BaseModel):
     """Employer response to an integrity report."""
 
@@ -272,6 +353,13 @@ class CreateEmployerResponseRequest(BaseModel):
     def validate_evidence_urls(cls, urls: list[str]) -> list[str]:
         """Ensure each evidence URL is a safe http or https URL."""
         return [validate_http_https_url(url) for url in urls]
+
+
+class PublicEmployerResponseListResponse(BaseModel):
+    """Public employer responses linked to a report."""
+
+    items: list[PublicEmployerResponseResponse]
+    total: int
 
 
 class EmployerResponseListResponse(BaseModel):

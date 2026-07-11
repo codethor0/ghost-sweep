@@ -18,12 +18,14 @@ Future batches may require evidence attachments before promotion or verification
 
 | State | Meaning |
 | ----- | ------- |
-| `pending` | Received; default on create |
-| `verified` | Moderator or trusted process confirmed the report |
-| `dismissed` | Report rejected or insufficient |
-| `disputed` | Employer or reviewer challenged the report |
+| `pending` | Received; default on create; not publicly visible |
+| `verified` | Moderator confirmed; eligible for public display and scoring |
+| `dismissed` | Report rejected or insufficient; excluded from public APIs and scoring |
+| `disputed` | Employer challenged the report; not publicly visible until verified |
 
-Moderation APIs that transition between these states are implemented in Batch 6. New reports always start as `pending`.
+New reports always start as `pending`. Public unauthenticated report APIs return only `verified` reports and omit internal reporter identifiers.
+
+Score recalculation uses only `verified` reports. Pending report creation does not change public company or posting scores.
 
 ## Abuse prevention
 
@@ -41,7 +43,13 @@ The platform must prevent:
 Current technical controls include:
 
 - authenticated report and vote submissions
+- public visibility limited to verified reports
+- duplicate active report rejection per reporter, posting, and report type (`409` on conflict)
+- report submission rate limiting separate from auth rate limits
 - duplicate vote protection per user and report (`409` on conflict, including race-safe handling)
+- duplicate employer response protection per employer user and report
+- employer response rate scoring based on distinct eligible reports, not raw response rows
+- refresh-token rotation and logout revocation
 - auth endpoint rate limiting
 - transparent scoring instead of accusatory labels
 

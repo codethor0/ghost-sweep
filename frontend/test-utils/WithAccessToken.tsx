@@ -8,11 +8,11 @@ export function WithAccessToken({
   token: string;
   children: React.ReactNode;
 }) {
-  const { setAccessToken } = useSession();
+  const { setSessionTokens } = useSession();
 
   useEffect(() => {
-    setAccessToken(token);
-  }, [setAccessToken, token]);
+    setSessionTokens(token, "test-refresh-token");
+  }, [setSessionTokens, token]);
 
   return <>{children}</>;
 }

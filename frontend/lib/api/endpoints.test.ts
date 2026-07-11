@@ -3,6 +3,8 @@ import {
   fetchCurrentUser,
   listCompanies,
   loginUser,
+  logoutUser,
+  refreshSession,
   registerUser,
 } from "@/lib/api/endpoints";
 
@@ -34,6 +36,24 @@ describe("api endpoints", () => {
     expect(mockedApiRequest).toHaveBeenCalledWith("/api/v1/auth/login", {
       method: "POST",
       body: { identifier: "user", password: "password123456" },
+    });
+  });
+
+  it("refreshSession posts refresh token", async () => {
+    mockedApiRequest.mockResolvedValue({ access_token: "a2", refresh_token: "r2", token_type: "bearer" });
+    await refreshSession("refresh-token");
+    expect(mockedApiRequest).toHaveBeenCalledWith("/api/v1/auth/refresh", {
+      method: "POST",
+      body: { refresh_token: "refresh-token" },
+    });
+  });
+
+  it("logoutUser posts refresh token", async () => {
+    mockedApiRequest.mockResolvedValue(undefined);
+    await logoutUser("refresh-token");
+    expect(mockedApiRequest).toHaveBeenCalledWith("/api/v1/auth/logout", {
+      method: "POST",
+      body: { refresh_token: "refresh-token" },
     });
   });
 

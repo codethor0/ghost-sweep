@@ -185,19 +185,19 @@ async def test_create_employer_response_disputes_pending_report(
     body = response.json()
     assert body["report_id"] == report_id
 
-    report = await client.get(f"/api/v1/reports/{report_id}")
+    report = await client.get(f"/api/v1/reports/{report_id}", headers=auth_headers)
     assert report.status_code == 200
     assert report.json()["status"] == ReportStatus.DISPUTED.value
 
 
 @pytest.mark.asyncio
-async def test_create_multiple_employer_responses_allowed(
+async def test_create_duplicate_employer_response_returns_409(
     client: AsyncClient,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
     employer_auth_headers: dict[str, str],
 ) -> None:
-    """Multiple employer responses should be allowed on the same report."""
+    """Duplicate employer responses from the same account should return 409."""
     report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
     first = await client.post(
         f"/api/v1/reports/{report_id}/responses",
@@ -211,18 +211,18 @@ async def test_create_multiple_employer_responses_allowed(
         json={"response_text": "We posted an additional clarification for candidates."},
         headers=employer_auth_headers,
     )
-    assert second.status_code == 201
-    assert first.json()["id"] != second.json()["id"]
+    assert second.status_code == 409
 
 
 @pytest.mark.asyncio
-async def test_list_employer_responses_is_public(
+async def test_list_employer_responses_requires_public_report(
     client: AsyncClient,
     sample_job_posting: JobPosting,
     auth_headers: dict[str, str],
     employer_auth_headers: dict[str, str],
+    admin_auth_headers: dict[str, str],
 ) -> None:
-    """Employer responses should be readable without authentication."""
+    """Employer responses should be readable only for publicly visible reports."""
     report_id = await _create_report(client, str(sample_job_posting.id), auth_headers)
     create = await client.post(
         f"/api/v1/reports/{report_id}/responses",
@@ -231,11 +231,21 @@ async def test_list_employer_responses_is_public(
     )
     assert create.status_code == 201
 
+    hidden = await client.get(f"/api/v1/reports/{report_id}/responses")
+    assert hidden.status_code == 404
+
+    verify = await client.post(
+        f"/api/v1/moderation/reports/{report_id}/verify",
+        headers=admin_auth_headers,
+    )
+    assert verify.status_code == 200
+
     response = await client.get(f"/api/v1/reports/{report_id}/responses")
     assert response.status_code == 200
     body = response.json()
     assert body["total"] == 1
     assert body["items"][0]["response_text"] == RESPONSE_TEXT
+    assert "user_id" not in body["items"][0]
 
 
 @pytest.mark.asyncio

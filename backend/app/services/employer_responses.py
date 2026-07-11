@@ -3,23 +3,28 @@
 from uuid import UUID
 
 from sqlalchemy import func, select
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
-from app.exceptions import ForbiddenError, NotFoundError
+from app.db_errors import raise_conflict_from_integrity_error
+from app.exceptions import ConflictError, ForbiddenError, NotFoundError
 from app.models.employer_response import EmployerResponse
 from app.models.enums import ReportStatus
 from app.models.report import Report
 from app.models.user import User
 from app.schemas import (
     CreateEmployerResponseRequest,
-    EmployerResponseListResponse,
-    EmployerResponseResponse,
+    PublicEmployerResponseListResponse,
+    PublicEmployerResponseResponse,
 )
 from app.services.audit import log_employer_response_created
+from app.services.report_eligibility import is_publicly_visible
+from app.services.reports import sync_company_report_count
 from app.services.scoring_pipeline import recalculate_for_job_posting_and_company
 
 _DISPUTE_FROM = frozenset({ReportStatus.PENDING, ReportStatus.VERIFIED})
+_DUPLICATE_RESPONSE_DETAIL = "An employer response from this account already exists for this report"
 
 
 async def _get_report_with_posting(session: AsyncSession, report_id: UUID) -> Report:
@@ -51,6 +56,15 @@ async def create_employer_response(
     company_id = report.job_posting.company_id
     _ensure_verified_employer_for_company(employer, company_id)
 
+    existing = await session.execute(
+        select(EmployerResponse.id).where(
+            EmployerResponse.report_id == report_id,
+            EmployerResponse.user_id == employer.id,
+        )
+    )
+    if existing.scalar_one_or_none() is not None:
+        raise ConflictError(_DUPLICATE_RESPONSE_DETAIL)
+
     previous_status = report.status
     if report.status in _DISPUTE_FROM:
         report.status = ReportStatus.DISPUTED
@@ -63,7 +77,11 @@ async def create_employer_response(
         evidence_urls=payload.evidence_urls,
     )
     session.add(response)
-    await session.flush()
+    try:
+        await session.flush()
+    except IntegrityError as exc:
+        await session.rollback()
+        raise_conflict_from_integrity_error(exc)
 
     await log_employer_response_created(
         session,
@@ -75,19 +93,20 @@ async def create_employer_response(
         new_status=report.status.value,
     )
     await recalculate_for_job_posting_and_company(session, report.job_posting_id, company_id)
+    await sync_company_report_count(session, company_id)
     await session.commit()
     await session.refresh(response)
     return response
 
 
-async def list_employer_responses(
+async def list_public_employer_responses(
     session: AsyncSession,
     *,
     report_id: UUID,
-) -> EmployerResponseListResponse:
-    """Return employer responses linked to a report."""
-    report_result = await session.execute(select(Report.id).where(Report.id == report_id))
-    if report_result.scalar_one_or_none() is None:
+) -> PublicEmployerResponseListResponse:
+    """Return employer responses only when the parent report is publicly visible."""
+    report = await _get_report_with_posting(session, report_id)
+    if not is_publicly_visible(report.status):
         raise NotFoundError("Report not found")
 
     total_result = await session.execute(
@@ -103,6 +122,7 @@ async def list_employer_responses(
         .order_by(EmployerResponse.created_at.asc())
     )
     items = [
-        EmployerResponseResponse.model_validate(response) for response in result.scalars().all()
+        PublicEmployerResponseResponse.model_validate(response)
+        for response in result.scalars().all()
     ]
-    return EmployerResponseListResponse(items=items, total=total)
+    return PublicEmployerResponseListResponse(items=items, total=total)

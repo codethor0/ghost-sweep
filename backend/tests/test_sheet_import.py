@@ -48,7 +48,7 @@ def _eligible_row(**overrides: str) -> dict[str, str]:
         "Has the company responded?": "No",
         "Consent": "I confirm this submission is made in good faith.",
         "Evidence links": "https://example.com/archive",
-        "Optional contact email": "reporter@example.com",
+        "Optional contact email": "",
         "review_status": "approved_for_import",
         "reviewer": "maintainer",
         "reviewed_at": "2026-07-01",
@@ -127,6 +127,7 @@ def test_plan_row_import_builds_description_preview() -> None:
     plan = plan_row_import(_eligible_row(), column_map=column_map, row_number=2)
     assert plan.action == "would_import"
     assert plan.normalized_job_url == "https://boards.greenhouse.io/acme/jobs/1234567"
+    assert plan.company_domain == "acme"
     assert plan.report_type == "ghost_job"
     assert plan.description_preview is not None
     assert "[ghost-sweep Sheet import]" in plan.description_preview

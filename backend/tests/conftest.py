@@ -175,6 +175,8 @@ async def redis_client(test_redis_url: str) -> AsyncGenerator[RedisClient, None]
 async def client(
     db_session: AsyncSession,
     redis_client: RedisClient,
+    test_database_url: str,
+    test_redis_url: str,
 ) -> AsyncGenerator[AsyncClient, None]:
     """Provide an HTTP client with database and Redis dependencies overridden.
 
@@ -186,6 +188,13 @@ async def client(
         AsyncClient: Async HTTP client bound to the FastAPI application.
     """
 
+    test_settings = get_settings().model_copy(
+        update={
+            "database_url": test_database_url,
+            "redis_url": test_redis_url,
+        }
+    )
+
     async def override_get_db() -> AsyncGenerator[AsyncSession, None]:
         yield db_session
 
@@ -193,13 +202,13 @@ async def client(
         yield redis_client
 
     async def override_get_settings() -> Settings:
-        return get_settings()
+        return test_settings
 
     app.dependency_overrides[get_db] = override_get_db
     app.dependency_overrides[get_redis] = override_get_redis
     app.dependency_overrides[get_settings_dependency] = override_get_settings
 
-    await init_redis_client(get_settings())
+    await init_redis_client(test_settings)
     transport = ASGITransport(app=app)
     try:
         async with AsyncClient(transport=transport, base_url="http://testserver") as async_client:

@@ -250,6 +250,76 @@ def validate_http_https_url(raw_url: str) -> str:
     return trimmed
 
 
+@dataclass(frozen=True)
+class EmployerIdentity:
+    """Employer identity hints extracted from a hosted ATS or careers URL."""
+
+    provider: JobSourceProvider
+    hosted_platform_domain: str | None
+    tenant_identifier: str | None
+    company_domain_hint: str | None
+
+
+def _first_path_segment(path: str) -> str | None:
+    segments = [segment for segment in path.split("/") if segment]
+    if not segments:
+        return None
+    return segments[0]
+
+
+def extract_employer_identity(normalized_url: str) -> EmployerIdentity:
+    """Extract employer identity hints without inventing a shared ATS domain."""
+    parts = urlsplit(normalized_url)
+    host = (parts.hostname or "").lower()
+    path = parts.path or ""
+    provider = detect_job_source_provider(normalized_url)
+    tenant: str | None = None
+    company_domain_hint: str | None = None
+
+    if provider == JobSourceProvider.GREENHOUSE and host.endswith("greenhouse.io"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.LEVER and host.endswith("lever.co"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.ASHBY and host.endswith("ashbyhq.com"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.SMARTRECRUITERS and host.endswith("smartrecruiters.com"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.WORKABLE and host.endswith("workable.com"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.JOBVITE and host.endswith("jobvite.com"):
+        tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.BAMBOOHR and host.endswith("bamboohr.com"):
+        tenant = host.split(".", maxsplit=1)[0] if host.count(".") >= 2 else None
+    elif provider == JobSourceProvider.WORKDAY:
+        if host.endswith("myworkdayjobs.com"):
+            tenant = host.split(".", maxsplit=1)[0]
+        elif host.endswith("myworkdaysite.com"):
+            tenant = _first_path_segment(path)
+    elif provider == JobSourceProvider.COMPANY_CAREERS:
+        company_domain_hint = host
+
+    hosted_platform_domains = {
+        JobSourceProvider.GREENHOUSE,
+        JobSourceProvider.LEVER,
+        JobSourceProvider.ASHBY,
+        JobSourceProvider.SMARTRECRUITERS,
+        JobSourceProvider.WORKABLE,
+        JobSourceProvider.JOBVITE,
+        JobSourceProvider.ICIMS,
+        JobSourceProvider.TALEO,
+        JobSourceProvider.WORKDAY,
+        JobSourceProvider.BAMBOOHR,
+    }
+    hosted_domain = host if provider in hosted_platform_domains else None
+
+    return EmployerIdentity(
+        provider=provider,
+        hosted_platform_domain=hosted_domain,
+        tenant_identifier=tenant,
+        company_domain_hint=company_domain_hint,
+    )
+
+
 def validate_job_url(raw_url: str) -> JobUrlValidationResult:
     """Validate and classify a raw job URL offline.
 

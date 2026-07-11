@@ -6,18 +6,22 @@ import csv
 import hashlib
 import re
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
-from urllib.parse import urlsplit
 
 from app.models.enums import PostingSource, ReportType
 from app.services.job_url_validation import (
     JobSourceProvider,
     detect_job_source_provider,
+    extract_employer_identity,
     normalize_job_url,
     validate_http_https_url,
 )
 
 _EMAIL_IN_TEXT = re.compile(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}")
+_PHONE_IN_TEXT = re.compile(r"(?<!\w)(?:\+?\d[\d\s().-]{7,}\d)(?!\w)")
+_PRIVATE_KEY_HEADER = re.compile(r"BEGIN (?:RSA |OPENSSH )?PRIVATE KEY")
+_TOKEN_LIKE = re.compile(r"(?i)(?:api[_-]?key|secret|token|password)\s*[:=]\s*\S+")
 
 REQUIRED_SOP_COLUMNS = (
     "review_status",
@@ -72,6 +76,11 @@ _PROVIDER_TO_SOURCE: dict[JobSourceProvider, PostingSource] = {
     JobSourceProvider.LEVER: PostingSource.COMPANY_SITE,
     JobSourceProvider.ASHBY: PostingSource.COMPANY_SITE,
     JobSourceProvider.SMARTRECRUITERS: PostingSource.COMPANY_SITE,
+    JobSourceProvider.ICIMS: PostingSource.COMPANY_SITE,
+    JobSourceProvider.WORKABLE: PostingSource.COMPANY_SITE,
+    JobSourceProvider.BAMBOOHR: PostingSource.COMPANY_SITE,
+    JobSourceProvider.TALEO: PostingSource.COMPANY_SITE,
+    JobSourceProvider.JOBVITE: PostingSource.COMPANY_SITE,
     JobSourceProvider.COMPANY_CAREERS: PostingSource.COMPANY_SITE,
     JobSourceProvider.UNKNOWN: PostingSource.OTHER,
 }
@@ -131,6 +140,45 @@ def _escalation_clear(value: str) -> bool:
 
 def _contains_email(text: str) -> bool:
     return bool(_EMAIL_IN_TEXT.search(text))
+
+
+def _scan_text_for_pii(text: str) -> list[str]:
+    """Return conservative PII category labels detected in free text."""
+    findings: list[str] = []
+    if _contains_email(text):
+        findings.append("email")
+    if _PHONE_IN_TEXT.search(text):
+        findings.append("phone")
+    if _PRIVATE_KEY_HEADER.search(text):
+        findings.append("private_key_header")
+    if _TOKEN_LIKE.search(text):
+        findings.append("credential_like_token")
+    return findings
+
+
+def _parse_reviewed_at(value: str) -> datetime | None:
+    """Parse a reviewed_at timestamp when present."""
+    trimmed = value.strip()
+    if not trimmed:
+        return None
+    normalized = trimmed.replace("Z", "+00:00")
+    try:
+        parsed = datetime.fromisoformat(normalized)
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=UTC)
+    return parsed
+
+
+def _company_domain_hint(normalized_url: str) -> str | None:
+    """Return a company domain hint without using shared ATS hosts."""
+    identity = extract_employer_identity(normalized_url)
+    if identity.company_domain_hint:
+        return identity.company_domain_hint
+    if identity.tenant_identifier:
+        return identity.tenant_identifier
+    return None
 
 
 def _split_evidence_links(raw: str) -> tuple[list[str], list[str]]:
@@ -258,6 +306,36 @@ def check_eligibility(
             message="import_ready must be yes",
         )
 
+    reviewer = _cell(row, column_map, "reviewer")
+    if not reviewer:
+        return EligibilityResult(
+            eligible=False,
+            reason_code="missing_reviewer",
+            message="reviewer is required for import-ready rows",
+        )
+
+    reviewed_at_raw = _cell(row, column_map, "reviewed_at")
+    reviewed_at = _parse_reviewed_at(reviewed_at_raw)
+    if reviewed_at is None:
+        return EligibilityResult(
+            eligible=False,
+            reason_code="invalid_reviewed_at",
+            message="reviewed_at must be a valid ISO date or datetime",
+        )
+    if reviewed_at > datetime.now(tz=UTC):
+        return EligibilityResult(
+            eligible=False,
+            reason_code="future_reviewed_at",
+            message="reviewed_at must not be in the future",
+        )
+
+    if review_status in {"pending", "reviewing"}:
+        return EligibilityResult(
+            eligible=False,
+            reason_code="review_status_pending",
+            message="import-ready rows cannot remain pending or reviewing",
+        )
+
     pii_redacted = _cell(row, column_map, "pii_redacted").lower()
     if pii_redacted != "yes":
         return EligibilityResult(
@@ -332,12 +410,25 @@ def check_eligibility(
             message="Narrative must be at least 20 characters",
         )
 
-    if _contains_email(narrative):
-        return EligibilityResult(
-            eligible=False,
-            reason_code="pii_in_narrative",
-            message="Narrative must not contain email addresses",
-        )
+    pii_fields = {
+        "narrative": narrative,
+        "notes": _cell(row, column_map, "notes"),
+        "company_name": company_name,
+        "job_title": job_title,
+        "location": _cell(row, column_map, "location"),
+        "evidence_links": _cell(row, column_map, "evidence_links"),
+        "optional_contact_email": _cell(row, column_map, "optional_contact_email"),
+    }
+    for field_name, field_value in pii_fields.items():
+        if field_name == "optional_contact_email" and not field_value.strip():
+            continue
+        findings = _scan_text_for_pii(field_value)
+        if findings:
+            return EligibilityResult(
+                eligible=False,
+                reason_code=f"pii_in_{field_name}",
+                message=f"{field_name} contains potential PII ({', '.join(findings)})",
+            )
 
     normalized = normalize_job_url(job_url)
     if normalized is None:
@@ -413,7 +504,6 @@ def plan_row_import(
         evidence_urls=evidence_urls,
     )
 
-    host = urlsplit(normalized).hostname or ""
     fingerprint = _row_fingerprint(
         timestamp=_cell(row, column_map, "timestamp"),
         normalized_url=normalized,
@@ -428,7 +518,7 @@ def plan_row_import(
         message=None,
         company_action="match_or_create",
         company_name=company_name,
-        company_domain=host.lower() if host else None,
+        company_domain=_company_domain_hint(normalized),
         posting_action="match_or_create",
         original_job_url=job_url,
         normalized_job_url=normalized,

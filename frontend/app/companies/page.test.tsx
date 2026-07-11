@@ -22,7 +22,7 @@ describe("CompaniesPage", () => {
       page_size: 20,
     });
 
-    const page = await CompaniesPage({ searchParams: {} });
+    const page = await CompaniesPage({ searchParams: Promise.resolve({}) });
     render(page);
 
     expect(screen.getByText("No companies are indexed yet.")).toBeInTheDocument();

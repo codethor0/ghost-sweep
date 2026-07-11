@@ -9,7 +9,7 @@ import { useSession } from "@/lib/session/session-context";
 
 export function LoginForm() {
   const router = useRouter();
-  const { setAccessToken } = useSession();
+  const { setSessionTokens } = useSession();
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -22,7 +22,7 @@ export function LoginForm() {
 
     try {
       const tokens = await loginUser({ identifier, password });
-      setAccessToken(tokens.access_token);
+      setSessionTokens(tokens.access_token, tokens.refresh_token);
       router.push("/dashboard");
     } catch (err) {
       if (err instanceof ApiError) {

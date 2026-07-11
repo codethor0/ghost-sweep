@@ -450,13 +450,21 @@ def create_tarball(bundle_root: Path, tarball: Path) -> None:
     """Create gzip tarball from bundle root."""
     if tarball.exists():
         tarball.unlink()
-    with tarfile.open(tarball, "w:gz") as archive:
-        for path in sorted(bundle_root.rglob("*")):
-            if path.is_file():
-                rel = path.relative_to(bundle_root.parent)
-                if path.name.startswith("._") or path.name == ".DS_Store":
-                    continue
-                archive.add(path, arcname=str(rel))
+    previous_copyfile_disable = os.environ.get("COPYFILE_DISABLE")
+    os.environ["COPYFILE_DISABLE"] = "1"
+    try:
+        with tarfile.open(tarball, "w:gz") as archive:
+            for path in sorted(bundle_root.rglob("*")):
+                if path.is_file():
+                    rel = path.relative_to(bundle_root.parent)
+                    if path.name.startswith("._") or path.name == ".DS_Store":
+                        continue
+                    archive.add(path, arcname=str(rel))
+    finally:
+        if previous_copyfile_disable is None:
+            os.environ.pop("COPYFILE_DISABLE", None)
+        else:
+            os.environ["COPYFILE_DISABLE"] = previous_copyfile_disable
 
 
 def verify_tarball(tarball: Path) -> list[str]:

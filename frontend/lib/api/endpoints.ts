@@ -32,6 +32,20 @@ export function loginUser(payload: LoginPayload): Promise<TokenResponse> {
   });
 }
 
+export function refreshSession(refreshToken: string): Promise<TokenResponse> {
+  return apiRequest<TokenResponse>(`${API_PREFIX}/auth/refresh`, {
+    method: "POST",
+    body: { refresh_token: refreshToken },
+  });
+}
+
+export function logoutUser(refreshToken: string): Promise<void> {
+  return apiRequest<void>(`${API_PREFIX}/auth/logout`, {
+    method: "POST",
+    body: { refresh_token: refreshToken },
+  });
+}
+
 export function fetchCurrentUser(token: string): Promise<UserResponse> {
   return apiRequest<UserResponse>(`${API_PREFIX}/auth/me`, { token });
 }

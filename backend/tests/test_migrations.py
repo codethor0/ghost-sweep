@@ -62,7 +62,7 @@ async def test_alembic_upgrade_head_records_revision() -> None:
         result = await connection.execute(text("SELECT version_num FROM alembic_version"))
         version = result.scalar_one()
     await engine.dispose()
-    assert version == "002_employer_claim_constraints"
+    assert version == "003_audit_remediation"
 
 
 @pytest.mark.asyncio

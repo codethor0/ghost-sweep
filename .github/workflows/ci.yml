@@ -36,8 +36,8 @@ jobs:
       TEST_DATABASE_URL: postgresql+asyncpg://ghost_sweep:ghost_sweep@localhost:5432/ghost_sweep_test
       TEST_REDIS_URL: redis://localhost:6379/1
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install backend dependencies
@@ -63,8 +63,8 @@ jobs:
   frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Install frontend dependencies
@@ -81,8 +81,8 @@ jobs:
   extension:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v6
         with:
           node-version: "20"
       - name: Extension smoke tests
@@ -91,7 +91,7 @@ jobs:
   docker:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Validate compose file
         run: docker compose config
       - name: Build images
